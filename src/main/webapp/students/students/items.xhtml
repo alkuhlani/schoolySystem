@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/WEB-INF/template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="title">
+        Schooly System
+    </ui:define>
+
+    <ui:define name="head">
+        <!--head-->
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form>
+            <div class="ui-g" >
+                <f:event type="preRenderComponent" listener="#{studentMB.prepareItems()}"/>      
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <!--<h1></h1>-->
+                        <p:messages showDetail="true" autoUpdate="true" closable="true" />
+                        <p:dataTable var="item" value="#{studentMB.items}"  reflow="true"
+                                     rowsPerPageTemplate="20,40,100,150,200,300"
+                                     rows="40"
+                                     paginator="true" 
+                                     resizableColumns="true"
+                                     paginatorTemplate="{CurrentPageReport} 
+                                     {FirstPageLink} 
+                                     {PreviousPageLink} 
+                                     {PageLinks} 
+                                     {NextPageLink} 
+                                     {LastPageLink} 
+                                     {RowsPerPageDropdown}
+                                     {Exporters}"
+                                     currentPageReportTemplate="(Displaying 
+                                     {startRecord} - {endRecord} 
+                                     of {totalRecords}, 
+                                     Page: {currentPage}/{totalPages})"
+                                     id="items" 
+                                     dir="#{(view.locale.language eq 'en')?'ltr':'rtl'}"
+                                     
+                                     rowIndexVar="index">
+                            <f:facet name="header">
+                                <p:commandButton id="toggler" type="button" value="Columns" style="float:right" icon="ui-icon-calculator" />
+                               
+                                <p:splitButton rendered="#{request.isUserInRole('ADMIN')}" 
+                                               value="#{msg.importDate}" style="float:right">
+                                    <p:menuitem   value="#{msg.importFromExcel}" 
+                                                  icon="ui-icon-cloud-upload" 
+                                                  outcome="itemsFromExcel"/>
+                                    <p:menuitem   value="#{msg.importFromCsv}" 
+                                                  icon="ui-icon-cloud-upload" 
+                                                  outcome="itemsFromExcel"/>
+                                </p:splitButton>
+                                <p:columnToggler datasource="items" trigger="toggler" />
+                                <h:link title="#{msg.add}" outcome="create" value="" style="text-align: left">
+                                    <i class="fa fa-plus" style="size: 20px;color: #ffffff;font-size:larger ;float: left;padding-right: 5px;" />
+                                </h:link> 
+                                #{msg.student_list}
+                            </f:facet>
+                            <f:facet name="{Exporters}">
+                                <h:commandLink>
+                                    <p:graphicImage value="/resources/barcelona-layout/images/Excel-3-icon.png" width="24"/>
+                                    <p:dataExporter type="xls" target="items" fileName="studens" />
+                                </h:commandLink>
+                            </f:facet>
+                            <p:column  headerText="no" 
+                                       filterBy="#{index+1}" 
+                                       sortBy="#{index+1}" 
+                                       style="text-align: center;width: 30px">
+                                <h:outputText value="#{index+1}"/>
+                            </p:column> 
+                            <p:column  headerText="#{msg.student_name}" filterBy="#{(view.locale.language eq 'en')?item.name_en:item.name_ar}" style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.name_en:item.name_ar}"/>
+                            </p:column>                                        
+                            <p:column  headerText="#{msg.studentId}" filterBy="#{item.studentID}" style="text-align: center">
+                                <h:outputText value="#{item.studentID}"/>
+                            </p:column> 
+                            <p:column  headerText="#{msg.phonenumber}" filterBy="#{item.phone1}" style="text-align: center">
+                                <h:outputText value="#{item.phone1}"/>
+                            </p:column>     
+                            <p:column  headerText="#{msg.dateOfRegistration}" filterBy="#{item.registerDate}" style="text-align: center">
+                                <h:outputText value="#{item.registerDate}"/>
+                            </p:column>   
+                            <p:column  headerText="#{msg.Parents}" filterBy="#{(view.locale.language eq 'en')?item.parent.name_en:item.parent.name_en}" style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.parent.name_en:item.parent.name_en}"/>
+                            </p:column>   
+                            <p:column  headerText="#{msg.school}" 
+                                       rendered="#{request.isUserInRole('ADMINISTRATOR')}"
+                                       filterBy="#{(view.locale.language eq 'en')?item.school.name_en:item.school.name_ar}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.school.name_en:item.school.name_ar}"/>
+                            </p:column>  
+                            <p:column style="width: 30px">
+                                <p:button   title="#{msg.update}" icon="fa fa-edit"  outcome="update">
+                                    <f:param name="id" value="#{item.id}"/>
+                                </p:button>
+                            </p:column>
+
+                            <p:column style="width: 30px">
+                                <p:button   title="choose parent" icon="fa fa-male"  outcome="items_parent">
+                                    <f:param name="id2" value="#{item.id}"/>
+                                </p:button>
+                            </p:column>
+                            
+                            <p:column style="width: 60px" rendered="#{request.isUserInRole('ADMIN')}">
+                                <p:commandButton value="#{msg.add}" rendered="#{item.user==null and request.isUserInRole('ADMIN')}"   
+                                                 title="#{msg.addAccount}"  
+                                                 actionListener="#{studentMB.createUser(item.id)}" 
+                                                 update="@form">
+                                </p:commandButton>
+                            </p:column>
+                           
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

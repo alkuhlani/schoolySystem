@@ -1,0 +1,153 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:h="http://java.sun.com/jsf/html"
+              xmlns:f="http://java.sun.com/jsf/core"
+              xmlns:ui="http://java.sun.com/jsf/facelets"
+              xmlns:p="http://primefaces.org/ui"
+              >
+
+    <ui:define name="head">
+        <style type="text/css">
+            .ui-selectoneradio.ui-grid-responsive .ui-grid-col-4,
+            .ui-selectmanycheckbox.ui-grid-responsive .ui-grid-col-4{
+                padding-bottom: 10px;
+            }
+            .ui-grid-col-4{
+                text-align: right
+            }
+            .ui-grid-col-6{
+                text-align: right
+            }
+            .ui-grid-col-2{
+                text-align: left
+            }
+
+        </style>
+    </ui:define>
+    
+    <div class="ui-g " >
+        <div class="ui-g-12">
+            <div class="card card-w-title" >
+                
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:button outcome="items"  title="back" icon="fa fa-reply" />
+                    </f:facet>
+                    <f:facet name="right">
+                    </f:facet>
+                </p:toolbar>
+                <p:focus context="panel"/>
+                <p:panelGrid id="panel" columns="2" columnClasses="ui-grid-col-4,ui-grid-col-6" 
+                             layout="grid" styleClass="ui-panelgrid-blank form-group" 
+                             style="border:0px none; background-color:transparent;direction:#{(view.locale.language eq 'en')?'ltr':'rtl'}" >
+                    
+                    <p:outputLabel for="departments" 
+                                   value="#{msg.department}"/>
+                    <p:selectOneMenu id="departments" 
+                                     value="#{classMB.item.department.id}" 
+                                     required="true"
+                                     style="text-align: center;width: 100%;
+                                     border-top: #006064;
+                                 border-radius:  10px ;border-style:  solid ">  
+                        <!--<p:ajax  update="test" />-->
+                        <f:selectItem itemLabel="#{msg.select}" 
+                                      itemValue="" noSelectionOption="true" />
+                        <f:selectItems value="#{classMB.departments}"
+                                       var="department"  
+                                       itemLabel="#{(view.locale.language eq 'en')?department.name_en:department.name_ar}" 
+                                       itemValue="#{department.id}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="level" 
+                                   value="#{msg.staticLevel}"/>
+                    <p:selectOneMenu id="level" 
+                                     value="#{classMB.item.staticLevel.id}" 
+                                     required="true"
+                                     style="text-align: center;width: 100%;
+                                     border-top: #006064;
+                                 border-radius:  10px ;border-style:  solid "> 
+                        <!--<p:ajax  update="test" />-->
+                        <f:selectItem itemLabel="#{msg.select}" 
+                                      itemValue="" noSelectionOption="true" />
+                        <f:selectItems value="#{classMB.staticLevels}"
+                                       var="level"  
+                                       itemLabel="#{(view.locale.language eq 'en')?level.name_en:level.name_ar}" 
+                                       itemValue="#{level.id}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="class_" 
+                                   value="#{msg.class}"/>
+                    <p:selectOneMenu id="class_" 
+                                     value="#{classMB.item.staticClass.id}" 
+                                     required="true"
+                                     style="text-align: center;width: 100%;
+                                     border-top: #006064;
+                                 border-radius:  10px ;border-style:  solid ">                        
+                        <f:selectItem itemLabel="#{msg.select}" 
+                                      itemValue="" noSelectionOption="true" />
+                        <f:selectItems value="#{classMB.staticClasses}"
+                                       var="class_"  
+                                       itemLabel="#{(view.locale.language eq 'en')?class_.name_en:class_.name_ar}" 
+                                       itemValue="#{class_.id}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="subClass" 
+                                   value="#{msg.subClass}"/>
+                    <p:selectOneMenu id="subClass" 
+                                     value="#{classMB.item.staticSubClass.id}" 
+                                     required="true"
+                                     style="text-align: center;width: 100%;
+                                     border-top: #006064;
+                                 border-radius:  10px ;border-style:  solid ">                        
+                        <f:selectItem itemLabel="#{msg.select}" 
+                                      itemValue="" noSelectionOption="true" />
+                        <f:selectItems value="#{classMB.staticSubClasses}"
+                                       var="subClass"  
+                                       itemLabel="#{(view.locale.language eq 'en')?subClass.name_en:subClass.name_ar}" 
+                                       itemValue="#{subClass.id}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="branch" 
+                                   value="#{msg.branch}"/>
+                    <p:selectOneMenu id="branch" 
+                                     value="#{classMB.item.branch.id}" 
+                                     required="true"
+                                     style="text-align: center;width: 100%;
+                                     border-top: #006064;
+                                 border-radius:  10px ;border-style:  solid ">                        
+                        <f:selectItem itemLabel="#{msg.select}" 
+                                      itemValue="" noSelectionOption="true" />
+                        <f:selectItems value="#{classMB.branchs}"
+                                       var="branch"  
+                                       itemLabel="#{(view.locale.language eq 'en')?branch.name_en:branch.name_ar}" 
+                                       itemValue="#{branch.id}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="noClass" 
+                                   value="#{msg.apriority}"/>
+                    <p:inputNumber id="noClass" 
+                                 value="#{classMB.item.noClass}" 
+                                 style="width: 100%;text-align: center;direction: ltr;
+                                 border-top: #006064;
+                                 border-radius:  10px ;border-style:  solid "
+                                 required="true"
+                                 minValue="0"
+                                 maxValue="999"/>
+                    <p:outputLabel for="name_ar" 
+                                   value="#{msg.class_name} - #{msg.ar}"/>
+                    <p:inputText id="name_ar" 
+                                 value="#{classMB.item.name_ar}" 
+                                 style="width: 100%;text-align: center;direction: rtl;
+                                 border-top: #006064;
+                                 border-radius:  10px ;border-style:  solid "
+                                 required="true"
+                                 />
+                    <p:outputLabel for="name_en" 
+                                   value="#{msg.class_name} - #{msg.eng}"/>
+                    <p:inputText id="name_en" 
+                                 value="#{classMB.item.name_en}" 
+                                 style="width: 100%;text-align: center;direction: ltr;
+                                 border-top: #006064;
+                                 border-radius:  10px ;border-style:  solid "
+                                 required="true"/>
+<!--                    <p:outputLabel id="test"
+                                   value="#{classMB.item.department.id} #{classMB.item.staticLevel.id}"/>-->
+                </p:panelGrid>
+            </div>
+        </div>
+    </div>
+</ui:component>

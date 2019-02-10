@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        </f:facet>
+        <title>Schooly System</title>
+        <h:outputScript name="js/ripple.js" library="barcelona-layout" />
+        <h:outputScript name="js/layout.js" library="barcelona-layout" />
+    </h:head>
+    <h:form >
+        <f:event type="preRenderComponent" rendered="#{param['id']==1}" listener="#{loginMB.logout2()}"/>
+    </h:form>
+    <h:body styleClass="login-body">
+        <h:form >
+            <div class="login-panel ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12 login-header">
+                        <h1>LOGIN</h1>
+                        <h2>Welcome to Schooly</h2>
+                        <p:graphicImage name="images/2logo-black.png" library="barcelona-layout" />
+                    </div>
+                    <div class="ui-g-12">
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="user" value="#{loginMB.username}" required="true" >
+                                <p:ajax event="keyup" process="visitorHint,type_"  update="visitorHint,type_" 
+                                        listener="#{loginMB.usernameListner}" />
+                            </p:inputText>
+                            <label>Username</label>
+                        </h:panelGroup>
+                        <p:outputLabel  id="visitorHint" value="#{msg.visitorHint}" rendered="#{loginMB.visitorHint}"/>
+                    </div>
+                    <div class="ui-g-12">
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:password  id="pass" value="#{loginMB.password}" />
+                            <label>Password</label>
+                        </h:panelGroup>
+                        
+                    </div>
+                    <div class="ui-g-12 chkbox-container">
+                        <p:selectBooleanCheckbox id="remember-me" />
+                        <p:outputLabel for="remember-me" value="Remember Me"/>
+
+                        <div class="ui-g-12 button-container">
+                            <p:commandButton ajax="false" action="#{loginMB.login()}" 
+                                             value="Login" icon="ui-icon-person" />
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <h:outputStylesheet name="css/layout-#{guestPreferences.layout}.css" library="barcelona-layout" />
+                <h:outputStylesheet name="css/ripple.css" library="barcelona-layout" />
+            </div>
+            <div class="ui-g-12"  style="text-align:center">                                
+                <p:selectOneButton  style="width:auto;color: #00796b" 
+                                    styleClass="amber-btn"
+                                    value="#{loginMB.loginType}"
+                                    id="type_">
+                    <p:ajax listener="#{loginMB.loginListner}" update="@form"/>
+                    <f:selectItem itemLabel="Admin" itemValue="1" />
+                    <f:selectItem itemLabel="Techear" itemValue="2" />
+                    <f:selectItem itemLabel="Parent" itemValue="3" />
+                    <f:selectItem itemLabel="Student" itemValue="4" />
+                </p:selectOneButton>
+            </div>
+        </h:form>
+    </h:body>
+
+</html>

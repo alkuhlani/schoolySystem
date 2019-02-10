@@ -1,0 +1,208 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:h="http://java.sun.com/jsf/html"
+              xmlns:f="http://java.sun.com/jsf/core"
+              xmlns:ui="http://java.sun.com/jsf/facelets"
+              xmlns:p="http://primefaces.org/ui"
+              >
+
+    <ui:define name="head">
+        <style type="text/css">
+            .ui-selectoneradio.ui-grid-responsive .ui-grid-col-4,
+            .ui-selectmanycheckbox.ui-grid-responsive .ui-grid-col-4{
+                padding-bottom: 10px;
+            }
+            .ui-grid-col-4{
+                text-align: right
+            }
+            .ui-grid-col-6{
+                text-align: right
+            }
+            .ui-grid-col-2{
+                text-align: left
+            }
+
+        </style>
+    </ui:define>
+
+    <div class="ui-g " >
+        <div class="ui-g-12">
+            <div class="card card-w-title" >
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:button outcome="items"  title="back" icon="fa fa-reply" />
+                    </f:facet>
+                    <f:facet name="right">
+                    </f:facet>
+                </p:toolbar>
+                <p:messages showDetail="true" autoUpdate="true" closable="true" />
+                <p:focus context="panel"/>
+                <p:panelGrid id="panel" columns="2" 
+                             columnClasses="ui-grid-col-4,ui-grid-col-6" 
+                             layout="grid" styleClass="ui-panelgrid-blank form-group" 
+                             style="border:0px none; background-color:transparent;direction:#{(view.locale.language eq 'en')?'ltr':'rtl'}" >
+                    <p:outputLabel for="term_" value="#{msg.term}"/> 
+                    <p:selectOneMenu id="term_" 
+                                     value="#{term3MarkMB.item.termWeek.id}" 
+                                     style="text-align: center;width: 100%"
+                                     disabled="#{!request.isUserInRole('ADMIN')}"
+                                     required="true">   
+                        <f:selectItem itemLabel="select" noSelectionOption="true"/>
+                        <f:selectItems value="#{term3MarkMB.termWeeks}" var="term"
+                                       itemLabel="#{term.name_en}" 
+                                       itemValue="#{term.id}" 
+                                       />
+                    </p:selectOneMenu>
+
+                    <p:outputLabel for="class_" value="#{msg.class}"
+                                   rendered="#{request.isUserInRole('ADMIN') or 
+                                               request.isUserInRole('EMPLOYEE') or 
+                                               request.isUserInRole('TEA-EMP')}"/> 
+                    <p:selectOneMenu id="class_" 
+                                     value="#{term3MarkMB.class_.id}" 
+                                     style="text-align: center;width: 100%"
+                                     required="true"
+                                     rendered="#{request.isUserInRole('ADMIN') or 
+                                                 request.isUserInRole('EMPLOYEE') or 
+                                                 request.isUserInRole('TEA-EMP')}">   
+                        <p:ajax listener="#{term3MarkMB.classListner}" update="student,subject" />
+                        <f:selectItem itemLabel="select" noSelectionOption="true"/>
+                        <f:selectItems value="#{term3MarkMB.class_s}" var="class_"
+                                       itemLabel="#{class_.name_en}" 
+                                       itemValue="#{class_.id}" />
+                    </p:selectOneMenu>
+
+                    <p:outputLabel for="subject" value="#{msg.subject}"
+                                   rendered="#{request.isUserInRole('ADMIN') or 
+                                               request.isUserInRole('EMPLOYEE') or 
+                                               request.isUserInRole('TEA-EMP')}"/>  
+                    <p:selectOneMenu  id="subject" 
+                                      value="#{term3MarkMB.item.subject_t.id}" 
+                                      style="text-align: center;width: 100%"
+                                      required="true"
+                                      rendered="#{request.isUserInRole('ADMIN') or 
+                                                  request.isUserInRole('EMPLOYEE') or 
+                                                  request.isUserInRole('TEA-EMP')}">   
+                        <f:selectItem itemLabel="select" noSelectionOption="true"/>
+                        <p:ajax listener="#{term3MarkMB.calc3}" update="markInput1,markInput2" />
+                        <f:selectItems value="#{term3MarkMB.teacherAssigns}" var="ta"
+                                       itemLabel="#{(view.locale.language eq 'en')?ta.subject_t.name_en:ta.subject_t.name_ar}"
+                                       itemValue="#{ta.subject_t.id}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="subject2" value="#{msg.subject}"
+                                   rendered="#{request.isUserInRole('TEACHER')}"/>  
+                    <p:selectOneMenu  id="subject2" 
+                                      value="#{term3MarkMB.teacherAssignId}" 
+                                      style="text-align: center;width: 100%"
+                                      required="true"
+                                      rendered="#{request.isUserInRole('TEACHER')}" >  
+                        <f:selectItem itemLabel="select" noSelectionOption="true"/>
+                        <p:ajax listener="#{term3MarkMB.studentListner}" update="student" />
+                        <f:selectItems value="#{term3MarkMB.teacherAssigns}" var="ta"
+                                       itemLabel="#{(view.locale.language eq 'en')?(ta.class_.name_en):(ta.class_.name_ar)}
+                                       - #{(view.locale.language eq 'en')?(ta.subject_t.name_en):(ta.subject_t.name_ar)}"
+                                       itemValue="#{ta.id}" />
+                    </p:selectOneMenu>
+
+                    <p:outputLabel for="student" value="#{msg.student_name}"/> 
+                    <p:selectOneMenu id="student" 
+                                     value="#{term3MarkMB.item.studentSchool.id}" 
+                                     style="text-align: center;width: 100%"
+                                     required="true">                  
+                        <f:selectItem itemLabel="select" noSelectionOption="true"/>
+                        <p:ajax listener="#{term3MarkMB.calc2}" update="markInput1,markInput2" />
+                        <f:selectItems value="#{term3MarkMB.studentSchools}" var="s"
+                                       itemLabel="#{(view.locale.language eq 'en')?s.student.name_en:s.student.name_ar}" 
+                                       itemValue="#{s.id}" />
+                    </p:selectOneMenu>
+
+                    <p:outputLabel for="mark1" value="Weekly report of mid term "
+                                   rendered="#{loginMB.user.school.systemVariables.termHalf eq '1'}"/>
+                    <h:panelGroup id="mark1" styleClass="md-inputfield"
+                                  rendered="#{loginMB.user.school.systemVariables.termHalf eq '1'}">
+                        <p:inputNumber id="markInput1" 
+                                       rendered="#{loginMB.user.school.systemVariables.termHalf eq '1'}"
+                                       value="#{term3MarkMB.item.firstHalfMark}" 
+                                       maxValue="#{loginMB.user.school.systemVariables.termTopMark.firstHalfMark}"
+                                       minValue="0.0 "
+                                       emptyValue="zero"
+                                       style="width: 100%;text-align: center"
+                                       required="true"/>
+                        <p:commandButton  actionListener="#{term3MarkMB.calcTermMarkHalf1Listner()}" value="calc" update="@form">
+                            <p:ajax listener="#{term3MarkMB.calcTermMarkHalf1Listner}" update="markInput1" />
+                        </p:commandButton>
+                    </h:panelGroup>
+                    <p:outputLabel for="exam1" value="Mid Term Exam"
+                                   rendered="#{loginMB.user.school.systemVariables.termHalf eq '1'}"/>
+                    <p:inputNumber id="exam1" 
+                                   rendered="#{loginMB.user.school.systemVariables.termHalf eq '1'}"
+                                   value="#{term3MarkMB.item.firstHalfExam}" 
+                                   maxValue="#{loginMB.user.school.systemVariables.termTopMark.firstHalfExam}"
+                                   minValue="0.0 "
+                                   emptyValue="zero"
+                                   style="width: 100%;text-align: center"
+                                   required="true"/>
+
+
+
+                    <p:outputLabel for="mark2" value="Weekly report of final term " 
+                                   rendered="#{loginMB.user.school.systemVariables.termHalf eq '2'}"/>
+                    <h:panelGroup id="mark2" styleClass="md-inputfield" 
+                                  rendered="#{loginMB.user.school.systemVariables.termHalf eq '2'}">
+                        <p:inputNumber id="markInput2" 
+                                       value="#{term3MarkMB.item.secondHalfMark}" 
+                                       maxValue="#{loginMB.user.school.systemVariables.termTopMark.secondHalfMark}"
+                                       minValue="0.0 "
+                                       emptyValue="zero"
+                                       style="width: 100%;text-align: center"
+                                       required="true"
+                                       rendered="#{loginMB.user.school.systemVariables.termHalf eq '2'}"/>
+                        <p:commandButton  actionListener="#{term3MarkMB.calcTermMarkHalf2Listner()}" value="calc" update="@form"
+                                          rendered="#{loginMB.user.school.systemVariables.termHalf eq '2'}">
+                            <p:ajax listener="#{term3MarkMB.calcTermMarkHalf2Listner}" update="markInput2" />
+                        </p:commandButton>
+                    </h:panelGroup>
+                    <p:outputLabel for="exam2" value="Final Exam"
+                                   rendered="#{loginMB.user.school.systemVariables.termHalf eq '2'}"/>
+                    <p:inputNumber id="exam2" 
+                                   value="#{term3MarkMB.item.secondHalfMark}" 
+                                   maxValue="#{loginMB.user.school.systemVariables.termTopMark.secondHalfExam}"
+                                   minValue="0.0 "
+                                   emptyValue="zero"
+                                   style="width: 100%;text-align: center"
+                                   required="true"
+                                   rendered="#{loginMB.user.school.systemVariables.termHalf eq '2'}"/>
+                    <p:outputLabel for="comments1" value="#{msg.comment}" 
+                                   rendered="#{loginMB.user.school.systemVariables.termHalf eq '1'}"/>
+                    <p:inputTextarea 
+                        rendered="#{loginMB.user.school.systemVariables.termHalf eq '1'}"
+                        required="true"
+                        rows="2" 
+                        id="comments1" 
+                        value="#{term3MarkMB.item.name1}"
+                        counter="display1" 
+                        maxlength="255" 
+                        counterTemplate="{0} حرف متبقي" 
+                        autoResize="true" 
+                        style="width: 100%;text-align:right;direction: ltr">
+                        <h:outputText id="display1" />
+                    </p:inputTextarea>
+                    <p:outputLabel for="comments2" value="#{msg.comment}" 
+                                   rendered="#{loginMB.user.school.systemVariables.termHalf eq '2'}"/>
+                    <p:inputTextarea 
+                        rendered="#{loginMB.user.school.systemVariables.termHalf eq '2'}"
+                        required="true"
+                        rows="2" 
+                        id="comments2" 
+                        value="#{term3MarkMB.item.name2}"
+                        counter="display2" 
+                        maxlength="255" 
+                        counterTemplate="{0} حرف متبقي" 
+                        autoResize="true" 
+                        style="width: 100%;text-align:right;direction: ltr">
+                        <h:outputText id="display2" />
+                    </p:inputTextarea>
+                </p:panelGrid>
+            </div>
+        </div>
+    </div>
+</ui:component>

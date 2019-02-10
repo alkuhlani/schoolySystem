@@ -1,0 +1,95 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:h="http://java.sun.com/jsf/html"
+              xmlns:f="http://java.sun.com/jsf/core"
+              xmlns:ui="http://java.sun.com/jsf/facelets"
+              xmlns:p="http://primefaces.org/ui"
+              >
+
+    <ui:define name="head">
+        <style type="text/css">
+            .ui-selectoneradio.ui-grid-responsive .ui-grid-col-4,
+            .ui-selectmanycheckbox.ui-grid-responsive .ui-grid-col-4{
+                padding-bottom: 10px;
+            }
+            .ui-grid-col-4{
+                text-align: right
+            }
+            .ui-grid-col-6{
+                text-align: right
+            }
+            .ui-grid-col-2{
+                text-align: left
+            }
+
+        </style>
+    </ui:define>
+
+    <div class="ui-g " >
+        <div class="ui-g-12">
+            <div class="card card-w-title" >
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:button outcome="items"  title="back" icon="fa fa-reply" />
+                    </f:facet>
+                    <f:facet name="right">
+                    </f:facet>
+                </p:toolbar>
+
+                <p:messages showDetail="true" autoUpdate="true" closable="true" />
+                <p:focus context="panel"/>
+                <p:panelGrid id="panel" columns="2" columnClasses="ui-grid-col-4,ui-grid-col-6" 
+                             layout="grid" styleClass="ui-panelgrid-blank form-group" 
+                             style="border:0px none; background-color:transparent;direction:#{(view.locale.language eq 'en')?'ltr':'rtl'}" >
+                    <p:outputLabel  value="exam" 
+                                    for="exam"/>
+                    <p:selectOneMenu value="#{examTableMB.item.exam.id}"
+                                     id="exam"
+                                     required="true">                                     
+                        <f:selectItem noSelectionOption="true" itemLabel="#{msg.select}"/>
+                        <f:selectItems value="#{examTableMB.exams}" var="sw"
+                                       itemValue="#{sw.id}"
+                                       itemLabel="#{(view.locale.language eq 'en')?sw.name_en:sw.name_ar}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel  value="#{msg.class}" 
+                                    for="class"/>
+                    <p:selectOneMenu value="#{examTableMB.item.class_.id}"
+                                     id="class"
+                                     required="true">
+                        <f:selectItem noSelectionOption="true" itemLabel="#{msg.select}"/>
+                        <f:selectItems value="#{examTableMB.class_s}" var="cl"
+                                       itemValue="#{cl.id}"
+                                       itemLabel="#{(view.locale.language eq 'en')?cl.name_en:cl.name_ar}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel  value="#{msg.subject}" 
+                                    for="subject"/>
+                    <p:selectOneMenu value="#{examTableMB.item.subject_t.id}"
+                                     id="subject"
+                                     required="true">
+                        <f:selectItem noSelectionOption="true" itemLabel="#{msg.select}"/>
+                        <f:selectItems value="#{examTableMB.subject_ts}" var="sub"
+                                       itemValue="#{sub.id}"
+                                       itemLabel="#{(view.locale.language eq 'en')?sub.name_en:sub.name_ar}"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel for="examDate"
+                                   value="#{msg.examDate}"/>
+                    <p:calendar id="examDate" required="true" value="#{examTableMB.item.examDate}" pattern="dd-MM-yyyy" mask="true" />
+                    <p:outputLabel for="beginTime"
+                                   value="#{msg.examTime}"/>
+                    <p:calendar id="beginTime" required="true" value="#{examTableMB.item.beginTime}" pattern="HH:mm" timeOnly="true"  />
+                    <p:outputLabel for="examTimeDuring"
+                                   value="#{msg.examDuration}"/>
+                    <p:calendar id="examTimeDuring" required="true" value="#{examTableMB.item.examTimeDuring}" pattern="HH:mm" timeOnly="true"  />
+                    
+                    <p:outputLabel for="description_ar"
+                                   value="#{msg.description}"/>
+                    <p:inputText id="description_ar" 
+                                 value="#{examTableMB.item.name}" 
+                                 style="width: 100%;text-align: center"
+                                 required="true"/>
+                    
+                </p:panelGrid>
+            </div>
+        </div>
+    </div>
+</ui:component>

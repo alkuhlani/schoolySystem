@@ -1,0 +1,159 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:h="http://java.sun.com/jsf/html"
+              xmlns:f="http://java.sun.com/jsf/core"
+              xmlns:ui="http://java.sun.com/jsf/facelets"
+              xmlns:p="http://primefaces.org/ui"
+              >
+
+    <ui:define name="head">
+        <style type="text/css">
+            .ui-selectoneradio.ui-grid-responsive .ui-grid-col-4,
+            .ui-selectmanycheckbox.ui-grid-responsive .ui-grid-col-4{
+                padding-bottom: 10px;
+            }
+            .ui-grid-col-4{
+                text-align: right
+            }
+            .ui-grid-col-6{
+                text-align: right
+            }
+            .ui-grid-col-2{
+                text-align: left
+            }
+
+        </style>
+    </ui:define>
+
+    <div class="ui-g " >
+        <div class="ui-g-12">
+            <div class="card card-w-title" >
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:button outcome="items"  title="back" icon="fa fa-reply" />
+                    </f:facet>
+                    <f:facet name="right">
+                    </f:facet>
+                </p:toolbar>
+
+                <p:messages showDetail="true" autoUpdate="true" closable="true" />
+                <p:focus context="panel"/>
+                <p:panelGrid id="panel" columns="2" columnClasses="ui-grid-col-4,ui-grid-col-6" 
+                             layout="grid" styleClass="ui-panelgrid-blank form-group" 
+                             style="border:0px none; background-color:transparent;direction:#{(view.locale.language eq 'en')?'ltr':'rtl'}" >
+
+                    <p:outputLabel  value="#{msg.type}" 
+                                    rendered="#{request.isUserInRole('ADMIN') and 
+                                                loginMB.user.school.systemVariables.termType.id eq 2}" />
+                    <p:selectOneListbox value="#{examMB.item.type}"
+                                        style="text-align: center;width: 100%"
+                                        required="true"
+                                        id="type"
+                                        rendered="#{request.isUserInRole('ADMIN') and 
+                                                    loginMB.user.school.systemVariables.termType.id eq 2}">
+                        <p:ajax listener="#{examMB.typeListner}" update="@form"/>
+                        <f:selectItem itemValue="0" itemLabel="week exam"
+                                      rendered="#{loginMB.user.school.systemVariables.termType.id == 2}"/>
+                        <f:selectItem itemValue="1" itemLabel="term week -1 exam"
+                                      rendered="#{loginMB.user.school.systemVariables.termType.id == 2}"/>
+                        <f:selectItem itemValue="2" itemLabel="term week -2 exam"
+                                      rendered="#{loginMB.user.school.systemVariables.termType.id == 2}"/>       
+                    </p:selectOneListbox>
+
+
+                    <p:outputLabel  value="#{msg.type}" 
+                                    rendered="#{request.isUserInRole('ADMIN') and 
+                                                loginMB.user.school.systemVariables.termType.id eq 1}" />
+                    <p:selectOneListbox value="#{examMB.item.type}"
+                                        style="text-align: center;width: 100%"
+                                        required="true"
+                                        id="type2"
+                                        rendered="#{request.isUserInRole('ADMIN') and 
+                                                    loginMB.user.school.systemVariables.termType.id eq 1}" >
+                        <p:ajax listener="#{examMB.typeListner}" update="@form"/>
+                        <f:selectItem itemValue="3" itemLabel="month exam"
+                                      rendered="#{loginMB.user.school.systemVariables.termType.id == '1'}"/>
+                        <f:selectItem itemValue="4" itemLabel="term month -1 exam"
+                                      rendered="#{loginMB.user.school.systemVariables.termType.id == 1}"/>
+                        <f:selectItem itemValue="5" itemLabel="term month -2 exam"
+                                      rendered="#{loginMB.user.school.systemVariables.termType.id == 1}"/>
+                    </p:selectOneListbox>
+
+
+                    <p:outputLabel  value="week" 
+                                    rendered="#{loginMB.user.school.systemVariables.termType.id == 2 
+                                                and examMB.item.type eq '0'}" 
+                                    id="week_"
+                                    for="week_2"/>
+                    <p:selectOneMenu value="#{examMB.item.schoolWeek.id}"
+                                     id="week_2"
+                                     rendered="#{loginMB.user.school.systemVariables.termType.id == 2 
+                                                 and examMB.item.type eq '0'}" 
+                                     required="true">
+                        <f:selectItem noSelectionOption="true" itemLabel="#{msg.select}"/>
+                        <f:selectItems value="#{examMB.schoolWeeks}" var="sw"
+                                       itemValue="#{sw.id}"
+                                       itemLabel="#{(view.locale.language eq 'en')?sw.name_en:sw.name_ar}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel  value="term week" 
+                                    rendered="#{loginMB.user.school.systemVariables.termType.id eq 2 
+                                                and (examMB.item.type eq '1' or examMB.item.type eq '2')}" 
+                                    id="termWeek"
+                                    for="termWeek_2"/>
+                    <p:selectOneMenu value="#{examMB.item.termWeek.id}"
+                                     id="termWeek_2"
+                                     rendered="#{loginMB.user.school.systemVariables.termType.id eq 2 
+                                                 and (examMB.item.type eq '1' or examMB.item.type eq '2')}" 
+                                     required="true">
+                        <f:selectItem noSelectionOption="true" itemLabel="#{msg.select}"/>
+                        <f:selectItems value="#{examMB.termWeeks}" var="sw"
+                                       itemValue="#{sw.id}"
+                                       itemLabel="#{(view.locale.language eq 'en')?sw.name_en:sw.name_ar}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel  value="month" 
+                                    rendered="#{loginMB.user.school.systemVariables.termType.id eq 1 
+                                                and examMB.item.type eq '3'}" 
+                                    id="month_"
+                                    for="month_2"/>
+                    <p:selectOneMenu value="#{examMB.item.schoolMonth.id}"
+                                     id="month_2"
+                                     rendered="#{loginMB.user.school.systemVariables.termType.id eq 1 
+                                                 and examMB.item.type eq '3'}" 
+                                     required="true">
+                        <f:selectItem noSelectionOption="true" itemLabel="#{msg.select}"/>
+                        <f:selectItems value="#{examMB.schoolMonths}" var="sw"
+                                       itemValue="#{sw.id}"
+                                       itemLabel="#{(view.locale.language eq 'en')?sw.name_en:sw.name_ar}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel  value="term month" 
+                                    rendered="#{loginMB.user.school.systemVariables.termType.id eq 1 
+                                                and (examMB.item.type eq '4' or examMB.item.type eq '5')}" 
+                                    id="termMonth"
+                                    for="termMonth_2"/>
+                    <p:selectOneMenu value="#{examMB.item.termMonth.id}"
+                                     id="termMonth_2"
+                                     rendered="#{loginMB.user.school.systemVariables.termType.id eq 1 
+                                                 and (examMB.item.type eq '4' or examMB.item.type eq '5')}" 
+                                     required="true">
+                        <f:selectItem noSelectionOption="true" itemLabel="#{msg.select}"/>
+                        <f:selectItems value="#{examMB.termMonths}" var="sw"
+                                       itemValue="#{sw.id}"
+                                       itemLabel="#{(view.locale.language eq 'en')?sw.name_en:sw.name_ar}"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel for="description_ar"
+                                   value="#{msg.descriptionAr}"/>
+                    <p:inputText id="description_ar" 
+                                 value="#{examMB.item.name_ar}" 
+                                 style="width: 100%;text-align: center"
+                                 required="true"/>
+                    <p:outputLabel for="description_en"
+                                   value="#{msg.descriptionEn}"/>
+                    <p:inputText id="description_en" 
+                                 value="#{examMB.item.name_en}" 
+                                 style="width: 100%;text-align: center"
+                                 required="true"/>
+                </p:panelGrid>
+            </div>
+        </div>
+    </div>
+</ui:component>

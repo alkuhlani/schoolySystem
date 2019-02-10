@@ -1,0 +1,127 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:h="http://java.sun.com/jsf/html"
+              xmlns:f="http://java.sun.com/jsf/core"
+              xmlns:ui="http://java.sun.com/jsf/facelets"
+              xmlns:p="http://primefaces.org/ui"
+              >
+
+    <ui:define name="head">
+        <style type="text/css">
+            .ui-selectoneradio.ui-grid-responsive .ui-grid-col-4,
+            .ui-selectmanycheckbox.ui-grid-responsive .ui-grid-col-4{
+                padding-bottom: 10px;
+            }
+            .ui-grid-col-4{
+                text-align: right
+            }
+            .ui-grid-col-6{
+                text-align: right
+            }
+            .ui-grid-col-2{
+                text-align: left
+            }
+
+        </style>
+    </ui:define>
+
+    <div class="ui-g " >
+        <div class="ui-g-12">
+            <div class="card card-w-title" >
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:button outcome="items"  title="back" icon="fa fa-reply" />
+                    </f:facet>
+                    <f:facet name="right">
+                    </f:facet>
+                </p:toolbar>
+                <!--                <p:panelGrid styleClass="nba-grid"  class="ui-g-12" >
+                                    <p:row style="width: 100%" styleClass="ui-widget-header">
+                                        <p:column  styleClass="ui-widget-header" style="text-align: left" >
+                                            <h:link title="back" outcome="items" value="" style="text-align: left">
+                                                <i class="fa fa-reply" style="size: 20px;color: #ffffff;font-size:larger ;float: left;padding-right: 5px;" />
+                                            </h:link> 
+                                        </p:column>
+                                    </p:row>
+                                </p:panelGrid>-->
+                <p:messages showDetail="true" autoUpdate="true" closable="true" />
+                <p:panelGrid id="panel" columns="1" columnClasses="ui-grid-col-12"  
+                             style="border:0px none; background-color:transparent;direction:#{(view.locale.language eq 'en')?'ltr':'rtl'}" >
+                    <p:dataTable var="item" 
+                                 value="#{studentParentMB.students}" 
+                                 selection="#{studentParentMB.student}" 
+                                 rowKey="#{item.id}"
+                                 rowsPerPageTemplate="5,10,15"
+                                 rows="5"
+                                 paginator="true" 
+                                 resizableColumns="true"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 dir="#{(view.locale.language eq 'en')?'ltr':'rtl'}">
+                        <f:facet name="header">
+
+                            #{msg.select} #{msg.student}
+                        </f:facet>
+                        <p:column selectionMode="single" style="width:16px;text-align:center"/>
+                        <p:column  headerText="#{msg.student_name}" filterBy="#{(view.locale.language eq 'en')?item.name_en:item.name_ar}" style="text-align: center">
+                            <h:outputText value="#{(view.locale.language eq 'en')?item.name_en:item.name_ar}"/>
+                        </p:column>                                        
+                        <p:column  headerText="#{msg.studentId}" filterBy="#{item.studentID}" 
+                                   style="text-align: center">
+                            <h:outputText value="#{item.studentID}"/>
+                        </p:column> 
+                        <p:column  headerText="#{msg.phonenumber}" filterBy="#{item.phone1}" 
+                                   style="text-align: center">
+                            <h:outputText value="#{item.phone1}"/>
+                        </p:column>     
+                    </p:dataTable>
+                    <p:dataTable var="item" 
+                                 value="#{studentParentMB.parents}"  
+                                 selection="#{studentParentMB.parent}" 
+                                 rowKey="#{item.id}"
+                                 rowsPerPageTemplate="5,10,15"
+                                 rows="5"
+                                 paginator="true" 
+                                 resizableColumns="true"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 dir="#{(view.locale.language eq 'en')?'ltr':'rtl'}"
+                                 >
+                        <f:facet name="header">
+
+                            #{msg.select} #{msg.Parents}
+                        </f:facet>
+                        <p:column selectionMode="single" style="width:16px;text-align:center" />
+                        <p:column  headerText="ID" filterBy="#{item.parentID}" style="text-align: center">
+                            <h:outputText value="#{item.parentID}"/>
+                        </p:column>    
+                        <p:column  headerText="#{msg.name}" filterBy="#{(view.locale.language eq 'en')?item.name_en:item.name_ar}" style="text-align: center">
+                            <h:outputText value="#{(view.locale.language eq 'en')?item.name_en:item.name_ar}"/>
+                        </p:column>                
+                        <p:column  headerText="#{msg.phonenumber} 1" filterBy="#{item.phone1}" style="text-align: center">
+                            <h:outputText value="#{item.phone1}"/>
+                        </p:column>                
+                        <p:column  headerText="#{msg.phonenumber} 2" filterBy="#{item.phone2}" style="text-align: center">
+                            <h:outputText value="#{item.phone2}"/>
+                        </p:column>     
+                    </p:dataTable>
+                    <p:outputLabel for="types" 
+                                   value="#{msg.type}"/>
+                    <p:selectOneMenu id="types" 
+                                     value="#{studentParentMB.item.type}"                                       
+                                     style="text-align: center;direction: ltr;
+                                     border-top: #006064;
+                                     border-radius:  10px ;border-style:  solid "
+                                     required="true">
+                        <f:selectItem itemLabel="#{msg.select}" 
+                                      itemValue="" noSelectionOption="true" />
+                        <f:selectItem itemLabel="#{msg.father}" 
+                                      itemValue="0"  />
+                        <f:selectItem itemLabel="#{msg.mother}" 
+                                      itemValue="1"  />
+                        <f:selectItem itemLabel="#{msg.other}" 
+                                      itemValue="2"  />
+                        
+                    </p:selectOneMenu>
+                </p:panelGrid>
+            </div>
+        </div>
+    </div>
+</ui:component>

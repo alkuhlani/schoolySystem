@@ -1,0 +1,166 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:h="http://java.sun.com/jsf/html"
+              xmlns:f="http://java.sun.com/jsf/core"
+              xmlns:ui="http://java.sun.com/jsf/facelets"
+              xmlns:p="http://primefaces.org/ui"
+              >
+
+    <ui:define name="head">
+        <style type="text/css">
+            .ui-selectoneradio.ui-grid-responsive .ui-grid-col-4,
+            .ui-selectmanycheckbox.ui-grid-responsive .ui-grid-col-4{
+                padding-bottom: 10px;
+            }
+            .ui-grid-col-4{
+                text-align: right
+            }
+            .ui-grid-col-6{
+                text-align: right
+            }
+            .ui-grid-col-2{
+                text-align: left
+            }
+
+        </style>
+    </ui:define>
+
+    <div class="ui-g " >
+        <div class="ui-g-12">
+            <div class="card card-w-title" >
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:button outcome="items"  title="back" icon="fa fa-reply" />
+                    </f:facet>
+                    <f:facet name="right">
+                    </f:facet>
+                </p:toolbar>    
+                <p:messages showDetail="true" autoUpdate="true" closable="true" />
+                <p:focus context="panel"/>
+                <p:growl id="msg" />
+                <p:panelGrid id="panel" columns="2" 
+                             columnClasses="ui-grid-col-4,ui-grid-col-6" 
+                             layout="grid" styleClass="ui-panelgrid-blank form-group" 
+                             style="border:0px none; background-color:transparent;direction: ltr" >
+                    <p:outputLabel for="name_ar" value="#{msg.arName}"/>
+                    <p:inputText id="name_ar" value="#{studentSchoolMB.student.name_ar}" 
+                                 style="width: 100%;text-align: center;direction: rtl;
+                                 border-top: #006064;
+                                 border-radius:  10px ;border-style:  solid "
+                                 required="true"/>
+                    <p:outputLabel for="name_en" value="#{msg.engName}"/>
+                    <p:inputText id="name_en" value="#{studentSchoolMB.student.name_en}" 
+                                 style="width: 100%;text-align: center;direction: ltr;
+                                 border-top: #006064;
+                                 border-radius:  10px ;border-style:  solid "
+                                 required="true"/>
+                    <p:outputLabel for="email" value="email"/>
+                    <p:inputText id="email" value="#{studentSchoolMB.student.email}" 
+                                 style="width: 100%;text-align: center;direction: ltr;
+                                 border-top: #006064;
+                                 border-radius:  10px ;border-style:  solid "
+                                 required="true">
+                        <p:keyFilter regEx="/[a-z0-9_\.\-@]/i"/>
+                    </p:inputText>
+                    <p:outputLabel for="address" value="#{msg.address}"/>
+                    <p:inputText id="address" value="#{studentSchoolMB.student.address}" 
+                                 style="width: 100%;text-align: center;direction: ltr;
+                                 border-top: #006064;
+                                 border-radius:  10px ;border-style:  solid "
+                                 required="true"/>
+                    <p:outputLabel for="birthDate" value="#{msg.birthDate}"/>
+                    <p:calendar id="birthDate" required="true" 
+                                value="#{studentSchoolMB.student.birthDate}" 
+                                pattern="dd-MM-yyyy" mask="true" />
+                    <p:outputLabel for="gender" value="#{msg.gender}"/>
+                    <p:selectOneRadio id="gender" 
+                                      required="true"
+                                      value="#{studentSchoolMB.student.gender}">
+                        <f:selectItem itemLabel="#{msg.boy}" 
+                                      itemValue="true" />
+                        <f:selectItem itemLabel="#{msg.girle}" 
+                                      itemValue="false" />
+                    </p:selectOneRadio>
+                    <p:outputLabel for="class" 
+                                   value="#{msg.class}"/>
+                    <p:selectOneMenu id="class" 
+                                     value="#{studentSchoolMB.item.class_.id}"                                       
+                                     style="width: 100%;text-align: center;direction: ltr;
+                                     border-top: #006064;
+                                     border-radius:  10px ;border-style:  solid "
+                                     required="true">
+                        <f:selectItem itemLabel="#{msg.select}" noSelectionOption="true"/>
+                        <f:selectItems value="#{studentSchoolMB.class_s}"
+                                       var="item"  
+                                       itemLabel="#{(view.locale.language eq 'en')?item.name_en:item.name_ar} - #{(view.locale.language eq 'en')?item.department.name_en:item.department.name_ar}" 
+                                       itemValue="#{item.id}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="phone" value="#{msg.phonenumber}"/>
+                    <p:inputText id="phone" value="#{studentSchoolMB.student.phone1}" 
+                                 style="width: 100%;text-align: center;direction: ltr;
+                                 border-top: #006064;
+                                 border-radius:  10px ;border-style:  solid "
+                                 required="true">
+                        <p:keyFilter regEx="/[\d\-]/"/>
+                    </p:inputText>
+                    <h:panelGroup >
+                        <p:outputLabel  value="#{msg.Parents}  :" />
+                        <p:commandButton value="new" actionListener="#{studentSchoolMB.prepareCreateNewParent}" 
+                                         update="@form"/>
+                    </h:panelGroup>
+                    <h:panelGroup  id="parentPanel" rendered="#{studentSchoolMB.newParent}">
+                        <p:panelGrid  columns="2" 
+                                      columnClasses="ui-grid-col-4,ui-grid-col-8" 
+                                      layout="grid" styleClass="ui-panelgrid-blank form-group" 
+                                      style="border:0px none; background-color:transparent;direction: ltr" >
+
+                            <p:outputLabel for="p_name_ar" value="#{msg.arName}"/>
+                            <p:inputText id="p_name_ar" value="#{studentSchoolMB.parent.name_ar}" 
+                                         style="width: 100%;text-align: center;direction: rtl;
+                                         border-top: #006064;
+                                         border-radius:  10px ;border-style:  solid "
+                                         required="true"/>
+                            <p:outputLabel for="p_name_en" value="#{msg.engName}"/>
+                            <p:inputText id="p_name_en" value="#{studentSchoolMB.parent.name_en}" 
+                                         style="width: 100%;text-align: center;direction: ltr;
+                                         border-top: #006064;
+                                         border-radius:  10px ;border-style:  solid "
+                                         required="true"/>
+                            <p:outputLabel for="p_email" value="#{msg.email}"/>
+                            <p:inputText id="p_email" value="#{studentSchoolMB.parent.email}" 
+                                         style="width: 100%;text-align: center;direction: ltr;
+                                         border-top: #006064;
+                                         border-radius:  10px ;border-style:  solid "
+                                         required="true">
+                                <p:keyFilter regEx="/[a-z0-9_\.\-@]/i"/>
+                            </p:inputText>
+
+                            <p:outputLabel for="p_phone1" value="#{msg.phonenumber} 1"/>
+                            <p:inputText id="p_phone1" value="#{studentSchoolMB.parent.phone1}" 
+                                         style="width: 100%;text-align: center;direction: ltr;
+                                         border-top: #006064;
+                                         border-radius:  10px ;border-style:  solid "
+                                         required="true"
+                                         maxlength="9">
+                                <p:keyFilter regEx="/[\d\-]/"/>
+                            </p:inputText>
+                            <p:outputLabel for="p_phone2" value="#{msg.phonenumber} 2"/>
+                            <p:inputText id="p_phone2" value="#{studentSchoolMB.parent.phone2}" 
+                                         style="width: 100%;text-align: center;direction: ltr;
+                                         border-top: #006064;
+                                         border-radius:  10px ;border-style:  solid "
+                                         required="true"
+                                         maxlength="9">
+                                <p:keyFilter regEx="/[\d\-]/"/>
+                            </p:inputText>
+
+                        </p:panelGrid>
+                    </h:panelGroup>
+
+                </p:panelGrid>
+
+
+
+            </div>
+        </div>
+    </div>
+</ui:component>

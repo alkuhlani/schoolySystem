@@ -1,0 +1,97 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:h="http://java.sun.com/jsf/html"
+              xmlns:f="http://java.sun.com/jsf/core"
+              xmlns:ui="http://java.sun.com/jsf/facelets"
+              xmlns:p="http://primefaces.org/ui"
+              >
+
+    <ui:define name="head">
+        <style type="text/css">
+            .ui-selectoneradio.ui-grid-responsive .ui-grid-col-4,
+            .ui-selectmanycheckbox.ui-grid-responsive .ui-grid-col-4{
+                padding-bottom: 10px;
+            }
+            .ui-grid-col-4{
+                text-align: right
+            }
+            .ui-grid-col-6{
+                text-align: right
+            }
+            .ui-grid-col-2{
+                text-align: left
+            }
+
+        </style>
+    </ui:define>
+
+    <div class="ui-g " >
+        <div class="ui-g-12">
+            <div class="card card-w-title" >
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:button outcome="items"  title="back" icon="fa fa-reply" />
+                    </f:facet>
+                    <f:facet name="right">
+                    </f:facet>
+                </p:toolbar>
+
+                <p:messages showDetail="true" autoUpdate="true" closable="true" />
+                <p:focus context="panel"/>
+                <p:panelGrid id="panel" columns="2" columnClasses="ui-grid-col-4,ui-grid-col-6" 
+                             layout="grid" styleClass="ui-panelgrid-blank form-group" 
+                             style="border:0px none; background-color:transparent;
+                             direction:#{(view.locale.language eq 'en')?'ltr':'rtl'}" >
+                    <p:outputLabel  value="#{msg.type}"/>
+                    <p:selectOneListbox value="#{activityMB.item.type}"
+                                        style="text-align: center;width: 100%"
+                                        required="true"
+                                        id="type">
+                        <f:selectItem itemValue="0" itemLabel="#{msg.albumImage}"/>
+                        <f:selectItem itemValue="1" itemLabel="#{msg.activity}"/>
+                        <f:selectItem itemValue="2" itemLabel="#{msg.studyDescision}"/>
+                    </p:selectOneListbox>
+                    <p:outputLabel for="title"
+                                   value="#{msg.title}"/>
+                    <p:inputText id="title" 
+                                 value="#{activityMB.item.title}" 
+                                 required="true"
+                                 style="width: 100%;text-align: center"/>
+                    <p:outputLabel for="description"
+                                   value="#{msg.description}"/>
+                    <p:inputTextarea id="description" rows="2" counter="display2" maxlength="255"        
+                                     autoResize="true" 
+                                     value="#{activityMB.item.name}" 
+                                     required="true" 
+                                     style="width: 100%;text-align: center;direction: rtl">
+                        <h:outputText id="display2" />
+                    </p:inputTextarea>
+                    <p:outputLabel  value="#{msg.seenType}"/>
+                    <p:selectOneListbox value="#{activityMB.item.seenType}"
+                                        style="text-align: center;width: 100%"
+                                        required="true"
+                                        id="seenType">
+                        <f:selectItem itemValue="0" itemLabel="#{msg.allAndVisitor}"/>
+                        <f:selectItem itemValue="1" itemLabel="#{msg.all}"/>
+                        <f:selectItem itemValue="2" itemLabel="#{msg.employeeOnly}"/>
+                        <f:selectItem itemValue="3" itemLabel="#{msg.studentOnly}"/>
+                        <f:selectItem itemValue="4" itemLabel="#{msg.parentOnly}"/>
+                    </p:selectOneListbox>
+                    <p:outputLabel value="#{msg.uploadImage}" style="text-align: right"/>
+                    <p:fileUpload value="#{activityMB.file}" mode="advanced" sizeLimit="5242880" 
+                                  fileUploadListener="#{activityMB.fileUploadListener}" >
+                    </p:fileUpload>
+
+                    <p:outputLabel for="priorityNo"
+                                   value="#{msg.apriority}"/>
+                    <p:inputNumber id="priorityNo" 
+                                   value="#{activityMB.item.priorityNo}" 
+                                   required="true"
+                                   style="width: 100%;text-align: center"/>
+                    <p:outputLabel for="isActive" value="#{msg.isActive}"/>
+                    <p:selectBooleanCheckbox id="isActive" required="true" value="#{activityMB.item.isActive}"/>
+
+                </p:panelGrid>
+            </div>
+        </div>
+    </div>
+</ui:component>

@@ -1,0 +1,136 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:h="http://java.sun.com/jsf/html"
+              xmlns:f="http://java.sun.com/jsf/core"
+              xmlns:ui="http://java.sun.com/jsf/facelets"
+              xmlns:p="http://primefaces.org/ui"
+              >
+
+    <ui:define name="head">
+        <style type="text/css">
+            .ui-selectoneradio.ui-grid-responsive .ui-grid-col-4,
+            .ui-selectmanycheckbox.ui-grid-responsive .ui-grid-col-4{
+                padding-bottom: 10px;
+            }
+            .ui-grid-col-4{
+                text-align: right
+            }
+            .ui-grid-col-6{
+                text-align: right
+            }
+            .ui-grid-col-2{
+                text-align: left
+            }
+
+        </style>
+    </ui:define>
+
+    <div class="ui-g " >
+        <div class="ui-g-12">
+            <div class="card card-w-title" >
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:button outcome="items"  title="back" icon="fa fa-reply" />
+                    </f:facet>
+                    <f:facet name="right">
+                    </f:facet>
+                </p:toolbar>
+
+                <p:messages showDetail="true" autoUpdate="true" closable="true" />
+                <p:focus context="panel"/>
+                <p:panelGrid id="panel" columns="2" 
+                             columnClasses="ui-grid-col-4,ui-grid-col-6" 
+                             layout="grid" styleClass="ui-panelgrid-blank form-group" 
+                             style="border:0px none; background-color:transparent;direction:#{(view.locale.language eq 'en')?'ltr':'rtl'}" 
+                             >
+                    
+                   
+                    
+                    <p:outputLabel for="termMonth" value="#{msg.term_name}"/> 
+                    <p:selectOneMenu id="termMonth" 
+                                     value="#{monthMarkMB.termMonth.id}" 
+                                     style="text-align: center;width: 100%"
+                                     required="true">   
+                        <p:ajax listener="#{monthMarkMB.weekListener}" update="schoolMonth" />
+                        <f:selectItem itemLabel="#{msg.select}" noSelectionOption="true"/>
+                        <f:selectItems value="#{monthMarkMB.termMonths}" var="term"
+                                       itemLabel="#{term.name_en}" 
+                                       itemValue="#{term.id}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="schoolMonth" value="#{msg.monthName}"/> 
+                    <p:selectOneMenu id="schoolMonth" 
+                                     value="#{monthMarkMB.item.schoolMonth.id}" 
+                                     style="text-align: center;width: 100%"
+                                     required="true">  
+                        <f:selectItem itemLabel="#{msg.select}" noSelectionOption="true"/>
+                        <f:selectItems value="#{monthMarkMB.schoolMonths}" var="week"
+                                       itemLabel="#{week.name_en}" 
+                                       itemValue="#{week.id}" />
+                    </p:selectOneMenu>
+                    
+                    <p:outputLabel for="teacherAssign" value="#{msg.teacher}"/> 
+                    <p:selectOneMenu  id="teacherAssign" 
+                                     value="#{monthMarkMB.item.teacherAssign.id}" 
+                                     style="text-align: center;width: 100%"
+                                     required="true">      
+                        <p:ajax listener="#{monthMarkMB.studentListener}" update="student" />
+                        <f:selectItem itemLabel="#{msg.select}" noSelectionOption="true"/>
+                        <f:selectItems value="#{monthMarkMB.teacherAssigns}" var="ta"
+                                       itemLabel="#{(view.locale.language eq 'en')?ta.class_.name_en:ta.class_.name_ar} - 
+                                       #{(view.locale.language eq 'en')?ta.subject_t.name_en:ta.subject_t.name_ar} - 
+                                       #{(view.locale.language eq 'en')?ta.teacher.name_en:ta.teacher.name_ar}" 
+                                       itemValue="#{ta.id}" />
+                    </p:selectOneMenu>
+                     
+                    <p:outputLabel for="student" value="#{msg.student_name}"/> 
+                    <p:selectOneMenu id="student" 
+                                     value="#{monthMarkMB.item.studentSchool.id}" 
+                                     style="text-align: center;width: 100%"
+                                     required="true">                        
+                        <f:selectItems value="#{monthMarkMB.studentSchools}" var="s"
+                                       itemLabel="#{(view.locale.language eq 'en')?s.student.name_en:s.student.name_ar}"                                       
+                                       itemValue="#{s.id}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="quize" value="#{msg.quizeMark}"/>
+                    <p:inputNumber id="quize" 
+                                   value="#{monthMarkMB.item.writing}" 
+                                   maxValue="#{loginMB.user.school.systemVariables.monthTopMark.writing}"
+                                   minValue="0.0 "
+                                   emptyValue="zero"
+                                   style="width: 100%;text-align: center"
+                                   required="true"/>
+                    <p:outputLabel for="hw" value="#{msg.hwMark}"/>
+                    <p:inputNumber id="hw" 
+                                   value="#{monthMarkMB.item.hw}" 
+                                   maxValue="#{loginMB.user.school.systemVariables.monthTopMark.hw}"
+                                   minValue="0.0 "
+                                   emptyValue="zero"
+                                   style="width: 100%;text-align: center"
+                                   required="true"/>
+                    <p:outputLabel for="oral" value="#{msg.oralMark}"/>
+                    <p:inputNumber id="oral" 
+                                   value="#{monthMarkMB.item.reading}" 
+                                   maxValue="#{loginMB.user.school.systemVariables.monthTopMark.reading}"
+                                   minValue="0.0 "
+                                   emptyValue="zero"
+                                   required="true"
+                                   style="width: 100%;text-align: center"/>
+                    <p:outputLabel for="behavior" value="#{msg.BehaviorMark}"/>
+                    <h:panelGroup id="behavior" styleClass="md-inputfield">
+                        <p:inputNumber id="behaviorM" 
+                                       value="#{monthMarkMB.item.behavior}" 
+                                       maxValue="#{loginMB.user.school.systemVariables.monthTopMark.behavior}"
+                                   minValue="0.0 "
+                                   emptyValue="zero"
+                                   style="width: 100%;text-align: center"
+                                   required="true" />
+                        <p:commandButton  actionListener="#{monthMarkMB.calcAttendance()}" value="clac">
+                            <p:ajax listener="#{monthMarkMB.calcAttendance}" update="behaviorM" />
+                        </p:commandButton>
+                    </h:panelGroup>
+                    
+                    
+                </p:panelGrid>
+            </div>
+        </div>
+    </div>
+</ui:component>

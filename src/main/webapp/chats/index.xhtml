@@ -1,0 +1,123 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Dashboard</ui:define>
+
+    <ui:define name="head">
+        <script type="text/javascript">
+            //<![CDATA[
+            function skinBar() {
+                this.cfg.shadow = false;
+                this.cfg.title = '';
+                this.cfg.seriesColors = ['#64B5F6', '#FFD54F'];
+                this.cfg.grid = {
+                    background: '#ffffff',
+                    borderColor: '#ffffff',
+                    gridLineColor: '#F5F5F5',
+                    shadow: false
+                };
+                this.cfg.axesDefaults = {
+                    borderWidth: 0.1,
+                    borderColor: 'bdbdbd',
+                    rendererOptions: {
+                        textColor: '#666F77'
+                    }
+                };
+                this.cfg.seriesDefaults = {
+                    shadow: false,
+                    lineWidth: 1,
+                    renderer: $.jqplot.BarRenderer,
+                    markerOptions: {
+                        shadow: false,
+                        size: 7,
+                        style: 'circle'
+                    }
+                }
+            }
+            //]]>  
+        </script>
+        <style type="text/css">
+            .main-content {
+                padding: 0;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="content">
+        <f:event type="preRenderComponent" listener="#{messagingMB.prepareItems()}"/>    
+        <h:form id="form">
+             <p:focus context="panel"/>
+            <div class="ui-g dashboard">            
+
+                <div class="card card-w-title">
+                    <div class="ui-g-12 ui-md-3">
+                        <p:dataTable value="#{messagingMB.teachers}" var="t" 
+                                     dir="#{(view.locale.language eq 'en')?'ltr':'rtl'}">
+                            <f:facet name="header">
+                                #{msg.teacher_list}
+                            </f:facet>
+
+
+                            <p:column filterBy="#{(view.locale.language eq 'en')?t.name_en:t.name_ar}">
+                                <p:commandLink  value="#{(view.locale.language eq 'en')?t.name_en:t.name_ar}"  
+                                                update="@form" actionListener="#{messagingMB.viewChat(t.user.id)}" />
+                            </p:column>
+                        </p:dataTable >
+
+                    </div>
+                    <div class="ui-g-12 ui-lg-9  chat">
+                        <p:panel id="panel" header="Chat" styleClass="ui-shadow-content">
+
+                            <div class="new-message">
+                                <p:dataScroller value="#{messagingMB.items}" var="item" 
+                                                chunkSize="5"
+                                                mode="inline" scrollHeight="400" 
+                                                style="width: border-box">
+
+                                    <f:facet name="loader">
+                                        <p:commandButton type="button" value="More" 
+                                                         icon="ui-icon-circle-triangle-s"
+                                                         rendered="#{messagingMB.items.size()>=1}"/>
+                                    </f:facet>
+
+
+                                    <li class="clearfix #{(item.users1.id eq loginMB.user.id)?'message-from':'message-own'}" >
+                                        <p:graphicImage value="/resources/schools/#{loginMB.user.school.id}/users/#{(item.users1.id eq loginMB.user.id)?loginMB.user.imagePath:item.users1.imagePath}" 
+                                                        library="barcelona-layout" />
+                                        <span >#{item.text} <a style="padding-left: 10px">#{item.send_date.hours}:#{item.send_date.minutes}</a></span>
+                                    </li>
+
+
+
+
+                                </p:dataScroller>
+
+                                <div class="message-attachment">
+                                    <p:commandLink
+                                        actionListener="#{messagingMB.sendMessage()}" 
+                                        update="@form" 
+                                        rendererType="preRenderComponent"
+                                        rendered="#{messagingMB.reciverId>=1}"
+                                        >
+                                         <i class="fa fa-send" style="size: 20px;color: #0D47A1" />
+                                    </p:commandLink>
+                                </div>
+                                <div class="message-input">
+                                    <p:inputTextarea  style="width: 100%" rows="1" autoResize="true" value="#{messagingMB.item.text}"  maxlength="255" placeholder="Write a message" />
+                                </div>
+
+                            </div>
+
+                        </p:panel>
+                    </div>
+
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

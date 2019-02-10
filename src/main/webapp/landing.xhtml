@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        </f:facet>
+        <title>Schooly</title>
+        <script type="text/javascript">
+            $(function () {
+                var menu = $('#menu');
+
+                $('#menu-button').on('click', function (e) {
+                    if (menu.hasClass('lmenu-active')) {
+                        menu.addClass('fadeOutUp');
+
+                        setTimeout(function () {
+                            menu.removeClass('fadeOutUp fadeInDown lmenu-active');
+                        }, 500);
+                    } else {
+                        menu.addClass('lmenu-active fadeInDown');
+                    }
+                    e.preventDefault();
+                });
+
+                menu.find('a').on('click', function () {
+                    menu.removeClass('fadeOutUp fadeInDown lmenu-active');
+                });
+            });
+        </script>
+        <!--listen2myradio.com SHOUTcast Flash Player-->
+        <!--        <p id='preview'></p>
+                <script id='myscript' language='javascript' 
+                src='http://flashplayer.listen2myradio.com/getInfo.js?id=13919527f4d4a0276e9336046ea40b9f128f'></script>-->
+        <!--End Player-->
+
+    </h:head>
+
+
+    <h:body styleClass="landing-body">
+        <h:form >
+            <f:event type="preRenderComponent" listener="#{activityMB.prepareItems()}"/> 
+
+            <div id="home" class="landing-wrapper">
+                <div id="header">
+                    <div class="pre-header">
+                        <div class="pre-header-content">
+                            <h:link outcome="/index">
+                                <p:graphicImage name="images/2logo-black.png" library="barcelona-layout" styleClass="landing-logo"/>
+                            </h:link>
+                            <!--<p:graphicImage name="images/logo-text.svg" library="barcelona-layout" />-->
+
+                            <a id="menu-button" href="#">
+                                <span class="fa fa-bars"></span>
+                            </a>
+
+                            <ul id="menu" class="animated">
+                                <li>
+                                    <a href="#home">HOME</a>
+                                </li>
+                                <li>
+                                    <a href="#features">DECISIONS</a>
+                                </li>
+                                <li>
+                                    <a href="#showcase2">ACTIVITIES</a>
+                                </li>
+                                <li>
+                                    <a href="#showcase">IMAGES</a>
+                                </li>
+                                
+<!--                                <li>
+                                    <a href="#pricing">PRICING</a>
+                                </li>-->
+                                <li>
+                                    <a href="#video">VIDEO</a>
+                                </li>
+                                <li>
+
+                                    <p:button outcome="index" value="SYSTEM"/>
+                                    <!--<a href="http://localhost:8080/schooly-1.0/faces/login.xhtml">LOGIN</a>-->
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="header-content" >
+
+                        <h1>WELCOME IN </h1>
+                        <h2>#{loginMB.user.school.name_en.toUpperCase()}</h2>
+                        <!--<p:commandButton type="button" value="LEARN MORE" styleClass="secondary" />-->
+                    </div>
+                </div>
+
+
+
+                <div id="features">
+                    <div class="features-content">
+                        <h2>DECISIONS</h2>
+                        <div class="ui-g " >
+                            <div class="ui-g-12">
+                                <div class="card card-w-title" >
+
+                                    <p:dataList value="#{activityMB.descision}" var="car" 
+                                                type="unordered" itemType="none" paginator="true" rows="7" 
+                                                styleClass="cars-datalist">
+                                        <f:facet name="header">
+
+                                        </f:facet>
+                                        <div style="border-bottom: 1px solid #d8d8d8" class="clearfix car-item">
+                                            <div class="car-details">
+                                                <p style="float: right">#{car.title}</p>
+                                                <p style="float: right">  #{car.name} : </p>
+                                                <p style="color:#757575;float: left">#{car.creation_date}</p>
+                                            </div>
+
+                                        </div>
+                                    </p:dataList>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="showcase2" class="showcase">
+                    <div class="showcase-header">
+                        <div class="ui-g " >
+                            <div class="ui-g-12">
+                                <div class="card card-w-title" >
+                                    <p:carousel value="#{activityMB.activities}" 
+                                                headerText="Activities" 
+                                                var="image" 
+                                                itemStyle="text-align:center" 
+                                                responsive="true"
+                                                autoPlayInterval="10000"
+                                                breakpoint="50000"
+                                                effectDuration="100"
+                                                >
+                                        <p:graphicImage height="500px" width="100%"
+                                                        value="/resources/schools/#{loginMB.user.school.id}/activity/#{image.imagePath}"
+                                                        styleClass="content" />
+                                        <div class="caption" style="color: #000000"><p>#{image.title} : #{image.name} .</p><a> #{image.creation_date}</a></div>
+                                    </p:carousel>
+<!--                                    <p:galleria value="#{activityMB.items}"  var="image" widgetVar="10000"
+                                                showCaption="true" autoPlay="true"
+                                                style="text-align: center;background: black" >
+                                        <p:graphicImage width="100%" height="100%" 
+                                                        value="/resources/schools/#{loginMB.user.school.id}/activity/#{image.imagePath}" 
+                                                        alt="#{image.name_en}" 
+                                                        title="#{image.title_en}"
+                                                        style="background: black;float: left"/>
+                                    </p:galleria>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="showcase">
+                    <div class="showcase-header">
+                        <div class="ui-g " >
+                            <div class="ui-g-12">
+                                <div class="card card-w-title" >
+                                    <p:carousel value="#{activityMB.albumImages}" 
+                                                headerText="Album Images" 
+                                                var="image" 
+                                                itemStyle="text-align:center" 
+                                                responsive="true"
+                                                autoPlayInterval="5000"
+                                                breakpoint="10000"
+                                                effectDuration="500"
+                                                >
+                                        <p:graphicImage height="500px" width="100%"
+                                                        value="/resources/schools/#{loginMB.user.school.id}/activity/#{image.imagePath}"
+                                                        styleClass="content" />
+                                        <div class="caption" style="color: #000000">#{image.title}</div>
+                                    </p:carousel>
+<!--                                    <p:contentFlow value="#{activityMB.items}" var="image">
+                                        <p:graphicImage height="500px" width="10000px"
+                                                        value="/resources/schools/#{loginMB.user.school.id}/activity/#{image.imagePath}"
+                                                        styleClass="content" />
+                                        <div class="caption" style="color: #000000">#{image.title_en}</div>
+                                    </p:contentFlow>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div id="video">
+                    <div class="video-content">
+                        <h2>VIDEO</h2>
+                        <div class="video-container">
+                            <iframe width="560" 
+                                    height="315" 
+                                    src="https://www.youtube.com/embed/m_qmxALpSB4" 
+                                    frameborder="0" 
+                                    allowfullscreen="allowfullscreen">
+                            </iframe>
+                        </div>
+                    </div>
+                </div>
+                <div id="footer">
+                    <div class="footer-content clearfix">
+                        <div class="footer-left">
+                            <p:graphicImage name="images/2logo-black.png" 
+                                            library="barcelona-layout" 
+                                            styleClass="landing-logo"/>
+                            <div>#{loginMB.user.school.name_en}</div>
+                        </div>
+<!--                        <div class="footer-right">
+                            <a href="#"><i class="fa fa-twitter" /></a>
+                            <a href="#"><i class="fa fa-facebook" /></a>
+                            <a href="#"><i class="fa fa-github" /></a>
+                        </div>-->
+                    </div>
+                </div>
+            </div>
+            <h:outputStylesheet name="css/animate.css" library="barcelona-layout" />
+            <h:outputStylesheet name="css/layout-#{guestPreferences.layout}.css" library="barcelona-layout" />
+        </h:form>
+
+    </h:body>
+
+</html>

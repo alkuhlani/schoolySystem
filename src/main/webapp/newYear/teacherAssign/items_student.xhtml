@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/WEB-INF/template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="title">
+        Schooly System
+    </ui:define>
+
+    <ui:define name="head">
+        <!--head-->
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form>
+            <div class="ui-g" >
+                <f:event type="preRenderComponent" listener="#{studentSchoolMB.prepareItems(param['id'])}"/>      
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <!--<h1></h1>-->
+                        <p:dataTable var="item" value="#{studentSchoolMB.items}"  reflow="true"
+                                     rowsPerPageTemplate="5,10,15,20,40,100"
+                                     rows="15"
+                                     paginator="true" 
+                                     resizableColumns="true"
+                                     widgetVar="studentTable"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     id="items" 
+                                     dir="#{(view.locale.language eq 'en')?'ltr':'rtl'}"
+                                     stickyHeader="true">
+                            <f:facet name="header">
+                                <p:commandButton id="toggler" type="button" value="Columns" style="float:right" icon="ui-icon-calculator" />
+                                <p:columnToggler datasource="items" trigger="toggler" />
+                                <p:button rendered="#{request.isUserInRole('ADMIN') 
+                                                      or request.isUserInRole('ADMINISTRATOR') 
+                                                      or request.isUserInRole('EMPLOYEE')}"  
+                                          title="new" value="new"  outcome="new_create" style="float: left"/>
+                                <p:button  rendered="#{request.isUserInRole('ADMIN') 
+                                                       or request.isUserInRole('ADMINISTRATOR') 
+                                                       or request.isUserInRole('EMPLOYEE')}"  
+                                           title="old" value="old"  outcome="student_items" style="float: left"/>
+                                
+                                #{msg.RegisteredStudents}
+                            </f:facet>
+                            <p:column  headerText="#{msg.name}" 
+                                       filterBy="#{(view.locale.language eq 'en')?item.student.name_en:item.student.name_ar}" 
+                                       sortBy="#{(view.locale.language eq 'en')?item.student.name_en:item.student.name_ar}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.student.name_en:item.student.id}"/>
+                            </p:column>                
+                            <p:column rendered="#{request.isUserInRole('TEACHER')}"  
+                                      filterOptions="true"
+                                      filterMatchMode="exact"
+                                      headerText="#{msg.class}" filterBy="#{(view.locale.language eq 'en')?item.class_.name_en:item.class_.name_ar}" style="text-align: center">
+                                <f:facet name="filter">
+                                    <p:selectOneMenu onchange="PF('studentTable').filter()" 
+                                                     rendered="#{request.isUserInRole('TEACHER')}">
+                                        <f:selectItem itemLabel="Select One" itemValue="#{null}" noSelectionOption="true" />
+                                        <f:selectItems  value="#{studentSchoolMB.teacherAssign}" 
+                                                        var="c" 
+                                                        itemLabel="#{(view.locale.language eq 'en')?c.class_.name_en:c.class_.name_ar}" 
+                                                        itemValue="#{(view.locale.language eq 'en')?c.class_.name_en:c.class_.name_ar}" />
+                                    </p:selectOneMenu>
+                                </f:facet>  
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.class_.name_en:item.class_.name_ar}"/>
+                            </p:column>                
+                            <p:column rendered="#{!request.isUserInRole('TEACHER')}" 
+                                      headerText="#{msg.class}" 
+                                      filterBy="#{(view.locale.language eq 'en')?item.class_.name_en:item.class_.name_ar}" 
+                                      sortBy="#{(view.locale.language eq 'en')?item.class_.name_en:item.class_.name_ar}" 
+                                      style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.class_.name_en:item.class_.name_ar}"/>
+                            </p:column>                
+                            <p:column  rendered="#{loginMB.user.school.systemVariables.termType eq '1'}" headerText="#{msg.department}" filterBy="#{(view.locale.language eq 'en')?item.department.name_en:item.department.name_ar}" style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.department.name_en:item.department.name_ar}"/>
+                            </p:column>                
+                            <p:column  headerText="#{msg.studentId}" 
+                                       filterBy="#{item.student.studentID}" 
+                                       sortBy="#{item.student.studentID}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{item.student.studentID}"/>
+                            </p:column>   
+                            <p:column  headerText="#{msg.phonenumber}" filterBy="#{item.student.phone1}" style="text-align: center">
+                                <h:outputText value="#{item.student.phone1}"/>
+                            </p:column>   
+                            <p:column  headerText="#{msg.school}" 
+                                       rendered="#{request.isUserInRole('ADMINISTRATOR')}"
+                                       filterBy="#{(view.locale.language eq 'en')?item.schoolYear.school.name_en:item.schoolYear.school.name_ar}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.schoolYear.school.name_en:item.schoolYear.school.name_ar}"/>
+                            </p:column>  
+                            <p:column style="width:16px">
+                                <p:rowToggler />
+                            </p:column>
+
+                            <p:column style="width: 30px"
+                                      rendered="#{request.isUserInRole('ADMINISTRATOR') or request.isUserInRole('ADMIN') }">
+                                <p:button   title="#{msg.update}" icon="fa fa-edit"  outcome="update">
+                                    <f:param name="id" value="#{item.id}"/>
+                                </p:button>
+                            </p:column>
+                            <p:rowExpansion>
+                                <p:panelGrid  columns="2" columnClasses="label,value" style="width:300px">
+                                    <f:facet name="header">
+                                        <p:outputLabel 
+                                            value="#{(view.locale.language eq 'en')?item.student.parent.name_en:item.student.parent.name_ar}"/>
+                                    </f:facet>
+
+                                    <h:outputText value="#{msg.phonenumber}" />
+                                    <h:outputText value="#{item.student.parent.phone1}" />
+
+                                </p:panelGrid>
+                            </p:rowExpansion>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

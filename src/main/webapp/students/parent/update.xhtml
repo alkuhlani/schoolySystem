@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/WEB-INF/template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:define name="title">
+        Schooly System
+    </ui:define>
+
+    <ui:define name="head">
+        <!--head-->
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form>
+            <f:event type="preRenderComponent" listener="#{parentMB.prepareUpdate(param['id'])}"/>
+            <ui:include src="form.xhtml"/>
+            <p:separator/>
+            <div style="text-align: center">
+                <p:commandButton value="#{msg.update}" action="#{parentMB.update()}" icon="fa fa-pencil-square-o">
+                    <p:confirm header="#{msg.updateConfirmation}" message="#{msg.doYouWanttoProcess}" icon="ui-icon-alert" />
+                </p:commandButton>
+                <p:commandButton value="#{msg.delete}" action="#{parentMB.delete()}"
+                                 rendered="#{request.isUserInRole('ADMINISTRATOR')}" icon="fa fa-times">
+                    <p:confirm header="#{msg.deleteConfirmation}" message="#{msg.doYouWanttoProcess}" icon="ui-icon-alert" />
+                </p:commandButton>
+            </div>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="#{msg.confirm}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="#{msg.cancel}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

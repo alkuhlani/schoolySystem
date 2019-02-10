@@ -1,0 +1,206 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/WEB-INF/template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="title">
+        Schooly System
+    </ui:define>
+
+    <ui:define name="head">
+        <!--head-->
+    </ui:define>
+
+    <ui:define name="content">
+        <f:event type="preRenderComponent" listener="#{vacationMB.prepareItems()}"/>  
+        <h:form>
+            <p:growl id="growl" showDetail="true"  autoUpdate="true" />  
+            <!--<p:messages showDetail="true" autoUpdate="true" closable="true" />-->
+            <div class="ui-g" >
+
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <p:toolbar rendered="#{1 == 2}">
+                            <f:facet name="left">
+                                <p:outputLabel for="classId " value="#{msg.class}" 
+                                               rendered="#{request.isUserInRole('ADMIN') or 
+                                                           request.isUserInRole('EMPLOYEE')}"/>
+                                <p:selectOneMenu value="#{vacationMB.classId}" 
+                                                 rendered="#{request.isUserInRole('ADMIN') or 
+                                                             request.isUserInRole('EMPLOYEE')}"
+                                                 id="classId" 
+                                                 required="true" >
+                                    <p:ajax listener="#{vacationMB.studentListner}" update="studentId" />
+                                    <f:selectItem itemLabel="#{msg.select} " noSelectionOption="true"/>
+                                    <f:selectItems  value="#{vacationMB.class_s}" 
+                                                    var="cc" 
+                                                    itemLabel="#{(view.locale.language eq 'en')?cc.name_en:cc.name_ar}" 
+                                                    itemValue="#{cc.id}" />
+                                </p:selectOneMenu>
+                                <p:outputLabel for="studentId" value="#{msg.student}" 
+                                               rendered="#{request.isUserInRole('PARENT') or 
+                                                           request.isUserInRole('ADMIN')}"/>
+                                <p:selectOneMenu value="#{vacationMB.studentId}" 
+                                                 rendered="#{request.isUserInRole('PARENT') or 
+                                                             request.isUserInRole('ADMIN')}"
+                                                 id="studentId" 
+                                                 required="true" >
+                                    <f:selectItem itemLabel="#{msg.select} " noSelectionOption="true"/>
+                                    <f:selectItems  value="#{vacationMB.studentSchools}" 
+                                                    var="stu" 
+                                                    itemLabel="#{(view.locale.language eq 'en')?
+                                                                 stu.student.name_en:stu.student.name_ar}"
+                                                    itemValue="#{stu.id}" />
+                                </p:selectOneMenu>   
+
+                                <p:outputLabel for="startDate" value="#{msg.from}"/>
+                                <p:calendar id="startDate" required="true" 
+                                            value="#{vacationMB.startDate}" 
+                                            pattern="dd-MM-yyyy" mask="true" pages="3"
+                                            style="color: #ffffff;text-align: center;direction: ltr">
+                                    <p:ajax event="dateSelect" update="endDate" /></p:calendar>
+                                <p:outputLabel for="endDate" value="#{msg.to}"/>
+                                <p:calendar id="endDate" required="true" 
+                                            value="#{vacationMB.endDate}" 
+                                            pattern="dd-MM-yyyy" mask="true" 
+                                            mindate="#{homeWorkMB.startDate}"  
+                                            style="color: #ffffff;text-align: center;direction: ltr"/>
+                            </f:facet>
+                            <f:facet name="right">
+                                <p:commandButton value="#{msg.search}" 
+                                                 actionListener="#{vacationMB.search()}" update="@form"/>
+                            </f:facet>
+                        </p:toolbar>
+                        <!--<h1></h1>-->
+                        <p:dataTable var="item" value="#{vacationMB.items}"  
+                                     reflow="true"
+                                     rowsPerPageTemplate="5,10,15"
+                                     rows="40"
+                                     paginator="true" 
+                                     resizableColumns="true"
+                                     paginatorTemplate="{CurrentPageReport} 
+                                     {FirstPageLink} 
+                                     {PreviousPageLink} 
+                                     {PageLinks} 
+                                     {NextPageLink} 
+                                     {LastPageLink} 
+                                     {RowsPerPageDropdown}"
+                                     currentPageReportTemplate="(Displaying 
+                                     {startRecord} - {endRecord} 
+                                     of {totalRecords}, 
+                                     Page: {currentPage}/{totalPages})"
+                                     id="items" 
+
+                                     rowIndexVar="index">
+                            <f:facet name="header">
+                                <p:button title="#{msg.add}" 
+                                          value="#{msg.add}" outcome="create" 
+                                          rendered="#{request.isUserInRole('EMPLOYEE') or 
+                                                      request.isUserInRole('TEA-EMP') or 
+                                                      request.isUserInRole('ADMIN') or 
+                                                      request.isUserInRole('PARENT')}"
+                                          style="float: left"/>
+                                <p:commandButton id="toggler" type="button" value="Columns" style="float:right" icon="ui-icon-calculator" />
+                                <p:columnToggler datasource="items" trigger="toggler" />
+                                #{msg.daysOff}
+                            </f:facet>
+                            <p:column  headerText="no" 
+                                       filterBy="#{index+1}" 
+                                       sortBy="#{index+1}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{index+1}"/>
+                            </p:column> 
+                            <p:column  headerText="#{msg.student}" 
+                                       filterBy="#{(view.locale.language eq 'en')?item.studentSchool.student.name_en:item.studentSchool.student.name_ar}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.studentSchool.student.name_en:item.studentSchool.student.name_ar}"/>
+                            </p:column> 
+                            <p:column  headerText="#{msg.class}" 
+                                       filterBy="#{(view.locale.language eq 'en')?item.studentSchool.class_.name_en:item.studentSchool.class_.name_ar}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.studentSchool.class_.name_en:item.studentSchool.class_.name_ar}"/>
+                            </p:column> 
+                            <p:column  headerText="#{msg.Parents}" 
+                                       filterBy="#{(view.locale.language eq 'en')?item.parent.name_en:item.parent.name_ar}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.parent.name_en:item.parent.name_ar}"/>
+                            </p:column>
+                            <p:column  headerText="#{msg.startDate}" 
+                                       filterBy="#{item.start_date}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{item.start_date}"/>
+                            </p:column> 
+                            <p:column  headerText="#{msg.endDate}" 
+                                       filterBy="#{item.end_date}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{item.end_date}"/>
+                            </p:column> 
+                          
+                            <p:column  headerText="#{msg.status}" 
+                                       filterBy="#{item.state_}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{(item.state_)?msg.approved:msg.notYet}" 
+                                              rendered="#{!request.isUserInRole('ADMIN')}"/>
+                                <p:commandButton title="#{msg.approval}" 
+                                                 value="#{msg.notYet}" 
+                                                 rendered="#{request.isUserInRole('ADMIN') and 
+                                                             !item.state_ and item.start_date.after(vacationMB.today)}"
+                                                 actionListener="#{vacationMB.approval(item.id)}"
+                                                 ajax="false"
+                                                 update="@form" />
+                                <p:commandButton title="#{msg.cancelApproval}" 
+                                                 value="#{msg.approved}" 
+                                                 rendered="#{request.isUserInRole('ADMIN') and 
+                                                             item.state_ }"
+                                                 actionListener="#{vacationMB.cancleApproval(item.id)}"
+                                                 ajax="false"
+                                                 styleClass="#{'green-btn'}" 
+                                                 update="form"/>
+                                <p:commandButton title="#{msg.approval}" 
+                                                 value="#{msg.lateApproval}" 
+                                                 rendered="#{request.isUserInRole('ADMIN') and 
+                                                             !item.state_ and item.start_date.before(vacationMB.today)}"
+                                                 actionListener="#{vacationMB.lateApproval(item.id)}"
+                                                 ajax="false"
+                                                 update="@form,growl" />
+                            </p:column>
+                            
+                            <p:column  headerText="#{msg.requestDate}" 
+                                       filterBy="#{item.request_date}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{item.request_date}"/>
+                            </p:column> 
+                            <p:column style="width: 20px" headerText="#{msg.reason}">
+                                <p:rowToggler  />
+                            </p:column>
+                            <p:column style="width: 30px">
+                                <p:button   title="#{msg.update}" 
+                                            icon="fa fa-edit"  
+                                            outcome="update"
+                                            rendered="#{request.isUserInRole('ADMIN')}">
+                                    <f:param name="id" value="#{item.id}"/>
+                                </p:button>
+                            </p:column>
+                            <p:rowExpansion>
+                                <p:panelGrid  columns="1"  style="text-align: center">
+                                    <f:facet name="header">
+                                        <p:outputLabel 
+                                            value="#{msg.reason}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{item.reason}"/>
+                                </p:panelGrid>
+
+                            </p:rowExpansion>
+                        </p:dataTable>
+
+
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

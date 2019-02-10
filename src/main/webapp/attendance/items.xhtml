@@ -1,0 +1,285 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/WEB-INF/template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="title">
+        Schooly System
+    </ui:define>
+
+    <ui:define name="head">
+        <!--head-->
+    </ui:define>
+
+    <ui:define name="content">
+        <f:event type="preRenderComponent" listener="#{attendanceMB.prepareItems()}"/>    
+        <h:form id="form">
+            <div class="ui-g" >
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <p:toolbar>
+                            <f:facet name="left">
+                                <p:outputLabel rendered="#{attendanceMB.searchMode eq 2}"
+                                               for="termId " value="#{msg.term}" />
+                                <p:selectOneMenu rendered="#{attendanceMB.searchMode eq 2}"
+                                                 value="#{attendanceMB.termId}" 
+                                                 id="termId" 
+                                                 required="true">
+                                    <p:ajax listener="#{attendanceMB.weekListner}" 
+                                            update="weekId"/>
+                                    <f:selectItem itemLabel="#{msg.select} " 
+                                                  noSelectionOption="true"/>
+                                    <f:selectItems  value="#{attendanceMB.termWeeks}" 
+                                                    var="tw" 
+                                                    itemLabel="#{(view.locale.language eq 'en')?tw.name_en:tw.name_ar}" 
+                                                    itemValue="#{tw.id}" />
+                                </p:selectOneMenu>
+                                <p:outputLabel rendered="#{attendanceMB.searchMode eq 2}"
+                                               for="weekId " value="#{msg.weekName}" />
+                                <p:selectOneMenu rendered="#{attendanceMB.searchMode eq 2}"
+                                                 value="#{attendanceMB.weekId}" 
+                                                 id="weekId" 
+                                                 required="true">
+                                    <f:selectItem itemLabel="#{msg.select} " 
+                                                  noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="#{msg.all}" 
+                                                  itemValue="-1"  />
+                                    <f:selectItems  value="#{attendanceMB.schoolWeeks}" 
+                                                    var="sw" 
+                                                    itemLabel="#{(view.locale.language eq 'en')?sw.name_en:sw.name_ar}" 
+                                                    itemValue="#{sw.id}" />
+                                </p:selectOneMenu>
+                                <p:outputLabel rendered="#{attendanceMB.searchMode eq 1}"
+                                               for="classId " 
+                                               value="#{msg.class}" />
+                                <p:selectOneMenu rendered="#{attendanceMB.searchMode eq 1}"
+                                                 value="#{attendanceMB.classId}" 
+                                                 id="classId" 
+                                                 required="true">
+                                    <p:ajax listener="#{attendanceMB.studentListner}" 
+                                            update="studentId"/>
+                                    <f:selectItem itemLabel="#{msg.select} " 
+                                                  noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="#{msg.all}" 
+                                                  itemValue="-1"  />                                    
+                                    <f:selectItems  value="#{attendanceMB.class_s}" 
+                                                    var="cc" 
+                                                    itemLabel="#{(view.locale.language eq 'en')?cc.name_en:cc.name_ar}" 
+                                                    itemValue="#{cc.id}" />
+                                </p:selectOneMenu>
+                                <p:outputLabel rendered="#{attendanceMB.searchMode eq 1}"
+                                               for="studentId" 
+                                               value="#{msg.student}"  />
+                                <p:selectOneMenu rendered="#{attendanceMB.searchMode eq 1}"
+                                                 value="#{attendanceMB.studentId}" 
+                                                 id="studentId"
+                                                 required="true" >
+                                    <f:selectItem itemLabel="#{msg.select} #{msg.student}" 
+                                                  noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="#{msg.all}" 
+                                                  itemValue="-1"  />
+                                    <f:selectItems  value="#{attendanceMB.studentSchools}" 
+                                                    var="st" 
+                                                    itemLabel="#{(view.locale.language eq 'en')?st.student.name_en:st.student.name_ar}" 
+                                                    itemValue="#{st.student.id}"  />
+                                </p:selectOneMenu>
+                                <p:outputLabel rendered="#{attendanceMB.searchMode eq 1}"
+                                               for="startDate" 
+                                               value="#{msg.from}"/>
+                                <p:calendar rendered="#{attendanceMB.searchMode eq 1}"
+                                            id="startDate" 
+                                            required="true" 
+                                            value="#{attendanceMB.startDate}" 
+                                            pattern="dd-MM-yyyy" 
+                                            mask="true" pages="3"
+                                            style="color: #ffffff;text-align: center;direction: ltr">
+                                    <p:ajax event="dateSelect" 
+                                            update="endDate" />
+                                </p:calendar>
+                                <p:outputLabel rendered="#{attendanceMB.searchMode eq 1}"
+                                               for="endDate" 
+                                               value="#{msg.to}"/>
+                                <p:calendar rendered="#{attendanceMB.searchMode eq 1}"
+                                            id="endDate" 
+                                            required="true" 
+                                            value="#{attendanceMB.endDate}" 
+                                            pattern="dd-MM-yyyy" 
+                                            mask="true" 
+                                            mindate="#{noteDailyMB.startDate}"  
+                                            style="color: #ffffff;text-align: center;direction: ltr"/>
+                            </f:facet>
+                            <f:facet name="right">
+                                <p:splitButton rendered="#{request.isUserInRole('ADMIN')
+                                                           or request.isUserInRole('EMPLOYEE')
+                                                           or request.isUserInRole('TEA-EMP')}"
+                                               value="#{msg.search}"  
+                                               update="@form" 
+                                               actionListener="#{attendanceMB.search()}" >
+                                    <p:menuitem action="#{attendanceMB.setSearchModeValue(2)}" 
+                                                value="#{msg.byWeek}"   
+                                                update="@form" 
+                                                ajax="false"
+                                                immediate="true"/>
+                                    <p:menuitem actionListener="#{attendanceMB.setSearchModeValue(1)}" 
+                                                value="#{msg.byClass}"  
+                                                update="@form" 
+                                                ajax="false"
+                                                immediate="true"/>
+                                </p:splitButton>
+                            </f:facet>
+                        </p:toolbar>
+
+                        <!--<h1></h1>-->
+                        <p:dataTable var="item" value="#{attendanceMB.items}"  
+                                     reflow="true"
+                                     rowsPerPageTemplate="5,10,15,20,40,100"
+                                     rows="40"
+                                     paginator="true" 
+                                     resizableColumns="true"
+                                     paginatorTemplate="{CurrentPageReport} 
+                                     {FirstPageLink} 
+                                     {PreviousPageLink} 
+                                     {PageLinks} 
+                                     {NextPageLink} 
+                                     {LastPageLink} 
+                                     {RowsPerPageDropdown}"
+                                     currentPageReportTemplate="(Displaying 
+                                     {startRecord} - {endRecord} 
+                                     of {totalRecords}, 
+                                     Page: {currentPage}/{totalPages})"
+                                     id="items" 
+                                     widgetVar="attendanceTable"
+                                     dir="#{(view.locale.language eq 'en')?'ltr':'rtl'}"
+                                     rowIndexVar="index">
+                            <f:facet name="header">
+                                <p:commandButton id="toggler" 
+                                                 type="button" 
+                                                 value="Columns" 
+                                                 style="float:right" 
+                                                 icon="ui-icon-calculator" />
+                                <p:columnToggler datasource="items" 
+                                                 trigger="toggler" />
+                                <p:button rendered="#{request.isUserInRole('ADMINISTRATOR') 
+                                                      or request.isUserInRole('ADMIN')
+                                                      or request.isUserInRole('EMPLOYEE')
+                                                      or request.isUserInRole('TEA-EMP')}"  
+                                          title="attendance" 
+                                          value="#{msg.attendance}"  
+                                          outcome="items_class" 
+                                          style="float: left"/>
+                                <p:commandButton   title="#{msg.todayAttendance}" 
+                                                   value="#{msg.todayAttendance}" 
+                                                   action="#{attendanceMB.prepareItems()}" 
+                                                   update="@form"  
+                                                   style="float: left"
+                                                   ajax="false"
+                                                   immediate="true"/>
+                                <p:commandButton   title="#{msg.TermAttendance}" 
+                                                   value="#{msg.TermAttendance}" 
+                                                   action="#{attendanceMB.prepareAllItems()}" 
+                                                   update="@form"  
+                                                   style="float: left"
+                                                   ajax="false"
+                                                   immediate="true"/>
+                                <p:commandButton   title="#{msg.weekAttendance}" 
+                                                   value="#{msg.weekAttendance}" 
+                                                   action="#{attendanceMB.prepareAll2Items()}" 
+                                                   update="@form"  
+                                                   style="float: left" 
+                                                   ajax="false"
+                                                   immediate="true"                                                   
+                                                   rendered="#{loginMB.user.school.systemVariables.termType.id eq 2}"/>
+                                <p:commandButton   title="#{msg.MonthAttendance}" 
+                                                   value="#{msg.MonthAttendance}" 
+                                                   action="#{attendanceMB.prepareAll2Items()}" 
+                                                   update="@form"  
+                                                   style="float: left"
+                                                   rendered="#{loginMB.user.school.systemVariables.termType.id eq 1}"
+                                                   ajax="false"
+                                                   immediate="true"/>
+
+                                #{msg.attendance}
+                            </f:facet>
+                            <p:column  headerText="no" 
+                                       filterBy="#{index+1}" 
+                                       sortBy="#{index+1}" 
+                                       style="text-align: center;width: 30px">
+                                <h:outputText value="#{index+1}"/>
+                            </p:column> 
+                            <p:column  headerText="#{msg.student}" 
+                                       sortBy="#{(view.locale.language eq 'en')?item.studentSchool.student.name_en:item.studentSchool.student.name_ar}" 
+                                       filterBy="#{(view.locale.language eq 'en')?item.studentSchool.student.name_en:item.studentSchool.student.name_ar}" 
+                                       rendered="#{!request.isUserInRole('PARENT')}"
+                                       style="text-align: center">
+
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.studentSchool.student.name_en:item.studentSchool.student.name_ar}"/>
+                            </p:column>                
+                            <p:column  headerText="#{msg.class}" 
+                                       filterBy="#{(view.locale.language eq 'en')?item.studentSchool.class_.name_en:item.studentSchool.class_.name_ar}"
+                                       style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.studentSchool.class_.name_en:item.studentSchool.class_.name_ar}"/>
+                            </p:column>                
+                            <p:column  headerText="#{msg.date}" 
+                                       filterBy="#{item.attendanceDate}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{item.attendanceDate}"/>
+                            </p:column>                
+                            <p:column  headerText="#{msg.school}" 
+                                       rendered="#{request.isUserInRole('ADMINISTRATOR')}"
+                                       filterBy="#{(view.locale.language eq 'en')?item.studentSchool.schoolYear.school.name_en:item.studentSchool.schoolYear.school.name_ar}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.studentSchool.schoolYear.school.name_en:item.studentSchool.schoolYear.school.name_ar}"/>
+                            </p:column>                
+
+                            <p:column  headerText="#{msg.status}" 
+                                       filterBy="#{item.status}" 
+                                       style="text-align: center">
+                                <p:commandButton rendered="#{item.status eq '0'}" 
+                                                 type="button" 
+                                                 value="" 
+                                                 styleClass="red-btn" 
+                                                 style="width: 2px"/>
+                                <p:commandButton rendered="#{item.status eq '2'}" 
+                                                 type="button" 
+                                                 value="" 
+                                                 styleClass="amber-btn" />
+                                <p:commandButton rendered="#{item.status eq '1'}" 
+                                                 type="button" 
+                                                 value="" 
+                                                 styleClass="green-btn" />
+                                <p:splitButton rendered="#{request.isUserInRole('ADMIN')}" 
+                                               value=""  
+                                               styleClass="#{(item.status eq '0')?'red-btn':((item.status eq '1')?'green-btn':'amber-btn')}" >
+                                    <p:menuitem rendered="#{item.status eq '1' or item.status eq '2'}" 
+                                                action="#{attendanceMB.checnageToAbsent(item.id)}" 
+                                                value="#{msg.absent}" 
+                                                update="items"
+                                                ajax="false"
+                                                immediate="true"/>
+                                    <p:menuitem rendered="#{item.status eq '0' or item.status eq '2'}" 
+                                                action="#{attendanceMB.checnageToPresent(item.id)}" 
+                                                value="#{msg.present}" 
+                                                update="items"
+                                                ajax="false"
+                                                immediate="true"/>
+                                    <p:separator rendered="#{item.status eq '0' or item.status eq '1'}" />
+                                    <p:menuitem rendered="#{item.status eq '0' or item.status eq '1'}"
+                                                action="#{attendanceMB.checnageToAuthorized(item.id)}" 
+                                                value="#{msg.authorized}"    
+                                                update="items"
+                                                ajax="false"
+                                                immediate="true"/>
+                                </p:splitButton>
+                            </p:column>   
+
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

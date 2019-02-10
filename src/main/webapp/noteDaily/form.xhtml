@@ -1,0 +1,125 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:h="http://java.sun.com/jsf/html"
+              xmlns:f="http://java.sun.com/jsf/core"
+              xmlns:ui="http://java.sun.com/jsf/facelets"
+              xmlns:p="http://primefaces.org/ui"
+              >
+
+    <ui:define name="head">
+        <style type="text/css">
+            .ui-selectoneradio.ui-grid-responsive .ui-grid-col-4,
+            .ui-selectmanycheckbox.ui-grid-responsive .ui-grid-col-4{
+                padding-bottom: 10px;
+            }
+            .ui-grid-col-4{
+                text-align: right
+            }
+            .ui-grid-col-6{
+                text-align: right
+            }
+            .ui-grid-col-2{
+                text-align: left
+            }
+
+        </style>
+    </ui:define>
+
+    <div class="ui-g " >
+        <div class="ui-g-12">
+            <div class="card card-w-title" >
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:button outcome="items"  title="back" icon="fa fa-reply" />
+                    </f:facet>
+                    <f:facet name="right">
+                    </f:facet>
+                </p:toolbar>
+
+                <p:messages showDetail="true" autoUpdate="true" closable="true" />
+                <p:focus context="panel"/>
+                <p:panelGrid id="panel" columns="2" columnClasses="ui-grid-col-4,ui-grid-col-6" 
+                             layout="grid" styleClass="ui-panelgrid-blank form-group" 
+                             style="border:0px none; background-color:transparent;direction:#{(view.locale.language eq 'en')?'ltr':'rtl'}" >
+                    <p:outputLabel  value="#{msg.class}" 
+                                    rendered="#{request.isUserInRole('ADMIN')}" />
+                    <p:selectOneMenu value="#{noteDailyMB.classId}"
+                                     style="text-align: center;width: 100%"
+                                     required="true"
+                                     id="classId"
+                                     rendered="#{request.isUserInRole('ADMIN')}">
+
+                        <f:selectItem itemLabel="Select" noSelectionOption="true"/>
+                        <p:ajax listener="#{noteDailyMB.subjectTableListner}" update="subjectTable"/>
+                        <f:selectItems value="#{noteDailyMB.class_s}" 
+                                       var="class"
+                                       itemValue="#{class.id}"
+                                       itemLabel="#{(view.locale.language eq 'en')?class.name_en:class.name_ar}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel  value="#{msg.subject}" rendered="#{request.isUserInRole('ADMIN')}"/>
+                    <p:selectOneMenu value="#{noteDailyMB.subjectId}"
+                                     style="text-align: center;width: 100%"
+                                     required="true"
+                                     id="subjectId"
+                                     rendered="#{request.isUserInRole('ADMIN')}">
+
+                        <f:selectItem itemLabel="Select" noSelectionOption="true"/>
+                        <p:ajax listener="#{noteDailyMB.subjectTableListner}" update="subjectTable"/>
+                        <f:selectItems value="#{noteDailyMB.subject_ts}" 
+                                       var="subject"
+                                       itemValue="#{subject.id}"
+                                       itemLabel="#{(view.locale.language eq 'en')?subject.name_en:subject.name_ar}"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel  value="#{msg.subjectTable}" />
+                    <p:selectOneMenu value="#{noteDailyMB.item.subjectTable.id}"
+                                     style="text-align: center;width: 100%"
+                                     required="true"
+                                     id="subjectTable">
+
+                        <f:selectItem itemLabel="Select" noSelectionOption="true"/>
+                        <p:ajax listener="#{noteDailyMB.classListner}" update="studentSelect"/>
+                        <f:selectItems value="#{noteDailyMB.subjectTables}" 
+                                       var="subjectTable"
+                                       itemValue="#{subjectTable.id}"
+                                       itemLabel="#{subjectTable.teacherAssign.class_.name_en} 
+                                       - #{subjectTable.teacherAssign.subject_t.name_en}
+                                       - #{subjectTable.teacherAssign.teacher.name_en}
+                                       - #{subjectTable.day.name_en}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel  value="#{msg.student_name}"/>
+                    <p:selectOneMenu value="#{noteDailyMB.item.studentSchool.id}"
+                                     style="text-align: center;width: 100%"
+                                     required="true"
+                                     id="studentSelect">
+                        <f:selectItem itemLabel="Select" noSelectionOption="true"/>
+                        <f:selectItem itemLabel="#{msg.all}" itemValue="-1"/>
+                        <f:selectItems value="#{noteDailyMB.studentSchools}" 
+                                       var="student"
+                                       itemValue="#{student.id}"
+                                       itemLabel="#{student.student.name_en}"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel for="name_ar" 
+                                   value="#{msg.description}"/>
+                    <p:inputTextarea 
+                        rows="2" 
+                        id="name_ar" 
+                        value="#{noteDailyMB.item.name}" 
+                        counter="display2" 
+                        maxlength="255" 
+                        counterTemplate="{0} حرف متبقي" 
+                        autoResize="true" 
+                        style="width: 100%;text-align:right;direction: rtl">
+                        <h:outputText id="display2" />
+                    </p:inputTextarea>
+                    <p:outputLabel for="forStudent" value="#{msg.forStudent}"/>
+                    <p:selectBooleanCheckbox id="forStudent" required="true" value="#{noteDailyMB.item.forStudent}"/>
+                    <p:outputLabel for="forParent" value="#{msg.forParent}"/>
+                    <p:selectBooleanCheckbox id="forParent" required="true" value="#{noteDailyMB.item.forParent}"/>
+                    
+
+                </p:panelGrid>
+            </div>
+        </div>
+    </div>
+</ui:component>

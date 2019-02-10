@@ -1,0 +1,134 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/WEB-INF/template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="title">
+        Schooly System
+    </ui:define>
+
+    <ui:define name="head">
+        <!--head-->
+    </ui:define>
+
+    <ui:define name="content">
+        <f:event type="preRenderComponent" listener="#{classMB.prepareAllItems2()}"/>      
+        <h:form>
+            <div class="ui-g" >
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+
+                        <p:fileUpload 
+                            value="#{branchMB.file}" mode="advanced" sizeLimit="5242880" 
+                            fileUploadListener="#{classMB.fileUploadListener}" 
+                            update="@form">
+                            <p:commandLink  id="downloadLink" value="Download Template"  actionListener="#{classMB.prepDownload}" ajax="false"> 
+                                <p:fileDownload value="#{classMB.download}" />
+                            </p:commandLink> , 
+                            <p:commandLink  id="downloadLink2" value="Download Static Data"  actionListener="#{classMB.writeStaticTables}" ajax="false"> 
+                                <p:fileDownload value="#{classMB.download2}" />
+                            </p:commandLink> 
+                             ملاحظة : يجب ان لاتترك اي مسافة بين صف وآخر او ان يكون هناك صف منسق بدون بيانات
+                        </p:fileUpload>
+
+                        <p:dataTable var="item" value="#{classMB.items}"  reflow="true"
+                                     rowsPerPageTemplate="20,40,100,150,200,300"
+                                     rows="40"
+                                     paginator="true" 
+                                     resizableColumns="true"
+                                     paginatorTemplate="{CurrentPageReport} 
+                                     {FirstPageLink} 
+                                     {PreviousPageLink} 
+                                     {PageLinks} 
+                                     {NextPageLink} 
+                                     {LastPageLink} 
+                                     {RowsPerPageDropdown}
+                                     {Exporters}"
+                                     currentPageReportTemplate="(Displaying 
+                                     {startRecord} - {endRecord} 
+                                     of {totalRecords}, 
+                                     Page: {currentPage}/{totalPages})"
+                                     id="items" 
+                                     dir="#{(view.locale.language eq 'en')?'ltr':'rtl'}"
+                                     selection="#{classMB.selectedClasses}" 
+
+                                     rowIndexVar="index">
+                            <f:facet name="header">
+                                <p:commandButton id="toggler" type="button" value="Columns" style="float:right" icon="ui-icon-calculator" />
+                                <p:columnToggler datasource="items" trigger="toggler" />
+                                <h:link title="#{msg.add}" outcome="create" value="" style="text-align: left">
+                                    <i class="fa fa-plus" style="size: 20px;color: #ffffff;font-size:larger ;float: left;padding-right: 5px;" />
+                                </h:link> 
+                                #{msg.class_list}
+                            </f:facet>
+                            <f:facet name="{Exporters}">
+                                <h:commandLink>
+                                    <p:graphicImage value="/resources/barcelona-layout/images/Excel-3-icon.png" width="24"/>
+                                    <p:dataExporter type="xls" target="items" fileName="studens" />
+                                </h:commandLink>
+                            </f:facet>
+                            <p:column  headerText="no" 
+                                       filterBy="#{index+1}" 
+                                       sortBy="#{index+1}" 
+                                       style="text-align: center;width: 30px">
+                                <h:outputText value="#{index+1}"/>
+                            </p:column> 
+                            <p:column  headerText="#{msg.name}" 
+                                       filterBy="#{item.name_ar}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{item.name_ar}"/>
+                            </p:column>  
+
+                            <p:column  headerText="#{msg.department}" 
+                                       filterBy="#{(view.locale.language eq 'en')?item.department.name_en:item.department.name_ar}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.department.name_en:item.department.name_ar}"/>
+                            </p:column> 
+                            <p:column  headerText="#{msg.staticLevel}" 
+                                       filterBy="#{(view.locale.language eq 'en')?item.staticLevel.name_en:item.staticLevel.name_ar}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.staticLevel.name_en:item.staticLevel.name_ar}"/>
+                            </p:column> 
+                            <p:column  headerText="#{msg.class}" 
+                                       filterBy="#{(view.locale.language eq 'en')?item.staticClass.name_en:item.staticClass.name_ar}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.staticClass.name_en:item.staticClass.name_ar}"/>
+                            </p:column> 
+                            <p:column  headerText="#{msg.subClass}" 
+                                       filterBy="#{(view.locale.language eq 'en')?item.staticSubClass.name_en:item.staticSubClass.name_ar}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.staticSubClass.name_en:item.staticSubClass.name_ar}"/>
+                            </p:column> 
+                            <p:column  headerText="#{msg.branch}" 
+                                       filterBy="#{(view.locale.language eq 'en')?item.branch.name_en:item.branch.name_ar}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.branch.name_en:item.branch.name_ar}"/>
+                            </p:column>  
+                            <p:column  headerText="#{msg.apriority}" 
+                                       filterBy="#{item.noClass}" 
+                                       style="text-align: center;width: 30px">
+                                <h:outputText value="#{item.noClass}"/>
+                            </p:column>    
+                            <p:column  headerText="#{msg.school}" 
+                                       rendered="#{request.isUserInRole('ADMINISTARTOR')}"
+                                       filterBy="#{(view.locale.language eq 'en')?item.school.name_en:item.school.name_ar}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.school.name_en:item.school.name_ar}"/>
+                            </p:column>                                 
+                        </p:dataTable>
+                    </div>
+                </div>
+
+            </div>
+            <p:separator />
+            <div style="text-align: center">
+                <p:commandButton  value="#{msg.save}"  action="#{classMB.createItemsFromExcel()}"  
+                                  icon="ui-icon-check"/>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,87 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:h="http://java.sun.com/jsf/html"
+              xmlns:f="http://java.sun.com/jsf/core"
+              xmlns:ui="http://java.sun.com/jsf/facelets"
+              xmlns:p="http://primefaces.org/ui"
+              >
+
+    <ui:define name="head">
+        <style type="text/css">
+            .ui-selectoneradio.ui-grid-responsive .ui-grid-col-4,
+            .ui-selectmanycheckbox.ui-grid-responsive .ui-grid-col-4{
+                padding-bottom: 10px;
+            }
+            .ui-grid-col-4{
+                text-align: right
+            }
+            .ui-grid-col-6{
+                text-align: right
+            }
+            .ui-grid-col-2{
+                text-align: left
+            }
+
+        </style>
+    </ui:define>
+
+    <div class="ui-g " >
+        <div class="ui-g-12">
+            <div class="card card-w-title" >
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:button outcome="items"  title="back" icon="fa fa-reply" />
+                    </f:facet>
+                    <f:facet name="right">
+                    </f:facet>
+                </p:toolbar>
+
+                <p:messages showDetail="true" autoUpdate="true" closable="true" />
+                <p:focus context="panel"/>
+                <p:panelGrid id="panel" columns="2" columnClasses="ui-grid-col-4,ui-grid-col-6" 
+                             layout="grid" styleClass="ui-panelgrid-blank form-group" 
+                             style="border:0px none; background-color:transparent;direction:#{(view.locale.language eq 'en')?'ltr':'rtl'}" >
+                    <p:outputLabel for="fullname" value="#{msg.arName}"/>
+                    <p:inputText id="fullname" value="#{parentMB.item.name_ar}" 
+                                 style="width: 100%;text-align: center;direction: rtl;
+                                 border-top: #006064;
+                                 border-radius:  10px ;border-style:  solid "
+                                 required="true"/>
+                    <p:outputLabel for="username" value="#{msg.engName}"/>
+                    <p:inputText id="username" value="#{parentMB.item.name_en}" 
+                                 style="width: 100%;text-align: center;direction: ltr;
+                                 border-top: #006064;
+                                 border-radius:  10px ;border-style:  solid "
+                                 required="true"/>
+                    <p:outputLabel for="email" value="#{msg.email}"/>
+                    <p:inputText id="email" value="#{parentMB.item.email}" 
+                                 style="width: 100%;text-align: center;direction: ltr;
+                                 border-top: #006064;
+                                 border-radius:  10px ;border-style:  solid "
+                                 required="true">
+                        <p:keyFilter regEx="/[a-z0-9_\.\-@]/i"/>
+                    </p:inputText>
+                    <p:outputLabel for="phone1" value="#{msg.phonenumber} 1"/>
+                    <p:inputText id="phone1" value="#{parentMB.item.phone1}" 
+                                 style="width: 100%;text-align: center;direction: ltr;
+                                 border-top: #006064;
+                                 border-radius:  10px ;border-style:  solid "
+                                 required="true"
+                                 maxlength="9">
+                        <p:keyFilter regEx="/[\d\-]/"/>
+                    </p:inputText>
+                    <p:outputLabel for="phone2" value="#{msg.phonenumber} 2"/>
+                    <p:inputText id="phone2" value="#{parentMB.item.phone2}" 
+                                 style="width: 100%;text-align: center;direction: ltr;
+                                 border-top: #006064;
+                                 border-radius:  10px ;border-style:  solid "
+                                 required="true"
+                                 maxlength="9">
+                        <p:keyFilter regEx="/[\d\-]/"/>
+                    </p:inputText>
+
+
+                </p:panelGrid>
+            </div>
+        </div>
+    </div>
+</ui:component>

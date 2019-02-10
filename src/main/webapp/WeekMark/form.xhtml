@@ -1,0 +1,179 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:h="http://java.sun.com/jsf/html"
+              xmlns:f="http://java.sun.com/jsf/core"
+              xmlns:ui="http://java.sun.com/jsf/facelets"
+              xmlns:p="http://primefaces.org/ui"
+              >
+
+    <ui:define name="head">
+        <style type="text/css">
+            .ui-selectoneradio.ui-grid-responsive .ui-grid-col-4,
+            .ui-selectmanycheckbox.ui-grid-responsive .ui-grid-col-4{
+                padding-bottom: 10px;
+            }
+            .ui-grid-col-4{
+                text-align: right
+            }
+            .ui-grid-col-6{
+                text-align: right
+            }
+            .ui-grid-col-2{
+                text-align: left
+            }
+
+        </style>
+    </ui:define>
+
+    <div class="ui-g " >
+        <div class="ui-g-12">
+            <div class="card card-w-title" >
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:button outcome="items"  title="back" icon="fa fa-reply" />
+                    </f:facet>
+                    <f:facet name="right">
+                    </f:facet>
+                </p:toolbar>
+                <p:messages showDetail="true" autoUpdate="true" closable="true" />
+                <p:focus context="panel"/>
+                <p:panelGrid id="panel" columns="2" 
+                             columnClasses="ui-grid-col-4,ui-grid-col-6" 
+                             layout="grid" styleClass="ui-panelgrid-blank form-group" 
+                             style="border:0px none; background-color:transparent;direction:#{(view.locale.language eq 'en')?'ltr':'rtl'}" >
+                    <p:outputLabel for="termWeek" value="#{msg.term_name}"/> 
+                    <p:selectOneMenu id="termWeek" disabled="#{request.isUserInRole('TEACHER')}" 
+                                     value="#{weekMarkMB.termWeek.id}" 
+                                     style="width: 100%;text-align: center;direction: ltr;
+                                     border-top: #006064;
+                                     border-radius:  10px ;border-style:  solid "
+                                     required="true">   
+                    <p:ajax listener="#{weekMarkMB.weekListener}" update="schoolWeek" />
+                    <f:selectItem itemLabel="#{msg.select}" noSelectionOption="true"/>
+                    <f:selectItems value="#{weekMarkMB.termWeeks}" var="term"
+                                   itemLabel="#{term.name_en}" 
+                                   itemValue="#{term.id}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="schoolWeek" value="#{msg.weekName}"/> 
+                    <p:selectOneMenu id="schoolWeek" 
+                                     value="#{weekMarkMB.item.schoolWeek.id}" 
+                                     style="width: 100%;text-align: center;direction: ltr;
+                                     border-top: #006064;
+                                     border-radius:  10px ;border-style:  solid "
+                                     required="true">                       
+                    <f:selectItem itemLabel="#{msg.select}" noSelectionOption="true"/>
+                    <f:selectItems value="#{weekMarkMB.schoolWeeks}" var="week"
+                                   itemLabel="#{week.name_en}" 
+                                   itemValue="#{week.id}" />
+                    </p:selectOneMenu>
+
+                    
+                    <p:outputLabel for="class" value="#{msg.class}"/> 
+                    <p:selectOneMenu  id="class" 
+                                      value="#{weekMarkMB.classId}" 
+                                      style="width: 100%;text-align: center;direction: ltr;
+                                      border-top: #006064;
+                                      border-radius:  10px ;border-style:  solid "
+                                      required="true"
+                                      rendered="#{request.isUserInRole('ADMIN')}">      
+                    <p:ajax listener="#{weekMarkMB.subjectTableListner}" update="teacherAssign,student" />
+                    <f:selectItem itemLabel="#{msg.select}" noSelectionOption="true"/>
+                    <f:selectItems value="#{weekMarkMB.class_s}" var="class_"
+                                   itemLabel="#{(view.locale.language eq 'en')?class_.name_en:class_.name_ar}"
+                                   itemValue="#{class_.id}" />
+                    </p:selectOneMenu>
+                    
+                    <p:outputLabel for="subject" value="#{msg.subject}"/> 
+                    <p:selectOneMenu  id="subject" 
+                                      value="#{weekMarkMB.subjectId}" 
+                                      style="width: 100%;text-align: center;direction: ltr;
+                                      border-top: #006064;
+                                      border-radius:  10px ;border-style:  solid "
+                                      required="true"
+                                      rendered="#{request.isUserInRole('ADMIN')}"> 
+                    <p:ajax listener="#{weekMarkMB.subjectTableListner}" update="teacherAssign,student" />
+                    <f:selectItem itemLabel="#{msg.select}" noSelectionOption="true"/>
+                    <f:selectItems value="#{weekMarkMB.subject_ts}" var="subject_"
+                                   itemLabel="#{(view.locale.language eq 'en')?subject_.name_en:subject_.name_ar}" 
+                                   itemValue="#{subject_.id}" />
+                    </p:selectOneMenu>
+                    
+                    <p:outputLabel for="teacherAssign" value="#{(request.isUserInRole('TEACHER'))?msg.subject:msg.teacher}"/> 
+                    <p:selectOneMenu  id="teacherAssign" 
+                                      value="#{weekMarkMB.item.teacherAssign.id}" 
+                                      style="width: 100%;text-align: center;direction: ltr;
+                                      border-top: #006064;
+                                      border-radius:  10px ;border-style:  solid "
+                                      required="true">      
+                    <p:ajax listener="#{weekMarkMB.studentListener}" update="student" />
+                    <f:selectItem itemLabel="#{msg.select}" noSelectionOption="true"/>
+                    <f:selectItems value="#{weekMarkMB.teacherAssigns}" var="ta"
+                                   itemLabel="#{(view.locale.language eq 'en')?ta.class_.name_en:ta.class_.name_ar} - 
+                                   #{(view.locale.language eq 'en')?ta.subject_t.name_en:ta.subject_t.name_ar} - 
+                                   #{(view.locale.language eq 'en')?ta.teacher.name_en:ta.teacher.name_ar}" 
+                                   itemValue="#{ta.id}" />
+                    </p:selectOneMenu>
+
+                    <p:outputLabel for="student" value="#{msg.student_name}"/> 
+                    <p:selectOneMenu id="student" 
+                                     value="#{weekMarkMB.item.studentSchool.id}" 
+                                     style="width: 100%;text-align: center;direction: ltr;
+                                     border-top: #006064;
+                                     border-radius:  10px ;border-style:  solid "
+                                     required="true">                      
+                    <f:selectItem itemLabel="#{msg.select}" noSelectionOption="true"/>
+                    <f:selectItems value="#{weekMarkMB.studentSchools}" var="s"
+                                   itemLabel="#{(view.locale.language eq 'en')?s.student.name_en:s.student.name_ar}"                                       
+                                   itemValue="#{s.id}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="quize" value="#{msg.quizeMark}"/>
+                    <p:inputNumber id="quize" 
+                                   value="#{weekMarkMB.item.quize}" 
+                                   maxValue="#{loginMB.user.school.systemVariables.weekTopMark.quize}"
+                                   minValue="0.0 "
+                                   emptyValue="zero"
+                                   style="text-align: center;direction: ltr;
+                                   border-top: #006064;
+                                   border-radius:  10px ;border-style:  solid "
+                                   required="true"/>
+                    <p:outputLabel for="hw" value="#{msg.hwMark}"/>
+                    <p:inputNumber id="hw" 
+                                   value="#{weekMarkMB.item.hw}" 
+                                   maxValue="#{loginMB.user.school.systemVariables.weekTopMark.hw}"
+                                   minValue="0.0 "
+                                   emptyValue="zero"
+                                   style="text-align: center;direction: ltr;
+                                   border-top: #006064;
+                                   border-radius:  10px ;border-style:  solid "
+                                   required="true"/>
+                    <p:outputLabel for="attendance" value="#{msg.attendanceMark}"/>
+                    <h:panelGroup id="termHalf" styleClass="md-inputfield">
+                        <p:inputNumber id="attendance" 
+                                       value="#{weekMarkMB.item.attendance}" 
+                                       maxValue="#{loginMB.user.school.systemVariables.weekTopMark.attendance}"
+                                       minValue="0.0 "
+                                       emptyValue="zero"
+                                       style="text-align: center;direction: ltr;
+                                       border-top: #006064;
+                                       border-radius:  10px ;border-style:  solid "
+                                       required="true"/>
+                        <p:commandButton  actionListener="#{weekMarkMB.calcAttendance()}" value="calc">
+                            <p:ajax listener="#{weekMarkMB.calcAttendance}" update="attendance" />
+                        </p:commandButton>
+                    </h:panelGroup>
+
+                    <p:outputLabel for="behavior" value="#{msg.BehaviorMark}"/>
+                    <p:inputNumber id="behavior" 
+                                   value="#{weekMarkMB.item.behavior}" 
+                                   maxValue="#{loginMB.user.school.systemVariables.weekTopMark.behavior}"
+                                   minValue="0.0 "
+                                   emptyValue="zero"
+
+                                   style="text-align: center;direction: ltr;
+                                   border-top: #006064;
+                                   border-radius:  10px ;border-style:  solid "
+                                   required="true"/>
+                </p:panelGrid>
+            </div>
+        </div>
+    </div>
+</ui:component>

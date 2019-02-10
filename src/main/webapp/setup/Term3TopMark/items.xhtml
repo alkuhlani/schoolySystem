@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/WEB-INF/template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="title">
+        Schooly System
+    </ui:define>
+
+    <ui:define name="head">
+        <!--head-->
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form>
+            <div class="ui-g" >
+
+                <f:event type="preRenderComponent" listener="#{termTopMarkMB.prepareItems()}"/>      
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h:commandButton id="forwardBtn" actionListener="#{termTopMarkMB.doForward}" style="display: none;"/>
+                        <!--<h1></h1>-->
+                        <p:dataTable var="item" value="#{termTopMarkMB.items}"  reflow="true"
+                                     rowsPerPageTemplate="5,10,15,20,40,100"
+                                     rows="15"
+                                     paginator="true" 
+                                     resizableColumns="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     id="items" 
+                                     dir="#{(view.locale.language eq 'en')?'ltr':'rtl'}"
+                                     >
+                            <f:facet name="header">
+                                <p:commandButton id="toggler" type="button" value="Columns" style="float:right" icon="ui-icon-calculator" />
+                                <p:columnToggler datasource="items" trigger="toggler" />
+                                <h:link title="#{msg.add}" outcome="create" value="" style="text-align: left">
+                                    <i class="fa fa-plus" style="size: 20px;color: #ffffff;font-size:larger ;float: left;padding-right: 5px;" />
+                                </h:link> 
+                                #{msg.term3TopMark}
+                            </f:facet>
+                            <p:column  headerText="#{msg.description}" filterBy="#{item.name}" style="text-align: center">
+                                <h:outputText value="#{item.name}"/>
+                            </p:column>                                            
+                            <p:column  headerText="#{msg.firstTermMark}" filterBy="#{item.firstHalfMark}" style="text-align: center">
+                                <h:outputText value="#{item.firstHalfMark}"/>
+                            </p:column>   
+                            <p:column  headerText="#{msg.firstTermExam}" filterBy="#{item.firstHalfExam}" style="text-align: center">
+                                <h:outputText value="#{item.firstHalfExam}"/>
+                            </p:column>   
+                            <p:column  headerText="#{msg.secondTermMark}" filterBy="#{item.secondHalfMark}" style="text-align: center">
+                                <h:outputText value="#{item.secondHalfMark}"/>
+                            </p:column>   
+                            <p:column  headerText="#{msg.secondTermExam}" filterBy="#{item.secondHalfExam}" style="text-align: center">
+                                <h:outputText value="#{item.secondHalfExam}"/>
+                            </p:column>   
+                            <p:column  headerText="#{msg.total}" filterBy="#{item.secondHalfExam+item.secondHalfMark+item.firstHalfExam+item.firstHalfMark}" style="text-align: center">
+                                <h:outputText value="#{item.secondHalfExam+item.secondHalfMark+item.firstHalfExam+item.firstHalfMark}"/>
+                            </p:column>   
+                            <p:column  headerText="#{msg.school}" 
+                                       rendered="#{request.isUserInRole('ADMINISTARTOR')}"
+                                       filterBy="#{(view.locale.language eq 'en')?item.school.name_en:item.school.name_ar}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.school.name_en:item.school.name_ar}"/>
+                            </p:column>  
+                            <p:column  style="width: 20px">
+                          
+                                <h:commandLink title="#{msg.update}"  class="fa fa-edit" action="#{termTopMarkMB.up()}">
+                                    <f:param name="id" value="#{item.id}"/>
+                                </h:commandLink>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>
