@@ -1,0 +1,96 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:h="http://java.sun.com/jsf/html"
+              xmlns:f="http://java.sun.com/jsf/core"
+              xmlns:ui="http://java.sun.com/jsf/facelets"
+              xmlns:p="http://primefaces.org/ui"
+              >
+
+    <ui:define name="head">
+        <style type="text/css">
+            .ui-selectoneradio.ui-grid-responsive .ui-grid-col-4,
+            .ui-selectmanycheckbox.ui-grid-responsive .ui-grid-col-4{
+                padding-bottom: 10px;
+            }
+            .ui-grid-col-4{
+                text-align: right
+            }
+            .ui-grid-col-6{
+                text-align: right
+            }
+            .ui-grid-col-2{
+                text-align: left
+            }
+            
+        </style>
+    </ui:define>
+
+    <div class="ui-g " >
+        <div class="ui-g-12">
+            <div class="card card-w-title" >
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:button outcome="items"  title="back" icon="fa fa-reply" />
+                    </f:facet>
+                    <f:facet name="right">
+                    </f:facet>
+                </p:toolbar>
+<!--                <p:panelGrid styleClass="nba-grid"  class="ui-g-12" >
+                    <p:row style="width: 100%" styleClass="ui-widget-header">
+                        <p:column  styleClass="ui-widget-header" style="text-align: left" >
+                            <h:link title="back" outcome="items" value="" style="text-align: left">
+                                <i class="fa fa-reply" style="size: 20px;color: #ffffff;font-size:larger ;float: left;padding-right: 5px;" />
+                            </h:link> 
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>-->
+                <p:messages showDetail="true" autoUpdate="true" closable="true" />
+                <p:focus context="panel"/>
+                <p:panelGrid id="panel" columns="2" columnClasses="ui-grid-col-4,ui-grid-col-6" 
+                             layout="grid" styleClass="ui-panelgrid-blank form-group" 
+                             style="border:0px none; background-color:transparent;direction:#{(view.locale.language eq 'en')?'ltr':'rtl'}" >
+                    <p:outputLabel for="teachers" 
+                                   value="#{msg.teacher}"/>
+                    <p:selectOneMenu id="teachers" 
+                                     value="#{teacherAssignMB.item.teacher.id}" 
+                                     style="text-align: center;width: 100%"
+                                     required="true">        
+                        <f:selectItem itemLabel="#{msg.select}" noSelectionOption="true"/>
+                        <p:ajax listener="#{teacherAssignMB.updateMsgListner}" update="classes"/>
+                        <f:selectItems value="#{teacherAssignMB.teachers}"
+                                       var="t"  
+                                       itemLabel="#{(view.locale.language eq 'en')?t.name_en:t.name_ar}" 
+                                       itemValue="#{t.id}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="classes" 
+                                   value="#{msg.class}"/>
+                    <p:selectOneMenu id="classes" 
+                                     value="#{teacherAssignMB.item.class_.id}" 
+                                      
+                                     style="text-align: center;width: 100%"
+                                     required="true">
+                        <f:selectItem itemLabel="#{msg.select}" noSelectionOption="true"/>
+                        <p:ajax listener="#{teacherAssignMB.updateMsgListner}" update="teachers"/>
+                        <f:selectItems value="#{teacherAssignMB.classes}"
+                                       var="c"  
+                                       itemLabel="#{(view.locale.language eq 'en')?c.name_en:c.name_ar}" 
+                                       itemValue="#{c.id}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="subjects" 
+                                   value="#{msg.subject}"/>
+                    <p:selectOneMenu id="subjects" 
+                                     value="#{teacherAssignMB.item.subject_t.id}" 
+                                      
+                                     style="text-align: center;width: 100%"
+                                     required="true">
+                        <f:selectItem itemLabel="#{msg.select}" noSelectionOption="true"/>
+                        <p:ajax listener="#{teacherAssignMB.updateMsgListner}" update="teachers"/>
+                        <f:selectItems value="#{teacherAssignMB.subject_ts}"
+                                       var="s"  
+                                       itemLabel="#{(view.locale.language eq 'en')?s.name_en:s.name_ar}" 
+                                       itemValue="#{s.id}" />
+                    </p:selectOneMenu>
+                </p:panelGrid>
+            </div>
+        </div>
+    </div>
+</ui:component>

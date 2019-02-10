@@ -1,0 +1,280 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pa="http://primefaces.org/barcelona">
+
+    <div class="layout-sidebar #{guestPreferences.darkMenu ? 'layout-sidebar-dark': ''}">
+        <pa:tabMenu>
+
+
+            <pa:tab icon="home" title="#{msg.schoolLife}">
+                <h:form>
+                    <pa:menu widgetVar="me2w">
+                        <p:menuitem id="attendance" 
+                                    value="#{msg.attendance}"  
+                                    icon="assignment" 
+                                    outcome="/attendance/items.xhtml" />
+                        <p:menuitem id="homeWork" 
+                                    value="#{msg.homework}" 
+                                    icon="assignment" 
+                                    outcome="/homeWork/items.xhtml" />
+                        <p:menuitem id="noteDaily" 
+                                    value="#{msg.noteDaily}" 
+                                    icon="assignment" 
+                                    outcome="/noteDaily/items.xhtml" />
+                        <p:menuitem id="daysOff" 
+                                    value="#{msg.daysOff}" 
+                                    icon="assignment" 
+                                    outcome="/vacation/items.xhtml"
+                                    />
+                    </pa:menu>
+                </h:form>
+            </pa:tab>
+            <pa:tab icon="dialpad" title="#{msg.marks}">
+                <h:form>
+                    <pa:menu widgetVar="me2w">
+                        <p:menuitem id="weekMark" value="#{msg.weekMark}" 
+                                    icon="menu" 
+                                    outcome="/WeekMark/items.xhtml" 
+                                    rendered="#{loginMB.user.school.systemVariables.termType.id eq 2 or request.isUserInRole('ADMINISTRATOR')}"/>
+                        <p:menuitem id="monthMark" value="#{msg.monthMarks}" 
+                                    icon="menu" 
+                                    outcome="/MonthMark/items.xhtml" 
+                                    rendered="#{loginMB.user.school.systemVariables.termType.id eq 1 or request.isUserInRole('ADMINISTRATOR')}"/>
+                        <p:menuitem id="term2Mark" 
+                                    value="#{(loginMB.user.school.systemVariables.termType.id eq 1 )?msg.termMark:msg.termWeek2term}" 
+                                    icon="menu" 
+                                    outcome="/term2Mark/items.xhtml" 
+                                    />
+                        <p:menuitem id="term3Mark" value="#{(loginMB.user.school.systemVariables.termType.id eq 1 )?msg.termMark:msg.termWeek3term}" 
+                                    icon="menu" 
+                                    outcome="/term3Mark/items.xhtml" 
+                                    rendered="#{loginMB.user.school.systemVariables.termType.id eq 2 or request.isUserInRole('ADMINISTRATOR')}"/>
+                    </pa:menu>
+                </h:form>
+            </pa:tab>
+
+
+
+
+            <pa:tab icon="class" title="#{msg.school_data}">
+                <h:form>
+                    <pa:menu widgetVar="me2e">
+                        <p:menuitem id="teacherAssign" value="#{msg.teacherAssign}" 
+                                    icon="texture" outcome="/newYear/teacherAssign/items.xhtml" />
+                        <p:menuitem id="subjectTable" value="#{msg.subjectTable}" 
+                                    icon="today" outcome="/newYear/subjectTable/items.xhtml" 
+                                    />
+                        <p:menuitem id="termWeek" value="#{msg.terms} - #{msg.termWeek}" 
+                                    icon="timelapse" outcome="/newYear/termWeek/items.xhtml" 
+                                    rendered="#{loginMB.user.school.systemVariables.termType.id eq 2 or request.isUserInRole('ADMINISTRATOR')}"/>
+                        <p:menuitem id="termMonth" value="#{msg.terms} - #{msg.termMonth}" 
+                                    icon="timelapse" outcome="/newYear/termMonth/items.xhtml" 
+                                    rendered="#{loginMB.user.school.systemVariables.termType.id eq 1 or request.isUserInRole('ADMINISTRATOR')}"/>
+                        <p:menuitem id="schoolWeek" value="#{msg.schoolCalender}" 
+                                    icon="timelapse" outcome="/newYear/schoolWeek/items.xhtml" 
+                                    rendered="#{loginMB.user.school.systemVariables.termType.id eq 2 or request.isUserInRole('ADMINISTRATOR')}"/>
+                        <p:menuitem id="schoolMonth" value="#{msg.schoolCalender}" 
+                                    icon="timelapse" outcome="/newYear/schoolMonth/items.xhtml" 
+                                    rendered="#{loginMB.user.school.systemVariables.termType.id eq 1 or request.isUserInRole('ADMINISTRATOR')}"/>
+                        <p:menuitem id="exam" value="#{msg.exams}" 
+                                    icon="texture" outcome="/exam/examTable/items.xhtml" />
+                        <p:menuitem id="reports" value="#{msg.reports}" 
+                                    icon="texture" outcome="/reports/items.xhtml" 
+                                    rendered="#{loginMB.user.school.systemVariables.termType.id eq 2 
+                                                and request.isUserInRole('ADMIN')}"/>
+                    </pa:menu>
+                </h:form>
+            </pa:tab>
+            <pa:tab icon="face" title="#{msg.students}"
+                    rendered="#{request.isUserInRole('ADMIN') 
+                                or request.isUserInRole('ADMINISTRATOR')
+                                or request.isUserInRole('TEACHER') 
+                                or request.isUserInRole('EMPLOYEE')}">
+                <h:form>
+                    <pa:menu widgetVar="me2w">
+                        <p:menuitem id="registerStudent" value="#{msg.students}" icon="&#xe54b;" outcome="/students/registerStudent/items.xhtml" />
+                        <p:menuitem rendered="#{request.isUserInRole('ADMIN') or request.isUserInRole('ADMINISTRATOR') or request.isUserInRole('EMPLOYEE')}"
+                                    id="allStudents" value="#{msg.allStudents}" icon="&#xe7fd;" outcome="/students/students/items.xhtml" />
+                        <p:menuitem rendered="#{request.isUserInRole('ADMIN') or request.isUserInRole('ADMINISTRATOR') or request.isUserInRole('EMPLOYEE')}"
+                                    id="parents" value="#{msg.Parents}" icon="&#xe7fd;" outcome="/students/parent/items.xhtml" />
+                        <p:menuitem rendered="#{request.isUserInRole('ADMIN') or request.isUserInRole('ADMINISTRATOR') or request.isUserInRole('EMPLOYEE')}"
+                                    id="studentParent" value="#{msg.students} - #{msg.Parents}" icon="people" outcome="/students/studentParent/items.xhtml" />
+                    </pa:menu>
+                </h:form>
+            </pa:tab>
+            <pa:tab icon="people" title="#{msg.employees}"
+                    rendered="#{request.isUserInRole('ADMIN') or request.isUserInRole('ADMINISTRATOR') }">
+                <h:form>
+                    <pa:menu widgetVar="me2w">
+                        <p:menuitem rendered="#{request.isUserInRole('ADMIN') or request.isUserInRole('ADMINISTRATOR')}"
+                                    id="employees" value="#{msg.teachers}" icon="&#xe7fd;" outcome="/teachers/teacher/items.xhtml" />
+                    </pa:menu>
+                </h:form>
+            </pa:tab>
+            <pa:tab icon="collections" title="#{msg.activity}"
+                    rendered="#{request.isUserInRole('ADMIN') or request.isUserInRole('ADMINISTRATOR') }">
+                <h:form>
+                    <pa:menu widgetVar="me2w">
+
+                        <p:menuitem rendered="#{request.isUserInRole('ADMIN') or request.isUserInRole('ADMINISTRATOR')}"
+                                    id="activity" value="#{msg.activities}" icon="cameraroll" outcome="/activity/items.xhtml" />                        
+
+                    </pa:menu>
+                </h:form>
+            </pa:tab>
+
+            <pa:tab icon="&#xE8B8;" title="#{msg.Systemvariables}" 
+                    rendered="#{request.isUserInRole('ADMIN') or request.isUserInRole('ADMINISTRATOR')}">
+                <h:form>
+                    <pa:menu widgetVar="me2e">
+                        <p:submenu rendered="#{request.isUserInRole('ADMIN') or request.isUserInRole('ADMINISTRATOR')}" 
+                                   id="sVariables" label="#{msg.Systemvariables}" icon="apps">
+                            <p:menuitem rendered="#{request.isUserInRole('ADMIN') or request.isUserInRole('ADMINISTRATOR')}" 
+                                        id="variables" value="#{msg.Configuration}" icon="fingerprint" outcome="/setup/systemVariables/systemVariables.xhtml" />
+                            <p:menuitem rendered="#{request.isUserInRole('ADMIN') or request.isUserInRole('ADMINISTRATOR')}"
+                                        id="schoolYears" value="#{msg.schoolYear}" icon="favoriteborder" outcome="/setup/SchoolYear/items.xhtml" />
+                            <p:menuitem rendered="#{(request.isUserInRole('ADMIN') and loginMB.user.school.systemVariables.termType.id eq 2)or request.isUserInRole('ADMINISTRATOR') }" 
+                                        id="weekTopMark" value="#{msg.weekTopMark}" icon="tune" outcome="/setup/WeekTopMark/items.xhtml" />
+                            <p:menuitem rendered="#{(request.isUserInRole('ADMIN')  and loginMB.user.school.systemVariables.termType.id eq 1 ) or request.isUserInRole('ADMINISTRATOR') }" 
+                                        id="monthTopMark" value="#{msg.monthTopMark}" icon="tune" outcome="/setup/MonthTopMark/items.xhtml" />
+                            <p:menuitem rendered="#{request.isUserInRole('ADMIN') or request.isUserInRole('ADMINISTRATOR') }" 
+                                        id="term2TopMark" value="#{msg.term2TopMark}" icon="tune" outcome="/setup/Term2TopMark/items.xhtml" />
+                            <p:menuitem rendered="#{( request.isUserInRole('ADMIN')  and loginMB.user.school.systemVariables.termType.id eq 2) or request.isUserInRole('ADMINISTRATOR') }" 
+                                        id="term3TopMark" value="#{msg.term3TopMark}" icon="tune" outcome="/setup/Term3TopMark/items.xhtml" />
+                        </p:submenu>
+                        <p:submenu rendered="#{request.isUserInRole('ADMIN') or request.isUserInRole('ADMINISTRATOR')}"   
+                                   id="sData" label="#{msg.Systemdata}" icon="widgets">
+                            <p:menuitem rendered="#{request.isUserInRole('ADMIN') or request.isUserInRole('ADMINISTRATOR')}" 
+                                        id="school" value="#{msg.school}" icon="widgets" outcome="/setup/school/setup_school.xhtml" />
+                            <p:menuitem rendered="#{request.isUserInRole('ADMIN') or request.isUserInRole('ADMINISTRATOR')}" 
+                                        id="branch" value="#{msg.branchs}" icon="storage" outcome="/setup/branch/items.xhtml" />
+                            <p:menuitem rendered="#{request.isUserInRole('ADMIN') or request.isUserInRole('ADMINISTRATOR')}" 
+                                        id="classSchool" value="#{msg.classes}" icon="storage" outcome="/setup/class/items.xhtml" />
+                            <p:menuitem rendered="#{request.isUserInRole('ADMIN') or request.isUserInRole('ADMINISTRATOR')}" 
+                                        id="subjectSchool" value="#{msg.subjects}" icon="storage" outcome="/setup/subject/items.xhtml" />
+
+                        </p:submenu>
+                        <p:menuitem rendered="#{request.isUserInRole('ADMIN') or request.isUserInRole('ADMINISTRATOR')}"  
+                                    id="users" value="#{msg.systemUsers}" icon="people" outcome="/setup/user/items.xhtml" />
+                    </pa:menu>
+                </h:form>
+            </pa:tab>
+
+            <pa:tab icon="&#xE8B8;" title="administrator" rendered="#{request.isUserInRole('ADMINISTRATOR')}" >
+                <h:form id="menu-administrator" rendered="#{request.isUserInRole('ADMINISTRATOR')}">
+                    <pa:menu>
+                        <p:menuitem rendered="#{request.isUserInRole('ADMINISTRATOR')}" 
+                                    id="schoolAdmin" value="Schools" icon="adjust" outcome="/administartion/school/items.xhtml" />
+                        <p:menuitem rendered="#{request.isUserInRole('ADMINISTRATOR')}" 
+                                    id="systemVariablesAdmin" value="System Variables" icon="adjust" outcome="/administartion/systemVariables/items.xhtml" />
+                        <p:menuitem rendered="#{request.isUserInRole('ADMINISTRATOR')}" 
+                                    id="usersADMIN" value="Users" icon="adjust" outcome="/administartion/user/items.xhtml" />
+                        <p:menuitem rendered="#{request.isUserInRole('ADMINISTRATOR')}" 
+                                    id="accessTracking" value="Access Tracking" icon="adjust" outcome="/administartion/accessTracking/items.xhtml" />
+                        <p:menuitem rendered="#{request.isUserInRole('ADMINISTRATOR')}" 
+                                    id="rolesADMIN" value="Roles" icon="adjust" outcome="/administartion/roles/items.xhtml" />
+                        <p:menuitem rendered="#{request.isUserInRole('ADMINISTRATOR')}" 
+                                    id="classADMIN" value="Claas" icon="adjust" outcome="/administartion/class/items.xhtml" />
+                        <p:menuitem rendered="#{request.isUserInRole('ADMINISTRATOR')}" 
+                                    id="subjectADMIN" value="Subject" icon="adjust" outcome="/administartion/subject/items.xhtml" />
+                        <p:menuitem rendered="#{request.isUserInRole('ADMINISTRATOR')}" 
+                                    id="termADMIN" value="Term" icon="adjust" outcome="/administartion/term/items.xhtml" />
+                        <p:menuitem rendered="#{request.isUserInRole('ADMINISTRATOR')}" 
+                                    id="termTypeADMIN" value="Term Type" icon="adjust" outcome="/administartion/termType/items.xhtml" />
+
+                        <p:menuitem rendered="#{request.isUserInRole('ADMINISTRATOR')}" 
+                                    id="departmentADMIN" value="Department" icon="adjust" outcome="/administartion/department/items.xhtml" />
+                        <p:menuitem rendered="#{request.isUserInRole('ADMINISTRATOR')}" 
+                                    id="departmentTypeADMIN" value="Department Type" icon="adjust" outcome="/administartion/depatmentType/items.xhtml" />
+                        <p:menuitem rendered="#{request.isUserInRole('ADMINISTRATOR')}" 
+                                    id="dayADMIN" value="Day" icon="adjust" outcome="/administartion/day/items.xhtml" />
+                    </pa:menu>
+                </h:form>
+            </pa:tab>
+            <pa:tab icon="home" title="Features" rendered="#{request.isUserInRole('ADMINISTRATOR')}" >
+                <h:form id="menu-form">
+                    <pa:menu widgetVar="meq">
+                        <p:menuitem id="um_dashboard" value="Dashboard" icon="&#xE871;" outcome="/dashboard"/>
+                        <p:submenu id="um_customization1" label="Menu Modes" icon="&#xE8B8;">
+                            <p:menuitem id="menu1" value="Light Menu" icon="&#xE893;" actionListener="#{guestPreferences.setDarkMenu(false)}" ajax="false"/>
+                            <p:menuitem id="menu2" value="Dark Menu" icon="&#xE892;" actionListener="#{guestPreferences.setDarkMenu(true)}" ajax="false"/>
+                            <p:menuitem id="menu3" value="Static Menu" icon="&#xE5D2;" actionListener="#{guestPreferences.setOverlayMenu(false)}" ajax="false"/>
+                            <p:menuitem id="menu4" value="Overlay Menu" icon="&#xE879;" actionListener="#{guestPreferences.setOverlayMenu(true)}" ajax="false"/>
+                        </p:submenu>
+                        <p:submenu id="om_orientation" label="Orientation" icon="&#xE237;">
+                            <p:menuitem id="om_ltr" value="LTR" icon="&#xE236;" actionListener="#{guestPreferences.setOrientationRTL(false)}" ajax="false" />
+                            <p:menuitem id="om_rtl" value="RTL" icon="&#xE237;" actionListener="#{guestPreferences.setOrientationRTL(true)}" ajax="false" />
+                        </p:submenu>
+                        <p:submenu id="um_themes" label="Themes" icon="&#xE40A;">
+                            <p:menuitem id="theme1" value="Blue - Amber" icon="&#xE40A;" actionListener="#{guestPreferences.setTheme('blue')}" ajax="false" />
+                            <p:menuitem id="theme2" value="Teal - Amber" icon="&#xE40A;" actionListener="#{guestPreferences.setTheme('teal')}" ajax="false" />
+                            <p:menuitem id="theme3" value="Blue Grey - Green" icon="&#xE40A;" actionListener="#{guestPreferences.setTheme('blue-grey')}" ajax="false" />
+                            <p:menuitem id="theme4" value="Cyan - Yellow" icon="&#xE40A;" actionListener="#{guestPreferences.setTheme('cyan')}" ajax="false" />
+                            <p:menuitem id="theme5" value="Dark - Blue" icon="&#xE40A;" actionListener="#{guestPreferences.setTheme('dark-blue')}" ajax="false" />
+                            <p:menuitem id="theme6" value="Dark - Green" icon="&#xE40A;" actionListener="#{guestPreferences.setTheme('dark-green')}" ajax="false" />
+                            <p:menuitem id="theme7" value="Light Blue - Green" icon="&#xE40A;" actionListener="#{guestPreferences.setTheme('light-blue')}" ajax="false" />
+                            <p:menuitem id="theme8" value="Indigo - Cyan" icon="&#xE40A;" actionListener="#{guestPreferences.setTheme('indigo')}" ajax="false" />
+                            <p:menuitem id="theme9" value="Deep Purple - Pink" icon="&#xE40A;" actionListener="#{guestPreferences.setTheme('deep-purple')}" ajax="false" />
+                            <p:menuitem id="theme10" value="Green - Yellow" icon="&#xE40A;" actionListener="#{guestPreferences.setTheme('green')}" ajax="false" />
+                        </p:submenu>
+                        <p:submenu id="bm_components" label="Components" icon="&#xE896;">
+                            <p:menuitem id="bm_sample" value="Sample Page" icon="&#xE30B;" outcome="/sample" />
+                            <p:menuitem id="bm_forms" value="Forms" icon="&#xE890;" outcome="/forms" />
+                            <p:menuitem id="bm_data" value="Data" icon="&#xE3EC;" outcome="/data" />
+                            <p:menuitem id="bm_panels" value="Panels" icon="&#xE14F;" outcome="/panel" />
+                            <p:menuitem id="bm_overlays" value="Overlays" icon="&#xE14D;" outcome="/overlay" />
+                            <p:menuitem id="bm_menus" value="Menus" icon="&#xE5D2;" outcome="/menu" />
+                            <p:menuitem id="bm_messages" value="Messages" icon="&#xE0C9;" outcome="/messages" />
+                            <p:menuitem id="bm_charts" value="Charts" icon="&#xE24B;" outcome="/charts" />
+                            <p:menuitem id="bm_file" value="File" icon="&#xE226;" outcome="/file" />
+                            <p:menuitem id="bm_misc" value="Misc" icon="&#xE332;" outcome="/misc" />
+                        </p:submenu>
+                        <p:submenu id="um_default" label="Template Pages" icon="&#xE884;">
+                            <p:menuitem id="um_db_landing" value="Landing" icon="&#xE904;" outcome="/landing"/>
+                            <p:menuitem id="um_empty" value="Empty Page" icon="&#xE88B;" outcome="/empty" />
+                            <p:menuitem id="um_login" value="Login Page" icon="&#xE8E8;" outcome="/login" />
+                            <p:menuitem id="um_error" value="Error Page" icon="&#xE000;" outcome="/error" />
+                            <p:menuitem id="um_404" value="404 Page" icon="&#xE001;" outcome="/404" />
+                            <p:menuitem id="um_access" value="Access Denied Page" icon="&#xE32A;" outcome="/access" />
+                        </p:submenu>
+                        <p:submenu id="um_hierarchy" label="Menu Hierarchy" icon="&#xE5D2;">
+                            <p:submenu id="um_sm1" label="Submenu 1" icon="&#xE8D2;">
+                                <p:submenu id="um_sm11" label="Submenu 1.1" icon="&#xE8D2;">
+                                    <p:menuitem id="um_lnk111" value="Link 1.1.1" icon="&#xE8D2;" url="#" />
+                                    <p:menuitem id="um_lnk112" value="Link 1.1.2" icon="&#xE8D2;" url="#" />
+                                    <p:menuitem id="um_lnk113" value="Link 1.1.3" icon="&#xE8D2;" url="#" />
+                                </p:submenu>
+                                <p:submenu id="um_sm12" label="Submenu 1.2" icon="&#xE8D2;">
+                                    <p:menuitem id="um_lnk121" value="Link 1.2.1" icon="&#xE8D2;" url="#" />
+                                </p:submenu>
+                            </p:submenu>
+                            <p:submenu id="um_sm2" label="Submenu 2" icon="&#xE8D2;">
+                                <p:submenu id="um_sm21" label="Submenu 2.1" icon="&#xE8D2;">
+                                    <p:menuitem id="um_lnk211" value="Link 2.1.1" icon="&#xE8D2;" url="#" />
+                                    <p:menuitem id="um_lnk212" value="Link 2.1.2" icon="&#xE8D2;" url="#" />
+                                </p:submenu>
+                                <p:submenu id="um_sm22" label="Submenu 2.2" icon="&#xE8D2;">
+                                    <p:menuitem id="um_lnk221" value="Link 2.2.1" icon="&#xE8D2;" url="#" />
+                                </p:submenu>
+                            </p:submenu>
+                        </p:submenu>
+                        <p:menuitem id="um_utils" value="Utils" icon="&#xE869;" outcome="/utils" />
+                        <p:menuitem id="um_doc" value="Documentation" icon="&#xE880;" outcome="/docs"/>
+                        <p:submenu id="staticList" label="Static List" icon="&#xE884;">
+                            <p:menuitem id="staticClass" value="Static Class" icon="&#xE904;" outcome="/administartion/statics/staticClass.xhtml"/>
+                            <p:menuitem id="staticLevel" value="Static Level" icon="&#xE904;" outcome="/administartion/statics/staticLevel.xhtml"/>
+                            <p:menuitem id="staticSupClass" value="Static Sup Class" icon="&#xE904;" outcome="/administartion/statics/staticSupClass.xhtml"/>
+                        </p:submenu>
+                    </pa:menu>
+                </h:form>
+            </pa:tab>
+            
+        </pa:tabMenu>   
+
+    </div>
+
+</ui:composition>

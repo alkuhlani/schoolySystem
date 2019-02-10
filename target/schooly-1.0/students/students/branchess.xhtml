@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+    <title>Employees</title>
+</h:head>
+<h:body>
+    <h:form>
+        <p:panel>
+        <p:dataTable var="item"
+                     value="#{branchesMB2.branchList}"
+                     rowKey="#{item.id}"
+                     scrollable="true"
+                     scrollHeight="400"
+                     selection="#{branchesMB2.selectedBranch}">
+            <p:column headerText="Id">
+                <h:outputText value="#{item.id}"/>
+            </p:column>
+
+            <p:column headerText="Name">
+                <h:outputText value="#{item.name_ar}"/>
+            </p:column>
+
+            
+            <p:column selectionMode="multiple"
+                      style="width:16px;text-align:center"/>
+        </p:dataTable>
+        <f:facet name="footer">
+            <p:commandButton value="Submit" actionListener="#{branchesMB2.submitSelectedBranches()}"/>
+        </f:facet>
+        </p:panel>
+    </h:form>
+</h:body>
+</html>

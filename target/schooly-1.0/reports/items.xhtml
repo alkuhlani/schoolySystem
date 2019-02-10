@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/WEB-INF/template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="title">
+        Schooly System
+    </ui:define>
+
+    <ui:define name="head">
+        <!--head-->
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form>
+            <div class="ui-g" >
+                
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <!--<h1></h1>-->
+                        <div class="card card-w-title">
+                            <h1>#{msg.reports}</h1>
+                            <p:accordionPanel style="margin-top:20px">
+                                <p:tab title="Attendance">
+                                    <p:panelGrid columns="1" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank">
+                                        <!--<div class="ui-g-12 ui-md-6" style="text-align:center">-->
+                                        <!--                                        <p:commandButton type="button" 
+                                                                                                 value="Primary Button" />-->
+                                        <p:link type="button" value="Attendance Sheet" target="_blank" outcome="attendanceSheet" />
+                                        <!--<p:commandButton type="button" value="Inline Button" />-->
+                                        <!--                                            <p:commandButton type="button" value="Blue-Grey Button" styleClass="blue-grey-btn" style="margin-bottom:10px;"/>
+                                                                                    <p:commandButton type="button" value="Cyan Button" styleClass="cyan-btn" style="margin-bottom:10px;"/>
+                                                                                    <p:commandButton type="button" value="Amber Button" styleClass="amber-btn" style="margin-bottom:10px;"/>
+                                                                                    <p:commandButton type="button" value="Teal Button" styleClass="teal-btn" style="margin-bottom:10px;"/>
+                                                                                    <p:commandButton type="button" value="Red Button" styleClass="red-btn" style="margin-bottom:10px;"/>
+                                                                                    <p:commandButton type="button" value="Orange Button" styleClass="orange-btn" style="margin-bottom:10px;"/>
+                                                                                    <p:commandButton type="button" value="Green Button" styleClass="green-btn" style="margin-bottom:10px;"/>
+                                                                                    <p:commandButton type="button" value="Deep-Orange Button" styleClass="deep-orange-btn" style="margin-bottom:10px;"/>
+                                                                                    <p:commandButton type="button" value="Purple Button" styleClass="purple-btn" style="margin-bottom:10px;"/>
+                                                                                    <p:commandButton type="button" value="Indigo Button" styleClass="indigo-btn" style="margin-bottom:10px;"/>
+                                                                                    <p:commandButton type="button" value="Pink Button" styleClass="pink-btn" style="margin-bottom:10px;"/>-->
+                                        <!--</div>-->
+                                        <!--                                        <h:outputText value="IMAGE" />
+                                                                                <h:outputText
+                                                                                    value="A" />-->
+                                    </p:panelGrid>
+                                </p:tab>
+                                <p:tab title="Marks">
+                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank">
+ 
+                                    </p:panelGrid>
+                                </p:tab>
+                                <!--                                <p:tab title="Godfather Part III">
+                                                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank">
+                                                                        <h:outputText value="IMAGE" />
+                                                                        <h:outputText value="After a break of more than 15 years, director Francis Ford Coppola and writer Mario Puzo returned to the well for this third and final story of the fictional Corleone crime family. 
+                                                                                      Two decades have passed, and crime kingpin Michael Corleone, now divorced from his wife Kay has nearly succeeded in keeping his promise that his family would one day be completely legitimate." />
+                                                                    </p:panelGrid>
+                                                                </p:tab>-->
+                            </p:accordionPanel>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

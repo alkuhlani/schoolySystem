@@ -1,0 +1,117 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:h="http://java.sun.com/jsf/html"
+              xmlns:f="http://java.sun.com/jsf/core"
+              xmlns:ui="http://java.sun.com/jsf/facelets"
+              xmlns:p="http://primefaces.org/ui"
+              >
+
+    <ui:define name="head">
+        <style type="text/css">
+            .ui-selectoneradio.ui-grid-responsive .ui-grid-col-4,
+            .ui-selectmanycheckbox.ui-grid-responsive .ui-grid-col-4{
+                padding-bottom: 10px;
+            }
+            .ui-grid-col-4{
+                text-align: right
+            }
+            .ui-grid-col-6{
+                text-align: right
+            }
+            .ui-grid-col-2{
+                text-align: left
+            }
+
+        </style>
+    </ui:define>
+
+    <div class="ui-g " >
+        <div class="ui-g-12">
+            <div class="card card-w-title" >
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:button outcome="items"  title="back" icon="fa fa-reply" />
+                    </f:facet>
+                    <f:facet name="right">
+                    </f:facet>
+                </p:toolbar>
+
+                <p:messages showDetail="true" autoUpdate="true" closable="true" />
+                <p:focus context="panel"/>
+                <p:panelGrid id="panel" columns="2" columnClasses="ui-grid-col-5,ui-grid-col-7" 
+                             layout="grid" styleClass="ui-panelgrid-blank form-group" 
+                             style="border:0px none; background-color:transparent;direction:#{(view.locale.language eq 'en')?'ltr':'rtl'}" >
+                    <p:outputLabel for="term" value="#{msg.term}"/>
+                    <p:selectOneMenu id="term" value="#{termWeekMB.item.term.id}" >
+                        <f:selectItems value="#{termWeekMB.terms}" 
+                                       var="term" itemLabel="#{(view.locale.language eq 'en')?term.name_en:term.name_ar}" 
+                                       itemValue="#{term.id}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="name_arabic" value="#{msg.term_name} - #{msg.arName}"/>
+                    <p:inputText id="name_arabic" value="#{termWeekMB.item.name_ar}" 
+                                 style="width: 100%;text-align: center;direction: rtl;
+                                 border-top: #006064;
+                                 border-radius:  10px ;border-style:  solid "
+                                 required="true"/>
+                    <p:outputLabel for="name_english" value="#{msg.term_name} - #{msg.engName}"/>
+                    <p:inputText id="name_english" value="#{termWeekMB.item.name_en}" 
+                                 style="width: 100%;text-align: center;direction: ltr;
+                                 border-top: #006064;
+                                 border-radius:  10px ;border-style:  solid "
+                                 required="true"/>
+                    <p:outputLabel for="schoolYear" value="#{msg.schoolYearCurrent}"/>
+                    <p:outputLabel id="schoolYear" value="#{loginMB.user.school.systemVariables.schoolYear.name_en}" style="width: 100%;text-align: center"/>
+                    <p:outputLabel for="noFirst" value="#{msg.no1Term}"/>
+                    <p:inputNumber id="noFirst" value="#{termWeekMB.item.noFirst}" 
+                                 style="text-align: center;direction: ltr;
+                                 border-top: #006064;
+                                 border-radius:  10px ;border-style:  solid "
+                                 required="true"
+                                 maxValue="15"
+                                 minValue="0" />
+                    <p:outputLabel for="first1Date" value="#{msg.date1termStart}"/>
+                    <p:calendar id="first1Date" required="true" 
+                                value="#{termWeekMB.item.first1Date}" 
+                                pattern="dd-MM-yyyy" mask="true" pages="3"
+                                style="text-align: center;direction: ltr;
+                                 border-top: #006064;
+                                 border-radius:  10px ;border-style:  solid ">
+                    <p:ajax event="dateSelect" update="end1Date" />
+                    </p:calendar>
+                    <p:outputLabel for="end1Date" value="#{msg.date1termEnd}"/>
+                    <p:calendar id="end1Date" required="true" 
+                                value="#{termWeekMB.item.end1Date}" 
+                                mindate="#{termWeekMB.item.first1Date}"
+                                pattern="dd-MM-yyyy" mask="true" pages="3"
+                                style="text-align: center;direction: ltr;
+                                 border-top: #006064;
+                                 border-radius:  10px ;border-style:  solid "/>
+                    <p:outputLabel for="noEnd" value="#{msg.no1Term}"/>
+                    <p:inputNumber id="noEnd" value="#{termWeekMB.item.noEnd}" 
+                                 style="text-align: center;direction: ltr;
+                                 border-top: #006064;
+                                 border-radius:  10px ;border-style:  solid "
+                                 required="true"
+                                 maxValue="15"
+                                 minValue="0" />
+                    <p:outputLabel for="first2Date" value="#{msg.date2termStart}"/>
+                    <p:calendar id="first2Date" required="true" 
+                                value="#{termWeekMB.item.first2Date}" 
+                                pattern="dd-MM-yyyy" mask="true" pages="3"
+                                style="text-align: center;direction: ltr;
+                                 border-top: #006064;
+                                 border-radius:  10px ;border-style:  solid ">
+                    <p:ajax event="dateSelect" update="end2Date" />
+                    </p:calendar>
+                    <p:outputLabel for="end2Date" value="#{msg.date2termEnd}"/>
+                    <p:calendar id="end2Date" required="true" 
+                                value="#{termWeekMB.item.end2Date}" 
+                                mindate="#{termWeekMB.item.first2Date}"
+                                pattern="dd-MM-yyyy" mask="true" pages="3"
+                                style="text-align: center;direction: ltr;
+                                 border-top: #006064;
+                                 border-radius:  10px ;border-style:  solid "/>
+                </p:panelGrid>
+            </div>
+        </div>
+    </div>
+</ui:component>

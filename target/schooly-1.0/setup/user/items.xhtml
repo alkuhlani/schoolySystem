@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/WEB-INF/template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="title">
+        Schooly System
+    </ui:define>
+
+    <ui:define name="head">
+        <!--head-->
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form>
+            <div class="ui-g" >
+                <f:event type="preRenderComponent" listener="#{usersMB.prepareItems()}"/>      
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <!--<h1></h1>-->
+                        <p:dataTable var="item" 
+                                     value="#{usersMB.items}"  
+                                     reflow="true"
+                                     rowsPerPageTemplate="5,10,15,20,40,100"
+                                     rows="15"
+                                     paginator="true" 
+                                     resizableColumns="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     id="items" 
+                                     dir="#{(view.locale.language eq 'en')?'ltr':'rtl'}"
+                                     >
+                            <f:facet name="header">
+                                <p:commandButton id="toggler" type="button" value="Columns" style="float:right" icon="ui-icon-calculator" />
+                                <p:columnToggler datasource="items" trigger="toggler" />
+                                <h:link title="#{msg.add}" outcome="create" value="" style="text-align: left">
+                                    <i class="fa fa-plus" style="size: 20px;color: #ffffff;font-size:larger ;float: left;padding-right: 5px;" />
+                                </h:link> 
+                                #{msg.systemUsers}
+
+                            </f:facet>
+                            <p:column  headerText="#{msg.fullName}" filterBy="#{(view.locale.language eq 'en')?item.name_en:item.name_ar}" style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.name_en:item.name_ar}"/>
+                            </p:column>                
+
+                            <p:column  headerText="#{msg.userName}" filterBy="#{item.username}" style="text-align: center">
+                                <h:outputText value="#{item.username}"/>
+                            </p:column>     
+                            <p:column  headerText="#{msg.password}" filterBy="#{item.password}" style="text-align: center">
+                                <h:outputText value="#{item.password}"/>
+                            </p:column>     
+                            <p:column  headerText="#{msg.role}" filterBy="#{item.role_}" style="text-align: center">
+                                <h:outputText value="#{item.role_}"/>
+                            </p:column>     
+                            <p:column  headerText="#{msg.school}" 
+                                       rendered="#{request.isUserInRole('ADMINISTARTOR')}"
+                                       filterBy="#{(view.locale.language eq 'en')?item.school.name_en:item.school.name_ar}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.school.name_en:item.school.name_ar}"/>
+                            </p:column>  
+
+                            <p:column style="width: 30px">
+                                <p:button   title="#{msg.update}" icon="fa fa-edit"  outcome="update">
+                                    <f:param name="id" value="#{item.id}"/>
+                                </p:button>
+                            </p:column>
+                            <p:column style="width: 70px">
+                                <p:splitButton rendered="#{request.isUserInRole('ADMIN')}" 
+                                            icon="fa fa-edit"    title="reset" >
+                                    <p:menuitem   value="username" 
+                                                  
+                                                  outcome="update_1"/>
+                                    <p:menuitem   value="password" 
+                                                  
+                                                  outcome="update_1">
+                                        <f:param name="id2" value="#{item.id}"/>
+                                                 <f:param name="mode" value="1"/>
+                                    </p:menuitem>
+                                </p:splitButton>
+                                <!--                                <p:button   title="reset password" icon="fa fa-edit"  outcome="update_1">
+                                                                    <f:param name="id" value="#{item.id}"/>
+                                                                </p:button>-->
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

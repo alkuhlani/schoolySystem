@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/WEB-INF/template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="title">
+        Schooly System
+    </ui:define>
+    <ui:define name="head">
+        <!--head-->
+    </ui:define>
+    <ui:define name="content">
+        <h:form id="form1">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <f:event type="preRenderComponent" 
+                         listener="#{staticSubClassMB.prepareItems()}"/>      
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <!--<h1></h1>-->
+                        <p:dataTable var="item" value="#{staticSubClassMB.items}"  reflow="true"
+                                     rowsPerPageTemplate="5,10,15,20,40,100"
+                                     rows="100"
+                                     paginator="true" 
+                                     resizableColumns="true"
+                                     paginatorTemplate="{CurrentPageReport} 
+                                     {FirstPageLink} 
+                                     {PreviousPageLink} 
+                                     {PageLinks} 
+                                     {NextPageLink} 
+                                     {LastPageLink} 
+                                     {RowsPerPageDropdown}"
+                                     id="items" 
+                                     dir="#{(view.locale.language eq 'en')?'ltr':'rtl'}">
+                            <f:facet name="header">
+                                <p:commandButton id="toggler" type="button" value="Columns" style="float:right" icon="ui-icon-calculator" />
+                                <p:columnToggler datasource="items" trigger="toggler" />
+                                <p:commandButton  icon="fa fa-plus" value="#{msg.add}" style="size: 20px;color: #ffffff;font-size:larger ;float: left;padding-right: 5px;"
+                                                  actionListener="#{staticSubClassMB.prepareCreate()}"/>
+                            </f:facet>
+                            <p:column  headerText="name" filterBy="#{(view.locale.language eq 'en')?item.name_en:item.name_ar}" style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.name_en:item.name_ar}"/>
+                            </p:column>   
+                            <p:column style="width: 30px">
+                                <p:commandButton title="#{msg.update}" icon="fa fa-edit" actionListener="#{staticSubClassMB.prepareUpdate(item.id)}"/>                             
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+        <h:form id="form2">
+            <p:dialog header="Add Class" 
+                      widgetVar="dlg" 
+                      resizable="false" 
+                      modal="true" 
+                      focus="panel2"
+                      closeOnEscape="true"
+                      closable="true">
+                <p:focus context="panel2"/>
+                <h:panelGrid columns="2" cellpadding="5" id="panel2">
+                    <h:outputLabel for="namear" value="#{msg.arName}" />
+                    <p:inputText id="namear" value="#{staticSubClassMB.item.name_ar}" required="true" label="namear" />
+                    <h:outputLabel for="nameen" value="#{msg.engName}" />
+                    <p:inputText id="nameen" value="#{staticSubClassMB.item.name_en}" required="true" label="nameen" />
+                    <f:facet name="footer">
+                        <p:separator/>
+                        <p:commandButton value="#{msg.add}" update="form1,:form1:growl" actionListener="#{staticSubClassMB.create()}"
+                                         oncomplete="handleLoginRequest(xhr, status, args)" rendered="#{!staticSubClassMB.isUpdate}" />
+                        <p:commandButton value="#{msg.update}" update="form1,:form1:growl" actionListener="#{staticSubClassMB.update()}" icon="fa fa-pencil-square-o" 
+                                         oncomplete="handleLoginRequest(xhr, status, args)" rendered="#{staticSubClassMB.isUpdate}" >
+                            <p:confirm header="#{msg.updateConfirmation}" message="#{msg.doYouWanttoProcess}" icon="ui-icon-alert"  />
+                        </p:commandButton>
+                        <p:commandButton value="#{msg.delete}" update="form1,:form1:growl" actionListener="#{staticSubClassMB.delete()}" oncomplete="handleLoginRequest(xhr, status, args)" 
+                                         rendered="#{request.isUserInRole('ADMINISTRATOR') and staticSubClassMB.isUpdate}" icon="fa fa-times">
+                            <p:confirm header="#{msg.deleteConfirmation}" message="#{msg.doYouWanttoProcess}" icon="ui-icon-alert" />
+                        </p:commandButton>
+                    </f:facet>
+                    <div style="text-align: center">
+                    </div>
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton oncomplete="PF('dlg').hide();"  value="#{msg.confirm}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton update="form1,:form1:growl" value="#{msg.cancel}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>
+                </h:panelGrid>
+            </p:dialog>
+        </h:form>
+        <script type="text/javascript">
+            function handleLoginRequest(xhr, status, args) {
+                if (args.validationFailed || !args.isTrue) {
+                    PF('dlg').jq.effect("shake", {times: 5}, 100);
+                } else {
+                    PF('dlg').hide();
+                    $('#loginLink').fadeOut();
+                }
+            }
+        </script>
+    </ui:define>
+</ui:composition>

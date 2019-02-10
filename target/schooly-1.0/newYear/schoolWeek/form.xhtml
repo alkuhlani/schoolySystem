@@ -1,0 +1,107 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:h="http://java.sun.com/jsf/html"
+              xmlns:f="http://java.sun.com/jsf/core"
+              xmlns:ui="http://java.sun.com/jsf/facelets"
+              xmlns:p="http://primefaces.org/ui"
+              >
+
+    <ui:define name="head">
+        <style type="text/css">
+            .ui-selectoneradio.ui-grid-responsive .ui-grid-col-4,
+            .ui-selectmanycheckbox.ui-grid-responsive .ui-grid-col-4{
+                padding-bottom: 10px;
+            }
+            .ui-grid-col-4{
+                text-align: right
+            }
+            .ui-grid-col-6{
+                text-align: right
+            }
+            .ui-grid-col-2{
+                text-align: left
+            }
+
+        </style>
+    </ui:define>
+
+    <div class="ui-g " >
+        <div class="ui-g-12">
+            <div class="card card-w-title" >
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:button outcome="items"  title="back" icon="fa fa-reply" />
+                    </f:facet>
+                    <f:facet name="right">
+                    </f:facet>
+                </p:toolbar>
+                <p:messages showDetail="true" autoUpdate="true" closable="true" />
+                <p:focus context="panel"/>
+                <p:panelGrid id="panel" columns="2" columnClasses="ui-grid-col-4,ui-grid-col-6" 
+                             layout="grid" styleClass="ui-panelgrid-blank form-group" 
+                             style="border:0px none; background-color:transparent;direction:#{(view.locale.language eq 'en')?'ltr':'rtl'}" >
+                    <p:outputLabel for="weekNamear" value="#{msg.weekName} - #{msg.ar}"/>
+                    <p:inputText id="weekNamear" value="#{schoolWeekMB.item.name_ar}" 
+                                 style="width: 100%;text-align: center;direction: rtl;
+                                 border-top: #006064;
+                                 border-radius:  10px ;border-style:  solid "
+                                 required="true"/>
+                    <p:outputLabel for="weekNameen" value="#{msg.weekName} - #{msg.eng}"/>
+                    <p:inputText id="weekNameen" value="#{schoolWeekMB.item.name_en}" 
+                                 style="width: 100%;text-align: center;direction: ltr;
+                                 border-top: #006064;
+                                 border-radius:  10px ;border-style:  solid "
+                                 required="true"/>
+                    <p:outputLabel for="termWeeks" 
+                                   value="#{msg.term}"/>
+                    <p:selectOneMenu id="termWeeks" 
+                                     value="#{schoolWeekMB.item.termWeek.id}" 
+                                     style="width: 100%;text-align: center;direction: ltr;
+                                     border-top: #006064;
+                                     border-radius:  10px ;border-style:  solid "
+                                     required="true">
+                        <f:selectItem itemLabel="#{msg.select}" noSelectionOption="true"/>
+                        <f:selectItems value="#{schoolWeekMB.termWeeks}"
+                                       var="termWeek"  
+                                       itemLabel="#{(view.locale.language eq 'en')?termWeek.name_en:termWeek.name_ar}" 
+                                       itemValue="#{termWeek.id}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="termType" 
+                                   value="#{msg.TermHalf}"/>
+                    <p:selectOneMenu id="termType" 
+                                     value="#{schoolWeekMB.item.termType}" 
+                                     style="width: 100%;text-align: center;direction: ltr;
+                                     border-top: #006064;
+                                     border-radius:  10px ;border-style:  solid "
+                                     required="true">
+                        <f:selectItem itemLabel="#{msg.select}" noSelectionOption="true"/>
+                        <f:selectItem 
+                            itemLabel="#{msg.firstHalf}" 
+                            itemValue="1" />
+                        <f:selectItem 
+                            itemLabel="#{msg.secondHalf}" 
+                            itemValue="2" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="weekFirstDate" value="#{msg.weekFirstDate}"/>
+                    <p:calendar id="weekFirstDate"
+                                value="#{schoolWeekMB.item.firstDate}" 
+                                pattern="dd-MM-yyyy" mask="true" pages="2"
+                                style="text-align: center;direction: ltr;
+                                border-top: #006064;
+                                border-radius:  10px ;border-style:  solid "
+                                required="true">
+                    <p:ajax event="dateSelect" update="weekEndDate" />
+                    </p:calendar>
+                    <p:outputLabel for="weekEndDate" value="#{msg.weekEndDate}"/>
+                    <p:calendar id="weekEndDate" 
+                                value="#{schoolWeekMB.item.endDate}" 
+                                mindate="#{schoolWeekMB.item.firstDate}"
+                                pattern="dd-MM-yyyy" mask="true" pages="2"
+                                style="text-align: center;direction: ltr;
+                                border-top: #006064;
+                                border-radius:  10px ;border-style:  solid "
+                                required="true"/>
+                </p:panelGrid>
+            </div>
+        </div>
+    </div>
+</ui:component>

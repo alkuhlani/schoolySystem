@@ -1,0 +1,132 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/WEB-INF/template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="title">
+        Schooly System
+    </ui:define>
+
+    <ui:define name="head">
+        <style type="text/css">
+            .jjj {
+                /*width: 100%;*/
+                /*table-layout: fixed;*/
+                /*word-wrap: break-word;*/
+                /*background-color: #000000;*/
+/*                color: #006064;
+                font-family: cursive;
+                background-origin: border-box;
+                background: #424242;
+                background-color:red;
+                background-repeat: round;
+                background-size: cover;
+                font-weight: bold;*/
+
+                background-color: #FF0000;
+                color: #FF0000;
+            
+            }
+            .ui-datatable.active-item th {
+                background: red;
+
+            }
+        </style>
+    </ui:define>
+
+
+    <ui:define name="content">
+        <h:form>
+            <!--<p:growl id="growl" showDetail="true"  autoUpdate="true" />-->  
+            <div class="ui-g" >
+                <f:event type="preRenderComponent" 
+                         listener="#{attendanceMB.prepareStudentByClass(param['id'])}"/>      
+                <div class="ui-g-12">
+
+                    <p:calendar id="attendanceDate" 
+                                value="#{attendanceMB.attendanceDate}" 
+                                pattern="dd-MM-yyyy" mask="true" 
+                                style="color: #ffffff;column-gap: normal;column-fill: balance;color: #ffffff">
+                        <p:ajax listener="#{attendanceMB.dateListner}"/>
+                    </p:calendar>
+
+
+                    <div class="card card-w-title">
+
+                        <p:messages showDetail="true" autoUpdate="true" closable="true" />
+                        <!--<h1></h1>-->
+                        <p:dataTable var="item" 
+                                     value="#{attendanceMB.studentSchools}"  
+                                     selection="#{attendanceMB.selectedStudentSchools}" 
+                                     rowKey="#{item.id}" 
+                                     style="margin-bottom:0"
+                                     rowsPerPageTemplate="5,10,15,20,40,100"
+                                     rows="40"
+                                     paginator="true" 
+                                     resizableColumns="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     id="items" 
+                                     sortBy="#{(view.locale.language eq 'en')?item.student.name_en:item.student.name_ar}"
+                                     dir="#{(view.locale.language eq 'en')?'ltr':'rtl'}"
+                                     rowStyleClass="#{item.subClass=='1'?'jjj':null}"
+                                     disabledSelection="#{item.subClass=='1'}">
+                            <f:facet name="header">
+                                <p:commandButton id="toggler" type="button" value="Columns" style="float:right" icon="ui-icon-calculator" />
+
+                                <p:columnToggler datasource="items" trigger="toggler" />
+
+                                <p:column  styleClass="ui-widget-header" style="text-align: left" >
+                                    <h:link title="back" outcome="items_class" value="" style="text-align: left">
+                                        <i class="fa fa-reply" style="size: 20px;color: #ffffff;font-size:larger ;float: left;padding-right: 5px;" />
+                                    </h:link> 
+                                </p:column>
+                                <p:clock />
+                            </f:facet>
+                            <p:column selectionMode="multiple"
+                                      style="width:16px;text-align:center"/>
+
+                            <p:column headerText="#{msg.name}" 
+                                       filterBy="#{(view.locale.language eq 'en')?item.student.name_en:item.student.name_ar}" 
+                                       sortBy="#{(view.locale.language eq 'en')?item.student.name_en:item.student.name_ar}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.student.name_en:item.student.name_ar}"/>
+                            </p:column>                
+                            <p:column  headerText="#{msg.class}" filterBy="#{(view.locale.language eq 'en')?item.class_.name_en:item.class_.name_ar}" style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.class_.name_en:item.class_.name_ar}"/>
+                            </p:column>                
+                            <p:column  headerText="#{msg.department}" 
+                                       filterBy="#{(view.locale.language eq 'en')?item.department.name_en:item.department.name_ar}" 
+                                       style="text-align: center"
+                                       rendered="#{loginMB.user.school.systemVariables.termType.id eq 1}">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.class_.department.name_en:item.class_.department.name_ar}"/>
+                            </p:column>                
+                            <p:column  headerText="ID" filterBy="#{item.student.studentID}" style="text-align: center">
+                                <h:outputText value="#{item.student.studentID}"/>
+                            </p:column>                
+<!--                            <p:column  headerText="ID" filterBy="#{item.student.studentID}" style="text-align: center">
+                                <h:outputText value="#{item.subClass}"/>
+                            </p:column>                -->
+
+                            <p:column  headerText="#{msg.school}" 
+                                       rendered="#{request.isUserInRole('ADMINISTARTOR')}"
+                                       filterBy="#{(view.locale.language eq 'en')?item.schoolYear.school.name_en:item.schoolYear.school.name_ar}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.schoolYear.school.name_en:item.schoolYear.school.name_ar}"/>
+                            </p:column>  
+                        </p:dataTable>
+
+                    </div>
+                </div>
+                <p:separator/>
+
+            </div>
+            <div style="text-align: center">
+                <p:commandButton  value="#{msg.attendanceDo}" type="submit"  actionListener="#{attendanceMB.create()}"  icon="ui-icon-check"  />
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

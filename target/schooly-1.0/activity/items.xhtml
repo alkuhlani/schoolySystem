@@ -1,0 +1,134 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/WEB-INF/template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="title">
+        Schooly System
+    </ui:define>
+
+    <ui:define name="head">
+        <!--head-->
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <div class="ui-g" >
+                <f:event type="preRenderComponent" listener="#{activityMB.prepareItems()}"/>      
+                <div class="ui-g-12" >
+                    <div class="card card-w-title">
+                        <!--<h1></h1>-->
+                        <p:toolbar>
+                            <f:facet name="left">
+                            </f:facet>
+                            <f:facet name="right">
+                            </f:facet>
+                        </p:toolbar>
+                        <p:dataTable var="item" value="#{activityMB.items}"  reflow="true"
+                                     rowsPerPageTemplate="5,10,15,20,40,100"
+                                     rows="40"
+                                     paginator="true" 
+                                     resizableColumns="true"
+                                     paginatorTemplate="{CurrentPageReport} 
+                                     {FirstPageLink} 
+                                     {PreviousPageLink} 
+                                     {PageLinks} 
+                                     {NextPageLink} 
+                                     {LastPageLink} 
+                                     {RowsPerPageDropdown}"
+                                     currentPageReportTemplate="(Displaying 
+                                     {startRecord} - {endRecord} 
+                                     of {totalRecords}, 
+                                     Page: {currentPage}/{totalPages})"
+                                     id="items" 
+                                     dir="#{(view.locale.language eq 'en')?'ltr':'rtl'}"
+
+                                     rowIndexVar="index">
+                            <f:facet name="header">
+                                <p:commandButton id="toggler" type="button" value="Columns" style="float:right" icon="ui-icon-calculator" />
+                                <p:columnToggler datasource="items" trigger="toggler" />
+
+                                <p:button rendered="#{request.isUserInRole('ADMINISTRATOR') 
+                                                      or request.isUserInRole('ADMIN')}"  
+                                          title="new" value="new"  
+                                          outcome="create" style="float: left"/>
+                                #{msg.activityList}
+                            </f:facet>
+                            <p:column  headerText="no" 
+                                       filterBy="#{index+1}" 
+                                       sortBy="#{index+1}" 
+                                       style="text-align: center;width: 30px">
+                                <h:outputText value="#{index+1}"/>
+                            </p:column> 
+                            <p:column  headerText="#{msg.apriority}" 
+                                       filterBy="#{item.priorityNo}" 
+                                       style="text-align: center;width: 30px">
+                                <h:outputText value="#{item.priorityNo}"/>
+                            </p:column> 
+                            <p:column  headerText="#{msg.title}" 
+                                       filterBy="#{item.title}" 
+                                       style="text-align: center" >
+                                <h:outputText value="#{item.title}" />
+                            </p:column> 
+                            <p:column  headerText="#{msg.description}" 
+                                       filterBy="#{item.name}" 
+                                       style="text-align: center" >
+                                <h:outputText value="#{item.name}" />
+                            </p:column>  
+
+                            <p:column  headerText="#{msg.type}" 
+                                       filterBy="#{(item.type eq '0')?msg.albumImage:
+                                                   (item.type eq '1')?msg.activity:
+                                                   (item.type eq '2')?msg.studyDescision:item.type}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{(item.type eq '0')?msg.albumImage:
+                                                   (item.type eq '1')?msg.activity:
+                                                   (item.type eq '2')?msg.studyDescision:item.type}"/>
+                            </p:column>  
+                            <p:column  headerText="#{msg.isActive}" 
+                                       filterBy="#{item.isActive}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{item.isActive}"/>
+                            </p:column>  
+
+
+                            <p:column style="width:32px;text-align: center">
+                                <p:commandButton update=":form:carDetail" 
+                                                 oncomplete="PF('carDialog').show()" 
+                                                 icon="ui-icon-search" title="View Image">
+                                    <f:setPropertyActionListener value="#{item}" 
+                                                                 target="#{activityMB.item}" />
+                                </p:commandButton>
+                            </p:column>
+
+
+                            <p:column rendered="#{request.isUserInRole('ADMINISTRATOR') or request.isUserInRole('ADMIN')}" 
+                                      style="width: 30px">
+                                <p:button rendered="#{request.isUserInRole('ADMINISTRATOR') or request.isUserInRole('ADMIN')}"   
+                                          title="#{msg.update}" icon="fa fa-edit"  outcome="update">
+                                    <f:param name="id" value="#{item.id}"/>
+                                </p:button>
+                            </p:column>
+                        </p:dataTable>
+                        <p:dialog header="Info" widgetVar="carDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                            <p:outputPanel id="carDetail" style="text-align:center;">
+                                <p:panelGrid  columns="2" rendered="#{not empty activityMB.item}" 
+                                              columnClasses="label,value">
+                                    <f:facet name="header">
+                                        <h:graphicImage width="500px" height="500px"
+                                                        value="/resources/schools/#{loginMB.user.school.id}/activity/#{activityMB.item.imagePath}"  />
+                                    </f:facet>
+
+                                </p:panelGrid>
+                            </p:outputPanel>
+                        </p:dialog>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

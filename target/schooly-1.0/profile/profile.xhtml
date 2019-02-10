@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../WEB-INF/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:define name="title">
+        Profile 
+    </ui:define>
+
+    <ui:define name="head">
+        <!--head-->
+    </ui:define>
+
+    <ui:define name="content">
+        <f:event type="preRenderComponent" listener="#{usersMB.prepareUpdateProfile()}"/>
+        <h:form id="form">
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h1>Account Data</h1>
+                            <p:focus context="name_en" rendered="#{!usersMB.edit}"/>
+                            <p:messages showDetail="true" autoUpdate="true" closable="true"  />
+                            <p:panelGrid columns="3" columnClasses="ui-grid-col-2,ui-grid-col-8,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                <p:outputLabel for="name_en" value="#{msg.engName}"/>
+                                <h:panelGroup styleClass="md-inputfield" id="nameEnP">
+                                    <p:inputText id="name_en" value="#{usersMB.item.name_en}" disabled="#{usersMB.editNameEn?flase:true}"/>
+                                    <label>#{msg.eng}</label>
+                                </h:panelGroup>
+                                <h:panelGroup styleClass="md-inputfield" >
+                                    <p:commandButton value="#{msg.update}" icon="fa fa-pencil-square-o" style="width:auto" action="#{usersMB.editNameEn()}" rendered="#{!usersMB.editNameEn}" disabled="#{usersMB.editNameEn?true:flase}" ajax="true" id="editNameEn">
+                                        <p:ajax  update="@form" listener="#{usersMB.editNameEn()}" />
+                                    </p:commandButton>
+                                    <p:commandButton value="#{msg.save}" icon="ui-icon-check" style="width:auto" action="#{usersMB.saveNameEn()}" rendered="#{usersMB.editNameEn}" disabled="#{usersMB.editNameEn?flase:true}" ajax="true" id="saveNameEn" />                                    
+                                </h:panelGroup>
+                                <p:outputLabel for="name_ar" value="#{msg.arName}"/>
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText id="name_ar" value="#{usersMB.item.name_ar}" disabled="#{usersMB.editNameAr?flase:true}"/>
+                                    <label>#{msg.ar}</label>
+                                </h:panelGroup>
+                                <h:panelGroup styleClass="md-inputfield" >
+                                    <p:commandButton value="#{msg.update}" icon="fa fa-pencil-square-o" style="width:auto" action="#{usersMB.editNameAr()}" rendered="#{!usersMB.editNameAr}"  disabled="#{usersMB.editNameAr?true:flase}" ajax="true" id="editNameAr">
+                                        <p:ajax  update="@form" listener="#{usersMB.editNameAr()}" />
+                                    </p:commandButton>
+                                    <p:commandButton value="#{msg.save}" icon="ui-icon-check" style="width:auto" action="#{usersMB.saveNameAr()}" rendered="#{usersMB.editNameAr}" disabled="#{usersMB.editNameAr?flase:true}" ajax="true" id="saveNameAr" />                                    
+                                </h:panelGroup>
+                                <p:outputLabel for="username" value="#{msg.userName}"/>
+                                <h:panelGroup id="username" styleClass="md-inputfield">
+                                    <p:inputText  value="#{usersMB.oldUsername}"  rendered="#{usersMB.editUserName}" placeholder="old username"/>
+                                    <br/>
+                                    <br/>
+                                    <p:inputText  value="#{usersMB.newUsername}"  rendered="#{usersMB.editUserName}" placeholder="new username"/>
+                                </h:panelGroup>
+                                <h:panelGroup styleClass="md-inputfield" >
+                                    <p:commandButton value="#{msg.update}" icon="fa fa-pencil-square-o" style="width:auto" action="#{usersMB.editUserName()}" rendered="#{!usersMB.editUserName}"  disabled="#{usersMB.editUserName?true:flase}" ajax="true" id="editUsername">
+                                        <p:ajax  update="@form" listener="#{usersMB.editUserName()}" />
+                                    </p:commandButton>
+                                    <p:commandButton value="#{msg.save}" icon="ui-icon-check" style="width:auto" action="#{usersMB.saveUserName()}" rendered="#{usersMB.editUserName}" disabled="#{usersMB.editUserName?flase:true}" ajax="true" id="saveUsername" update="@all" />                                    
+                                </h:panelGroup>
+                                <p:outputLabel for="passwored" value="#{msg.password}"/>
+                                <h:panelGroup id="passwored" styleClass="md-inputfield">
+                                    <p:password id="no3" maxlength="15"  
+                                                value="#{usersMB.oldPassword}"
+
+                                                placeholder="Old Password" 
+                                                style="margin-top:15px;"
+                                                rendered="#{usersMB.editPassword}" />
+                                    <br/>
+                                    <p:password id="no1" maxlength="15"  
+                                                value="#{usersMB.newPassword2}" 
+                                                feedback="true" 
+                                                placeholder="new Password" 
+                                                style="margin-top:15px;" 
+                                                match="no2"
+                                                rendered="#{usersMB.editPassword}"/>
+                                    <p:password  id="no2"
+                                                value="#{usersMB.newPassword}" 
+                                                maxlength="15" feedback="true" 
+                                                placeholder="new Password" 
+                                                style="margin-top:15px;" 
+                                                rendered="#{usersMB.editPassword}"/>
+                                </h:panelGroup>
+                                <h:panelGroup styleClass="md-inputfield" >
+                                    <p:commandButton value="#{msg.update}" icon="fa fa-pencil-square-o" style="width:auto" action="#{usersMB.editPassword()}" 
+                                                     rendered="#{!usersMB.editPassword}"  disabled="#{usersMB.editPassword?true:flase}" ajax="true" 
+                                                     id="editPassword">
+                                        <p:ajax  update="@form" listener="#{usersMB.editPassword()}" />
+                                    </p:commandButton>
+                                    <p:commandButton value="#{msg.save}" icon="ui-icon-check" 
+                                                     style="width:auto" actionListener="#{usersMB.savePassword()}" rendered="#{usersMB.editPassword}" disabled="#{usersMB.editPassword?flase:true}" ajax="true" id="savePassword" update="@all"  />                                    
+                                </h:panelGroup>
+                                <p:outputLabel for="image" value="image"/>
+                                <h:panelGroup id="image" styleClass="md-inputfield" >
+                                    <h:graphicImage rendered="#{!usersMB.editImagePath}"  
+                                                    width="100px" height="100px"
+                                                    value="/resources/schools/#{loginMB.user.school.id}/users/#{usersMB.item.imagePath}"  />
+                                    <p:outputLabel rendered="#{usersMB.editImagePath}"   value="upload image" style="text-align: right"/>
+                                    <p:fileUpload rendered="#{usersMB.editImagePath}" 
+                                                  value="#{usersMB.file}" mode="advanced" sizeLimit="5242880" 
+                                                  fileUploadListener="#{usersMB.fileUploadListener}" >
+                                    </p:fileUpload>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="md-inputfield" >
+                                        <p:commandButton value="#{msg.update}" icon="fa fa-pencil-square-o" style="width:auto" 
+                                                         action="#{usersMB.editImage()}" 
+                                                         rendered="#{!usersMB.editImagePath}"  
+                                                         disabled="#{usersMB.editPassword?true:flase}" 
+                                                         ajax="true" id="editImagePath">
+                                            <p:ajax  update="@form" 
+                                                     listener="#{usersMB.editImage()}" />
+                                        </p:commandButton>
+                                        <p:commandButton value="#{msg.save}" icon="ui-icon-check" style="width:auto" 
+                                                         action="#{usersMB.saveImage()}" 
+                                                         rendered="#{usersMB.editImagePath}" 
+                                                         disabled="#{usersMB.editImagePath?flase:true}" 
+                                                         ajax="true" id="saveImagePath" update="@all" />                                    
+                                    </h:panelGroup>
+                                
+                            </p:panelGrid>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

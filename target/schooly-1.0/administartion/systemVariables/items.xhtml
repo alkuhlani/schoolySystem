@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../WEB-INF/template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="title">
+        System Variables
+    </ui:define>
+
+    <ui:define name="head">
+        <!--head-->
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form>
+            <div class="ui-g" >
+                <f:event type="preRenderComponent" listener="#{systemVariablesMB.prepareItems()}"/>      
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <!--<h1></h1>-->
+                        <p:dataTable var="item" value="#{systemVariablesMB.items}"  reflow="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="5,10,15,20,40,100"
+                                     resizableColumns="true"
+                                     dir="#{(view.locale.language eq 'en')?'ltr':'rtl'}">
+                            <f:facet name="header">
+                                System Variables
+                            </f:facet>
+                          
+                            <p:column  headerText="school name" filterBy="#{item.school.id}" style="text-align: center">
+                                <h:outputText value="#{item.school.name_en}"/>
+                            </p:column>                
+                            <p:column  headerText="school year" filterBy="#{item.school.id}" style="text-align: center">
+                                <h:outputText value="#{item.schoolYear.name_en}"/>
+                            </p:column>                
+                            <p:column  headerText="school year" filterBy="#{item.school.id}" style="text-align: center">
+                                <h:outputText value="#{item.firstID}"/>
+                            </p:column>                
+                            <p:column  headerText="school year" filterBy="#{item.school.id}" style="text-align: center">
+                                <h:outputText value="#{item.termType.name_en}"/>
+                            </p:column>                
+                            <p:column  headerText="termHalf" filterBy="#{item.school.id}" style="text-align: center">
+                                <h:outputText value="#{item.termHalf}"/>
+                            </p:column>                
+                            <p:column  headerText="termMonth" filterBy="#{item.school.id}" style="text-align: center">
+                                <h:outputText value="#{item.termMonth.name_en}"/>
+                            </p:column>                
+                            <p:column  headerText="termWeek" filterBy="#{item.school.id}" style="text-align: center">
+                                <h:outputText value="#{item.termWeek.name_en}"/>
+                            </p:column>                
+                            <p:column  headerText="schoolMonth" filterBy="#{item.school.id}" style="text-align: center">
+                                <h:outputText value="#{item.schoolMonth.name_en}"/>
+                            </p:column>                
+                            <p:column  headerText="schoolWeek" filterBy="#{item.school.id}" style="text-align: center">
+                                <h:outputText value="#{item.schoolWeek.name_en}"/>
+                            </p:column>                
+
+
+<!--                            <p:column style="width: 30px">
+                                <p:button   title="#{msg.update}" icon="fa fa-edit"  outcome="view">
+                                    <f:param name="id" value="#{item.id}"/>
+                                </p:button>
+                            </p:column>-->
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

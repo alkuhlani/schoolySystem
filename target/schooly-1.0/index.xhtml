@@ -1,0 +1,28 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Schooly</ui:define>
+
+    <ui:define name="content">
+        <f:event type="preRenderComponent" listener="#{guestPreferences.setOverlayMenu(false)}"/>     
+        <f:event type="preRenderComponent" listener="#{guestPreferences.setTheme('blue')}" />     
+        <f:event type="preRenderComponent" listener="#{guestPreferences.setDarkMenu(false)}"/>     
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <div class="card">
+                    <h1>#{msg.welcome} #{(view.locale.language eq 'en')?loginMB.user.name_en:loginMB.user.name_ar}</h1>
+                    <!--<p>Use this page to start from scratch and place your custom content.</p>-->
+<!--                    <p:button  value="Home" style="display:inline-block;margin-top:5px" rendered="#{request.isUserInRole('ADMIN')}"/>-->
+
+
+                </div>
+            </div>
+        </div>
+
+    </ui:define>
+
+</ui:composition>

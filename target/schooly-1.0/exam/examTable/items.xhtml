@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/WEB-INF/template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="title">
+        Schooly System
+    </ui:define>
+
+    <ui:define name="head">
+        <!--head-->
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form>
+            <div class="ui-g" >
+                <f:event type="preRenderComponent" listener="#{examTableMB.prepareItems()}"/>      
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <!--<h1></h1>-->
+                        <p:toolbar>
+                            <f:facet name="left">
+                            </f:facet>
+                            <f:facet name="right">
+                            </f:facet>
+                        </p:toolbar>
+                        <p:dataTable var="item" value="#{examTableMB.items}"  reflow="true"
+                                     rowsPerPageTemplate="5,10,15,20,40,100"
+                                     rows="40"
+                                     paginator="true" 
+                                     resizableColumns="true"
+                                     paginatorTemplate="{CurrentPageReport} 
+                                     {FirstPageLink} 
+                                     {PreviousPageLink} 
+                                     {PageLinks} 
+                                     {NextPageLink} 
+                                     {LastPageLink} 
+                                     {RowsPerPageDropdown}"
+                                     currentPageReportTemplate="(Displaying 
+                                     {startRecord} - {endRecord} 
+                                     of {totalRecords}, 
+                                     Page: {currentPage}/{totalPages})"
+                                     id="items" 
+                                     dir="#{(view.locale.language eq 'en')?'ltr':'rtl'}"
+
+                                     rowIndexVar="index">
+                            <f:facet name="header">
+                                <p:commandButton id="toggler" type="button" value="Columns" style="float:right" icon="ui-icon-calculator" />
+                                <p:columnToggler datasource="items" trigger="toggler" />
+                                <p:button rendered="#{request.isUserInRole('ADMINISTRATOR') 
+                                                      or request.isUserInRole('ADMIN')}"  
+                                          title="new" value="#{msg.add}"  
+                                          outcome="create" style="float: left"/>
+                                <p:button rendered="#{request.isUserInRole('ADMINISTRATOR') 
+                                                      or request.isUserInRole('ADMIN')}"  
+                                          title="exams" value="#{msg.exams}"  
+                                          outcome="/exam/items" style="float: left"/>
+                                
+                            </f:facet>
+                            <p:column  headerText="no" 
+                                       filterBy="#{index+1}" 
+                                       sortBy="#{index+1}" 
+                                       style="text-align: center;width: 30px">
+                                <h:outputText value="#{index+1}"/>
+                            </p:column> 
+
+                            <p:column  headerText="#{msg.description}" 
+                                       filterBy="#{(view.locale.language eq 'en')?item.exam.name_en:item.exam.name_ar}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.exam.name_en:item.exam.name_ar}"/>
+                            </p:column>  
+                            <p:column  headerText="#{msg.class}" 
+                                       filterBy="#{(view.locale.language eq 'en')?item.class_.name_en:item.class_.name_ar}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.class_.name_en:item.class_.name_ar}"/>
+                            </p:column>  
+                            <p:column  headerText="#{msg.subject}" 
+                                       filterBy="#{(view.locale.language eq 'en')?item.subject_t.name_en:item.subject_t.name_ar}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.subject_t.name_en:item.subject_t.name_ar}"/>
+                            </p:column>  
+                            <p:column  headerText="#{msg.examDate}" 
+                                       filterBy="#{item.examDate}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{item.examDate}"/>
+                            </p:column>  
+                            <p:column  headerText="#{msg.examTime}" 
+                                       filterBy="#{item.examDate}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{item.beginTime}"/>
+                            </p:column>  
+                            <p:column  headerText="#{msg.examDuration}" 
+                                       filterBy="#{item.examDate}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{item.examTimeDuring}"/>
+                            </p:column>  
+
+
+                            <p:column  headerText="#{msg.school}" 
+                                       rendered="#{request.isUserInRole('ADMINISTRATOR')}"
+                                       filterBy="#{(view.locale.language eq 'en')?item.exam.schoolYear.school.name_en:item.exam.schoolYear.school.name_ar}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.exam.schoolYear.school.name_en:item.exam.schoolYear.school.name_ar}"/>
+                            </p:column>  
+
+
+                            <p:column rendered="#{request.isUserInRole('ADMINISTRATOR') or request.isUserInRole('ADMIN')}" 
+                                      style="width: 30px">
+                                <p:button rendered="#{request.isUserInRole('ADMINISTRATOR') or request.isUserInRole('ADMIN')}"   
+                                          title="#{msg.update}" icon="fa fa-edit"  outcome="update">
+                                    <f:param name="id" value="#{item.id}"/>
+                                </p:button>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

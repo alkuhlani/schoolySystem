@@ -1,0 +1,101 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Dashboard</ui:define>
+
+    <ui:define name="head">
+           <script type="text/javascript">
+               //<![CDATA[
+               function skinBar() {
+                   this.cfg.shadow = false;
+                   this.cfg.title = '';
+                   this.cfg.seriesColors = ['#64B5F6', '#FFD54F'];
+                   this.cfg.grid = {
+                       background: '#ffffff',
+                       borderColor: '#ffffff',
+                       gridLineColor: '#F5F5F5',
+                       shadow: false
+                   };
+                   this.cfg.axesDefaults = {
+                       borderWidth: 0.1,
+                       borderColor: 'bdbdbd',
+                       rendererOptions: {
+                           textColor: '#666F77'
+                       }
+                   };
+                   this.cfg.seriesDefaults = {
+                       shadow: false,
+                       lineWidth: 1,
+                       renderer: $.jqplot.BarRenderer,
+                       markerOptions: {
+                           shadow: false,
+                           size: 7,
+                           style: 'circle'
+                       }
+                   }
+               }
+               //]]>  
+           </script>
+           <style type="text/css">
+               .main-content {
+                   padding: 0;
+               }
+           </style>
+       </ui:define>
+
+    <ui:define name="content">
+        <div class="ui-g dashboard">            
+      
+            
+            
+            <div class="ui-g-12 ui-lg-8 chat">
+                <p:panel header="Chat" styleClass="ui-shadow-content">
+                    <ul>
+                        <li class="clearfix message-from">
+                            <p:graphicImage name="images/avatar2.png" library="barcelona-layout" />
+                            <span>Retro occupy organic, stumptown shabby chic pour-over roof party DIY normcore.</span>
+                        </li>
+                        <li class="clearfix message-own">
+                            <p:graphicImage name="images/profile-image.png" library="barcelona-layout" />
+                            <span>Actually artisan organic occupy, Wes Anderson ugh whatever pour-over gastropub selvage.</span>
+                        </li>
+                        <li class="clearfix message-from">
+                            <p:graphicImage name="images/avatar2.png" library="barcelona-layout" />
+                            <span>Chillwave craft beer tote bag stumptown quinoa hashtag.</span>
+                        </li>
+                        <li class="clearfix message-own">
+                            <p:graphicImage name="images/profile-image.png" library="barcelona-layout" />
+                            <span>Dreamcatcher locavore iPhone chillwave, occupy trust fund slow-carb distillery art party narwhal.</span>
+                        </li>
+                        <li class="clearfix message-own">
+                            <span>Sed ut perspiciatis unde omnis iste natus.</span>
+                        </li>
+                        <li class="clearfix message-from">
+                            <p:graphicImage name="images/avatar2.png" library="barcelona-layout" />
+                            <span>Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse.</span>
+                        </li>
+                        <li class="clearfix message-own">
+                            <p:graphicImage name="images/profile-image.png" library="barcelona-layout" />
+                            <span>At vero eos et accusamus.</span>
+                        </li>
+                    </ul>
+                    <div class="new-message">
+                        <div class="message-attachment">
+                            <i class="fa fa-paperclip" />
+                        </div>
+                        <div class="message-input">
+                            <input value="#{messagingMB.item.text}" type="text" placeholder="Write a message" />
+                        </div>
+                    </div>
+                </p:panel>
+            </div>
+            
+          
+        </div>
+    </ui:define>
+
+</ui:composition>

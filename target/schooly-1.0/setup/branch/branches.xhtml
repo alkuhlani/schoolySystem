@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+    <title>Branches</title>
+</h:head>
+<h:body>
+    <h:form>
+        <p:panel>
+        <p:dataTable var="employee"
+                     value="#{employeeBean.employeeList}"
+                     rowKey="#{employee.id}"
+                     scrollable="true"
+                     scrollHeight="400"
+                     selection="#{employeeBean.selectedEmployees}">
+            <p:column headerText="Id">
+                <h:outputText value="#{employee.id}"/>
+            </p:column>
+
+            <p:column headerText="Name">
+                <h:outputText value="#{employee.name}"/>
+            </p:column>
+
+            <p:column headerText="Phone Number">
+                <h:outputText value="#{employee.phoneNumber}"/>
+            </p:column>
+
+            <p:column headerText="Department">
+                <h:outputText value="#{employee.department}"/>
+            </p:column>
+            <p:column selectionMode="multiple"
+                      style="width:16px;text-align:center"/>
+        </p:dataTable>
+        <f:facet name="footer">
+            <p:commandButton value="Submit" actionListener="#{employeeBean.submitSelectedEmployees()}"/>
+        </f:facet>
+        </p:panel>
+    </h:form>
+</h:body>
+</html>

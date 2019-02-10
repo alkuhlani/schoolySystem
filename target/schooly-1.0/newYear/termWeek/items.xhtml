@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/WEB-INF/template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="title">
+        Schooly System
+    </ui:define>
+
+    <ui:define name="head">
+        <!--head-->
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form>
+            <div class="ui-g" >
+                <f:event type="preRenderComponent" listener="#{termWeekMB.prepareItems()}"/>      
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <!--<h1></h1>-->
+                        <p:dataTable var="item" value="#{termWeekMB.items}"  reflow="true"
+                                     rowsPerPageTemplate="5,10,15,20,40,100"
+                                     rows="40"
+                                     paginator="true" 
+                                     resizableColumns="true"
+                                     paginatorTemplate="{CurrentPageReport} 
+                                     {FirstPageLink} 
+                                     {PreviousPageLink} 
+                                     {PageLinks} 
+                                     {NextPageLink} 
+                                     {LastPageLink} 
+                                     {RowsPerPageDropdown}"
+                                     id="items" 
+                                     dir="#{(view.locale.language eq 'en')?'ltr':'rtl'}">
+                            <f:facet name="header">
+                                
+                                <p:commandButton id="toggler" type="button" value="Columns" style="float:right" icon="ui-icon-calculator" />
+                                <p:columnToggler datasource="items" trigger="toggler" />
+                                <h:link rendered="#{request.isUserInRole('ADMINISTRATOR') or request.isUserInRole('ADMIN')}" title="#{msg.add}" outcome="create" value="" style="text-align: left">
+                                    <i class="fa fa-plus" style="size: 20px;color: #ffffff;font-size:larger ;float: left;padding-right: 5px;" />
+                                </h:link> 
+                                #{msg.terms} - #{msg.termWeek}
+                            </f:facet>
+                            <p:column  headerText="#{msg.term_name}" filterBy="#{(view.locale.language eq 'en')?item.term.name_en:item.term.name_ar}" style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.term.name_en:item.term.name_ar}"/>
+                            </p:column>                         
+                            <p:column  headerText="#{msg.term_name}" filterBy="#{(view.locale.language eq 'en')?item.name_en:item.name_ar}" style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.name_en:item.name_ar}"/>
+                            </p:column>                         
+                            <p:column  headerText="#{msg.no1Term}" filterBy="#{item.noFirst}" style="text-align: center">
+                                <h:outputText value="#{item.noFirst}"/>
+                            </p:column>                
+                            <p:column  headerText="#{msg.date1termStart}" filterBy="#{item.first1Date}" style="text-align: center">
+                                <h:outputText value="#{item.first1Date}"/>
+                            </p:column>                
+                            <p:column  headerText="#{msg.date1termEnd}" filterBy="#{item.end1Date}" style="text-align: center">
+                                <h:outputText value="#{item.end1Date}"/>
+                            </p:column>                
+                            <p:column  headerText="#{msg.no2Term}" filterBy="#{item.noEnd}" style="text-align: center">
+                                <h:outputText value="#{item.noEnd}"/>
+                            </p:column>    
+                            <p:column  headerText="#{msg.date2termStart}" filterBy="#{item.first2Date}" style="text-align: center">
+                                <h:outputText value="#{item.first2Date}"/>
+                            </p:column>   
+                            <p:column  headerText="#{msg.date2termEnd}" filterBy="#{item.end2Date}" style="text-align: center">
+                                <h:outputText value="#{item.end2Date}"/>
+                            </p:column>  
+                            <p:column  headerText="#{msg.school}" 
+                                       rendered="#{request.isUserInRole('ADMINISTRATOR')}"
+                                       filterBy="#{(view.locale.language eq 'en')?item.schoolYear.school.name_en:item.schoolYear.school.name_ar}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.schoolYear.school.name_en:item.schoolYear.school.name_ar}"/>
+                            </p:column>  
+                            
+                            <p:column rendered="#{request.isUserInRole('ADMINISTRATOR') or request.isUserInRole('ADMIN')}" style="width: 30px">
+                                <p:button rendered="#{request.isUserInRole('ADMINISTRATOR') or request.isUserInRole('ADMIN')}"  title="#{msg.update}" icon="fa fa-edit"  outcome="update">
+                                    <f:param name="id" value="#{item.id}"/>
+                                </p:button>
+                            </p:column>
+                            <p:column  rendered="#{request.isUserInRole('ADMINISTRATOR') or 
+                                                  request.isUserInRole('ADMIN')}" style="width: 65px">
+                              
+                                <p:button outcome="studentItems" value="report" 
+                                          rendered="#{request.isUserInRole('ADMINISTRATOR') or 
+                                                      request.isUserInRole('ADMIN')}"  >
+                                     <f:param name="id" value="#{item.id}"/>
+                                </p:button>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

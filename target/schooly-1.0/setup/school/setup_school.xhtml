@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/WEB-INF/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:define name="title">
+        Schooly System
+    </ui:define>
+
+    <ui:define name="head">
+        <!--head-->
+    </ui:define>
+
+    <ui:define name="content">
+        <f:event type="preRenderComponent" listener="#{schoolMB.prepareItems()}"/>
+        <h:form id="form">
+
+            <p:growl id="growl" showDetail="true"  autoUpdate="true" />  
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h1>#{msg.school_data}</h1>
+                            <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" 
+                                         layout="grid" styleClass="ui-panelgrid-blank form-group" 
+                                         style="border:0px none; background-color:transparent;direction:#{(view.locale.language eq 'en')?'ltr':'rtl'}">
+                                <p:outputLabel for="name_ar" value="#{msg.school_name} - #{msg.arName}"/>
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText id="name_ar" value="#{schoolMB.item.name_ar}" style=";text-align: right" disabled="#{schoolMB.edit?flase:true}"/>
+                                    <label>#{msg.arName}</label>
+                                </h:panelGroup>
+                                <p:outputLabel for="name_eng" value="#{msg.school_name} 
+                                               - #{msg.engName}"/>
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText id="name_eng" value="#{schoolMB.item.name_en}" 
+                                                 disabled="#{schoolMB.edit?flase:true}"/>
+                                    <label>#{msg.engName}</label>
+                                </h:panelGroup>
+                                <p:outputLabel for="FB" value="FB"/>
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText id="FB" value="#{schoolMB.item.fb}" 
+                                                 disabled="#{schoolMB.edit?flase:true}"/>
+                                    <label>FB</label>
+                                </h:panelGroup>
+                                <p:outputLabel for="webSiteUrl" value="Web Site"/>
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText id="webSiteUrl" value="#{schoolMB.item.webSiteUrl}" 
+                                                 disabled="#{schoolMB.edit?flase:true}"/>
+                                    <label>Web Site URL</label>
+                                </h:panelGroup>
+                                <p:outputLabel for="email" value="#{msg.email}"/>
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText id="email" value="#{schoolMB.item.email}" 
+                                                 disabled="#{schoolMB.edit?flase:true}"/>
+                                    <label>Email</label>
+                                </h:panelGroup>
+                                <p:outputLabel for="phoneContact" value="#{msg.phoneContact}"/>
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText id="phoneContact" value="#{schoolMB.item.phoneContact}" 
+                                                 disabled="#{schoolMB.edit?flase:true}"/>
+                                    <label>#{msg.phoneContact}</label>
+                                </h:panelGroup>
+                                <p:outputLabel for="location" value="#{msg.location}"/>
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText id="location" value="#{schoolMB.item.location}" 
+                                                 disabled="#{schoolMB.edit?flase:true}"/>
+                                    <label>#{msg.location}</label>
+                                </h:panelGroup>
+                                <p:outputLabel for="managerName" value="#{msg.managerName}"/>
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText id="managerName" value="#{schoolMB.item.managerName}" 
+                                                 disabled="#{schoolMB.edit?flase:true}"/>
+                                    <label>#{msg.managerName}</label>
+                                </h:panelGroup>
+                                <p:commandButton value="#{msg.update}" icon="fa fa-pencil-square-o" style="width:auto" action="#{schoolMB.edit()}"  disabled="#{schoolMB.edit?true:flase}" ajax="true" id="edit">
+                                    <p:ajax  update="@form" listener="#{schoolMB.edit()}" />
+                                </p:commandButton>
+                                <p:commandButton value="#{msg.save}" icon="fa fa-check-square-o" style="width:auto" action="#{schoolMB.update()}" update="form"  disabled="#{schoolMB.edit?flase:true}" id="save" ajax="true">
+
+                                </p:commandButton>
+                            </p:panelGrid>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

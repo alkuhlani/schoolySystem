@@ -1,0 +1,75 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pa="http://primefaces.org/barcelona">
+
+    <div class="topbar">
+        <div class="logo">
+            <h:link outcome="/landing">
+                <p:graphicImage name="images/2logo-black.png" library="barcelona-layout" />
+            </h:link>
+        </div>
+        <a id="topbar-menu-button" href="#">
+            <i class="fa fa-bars"></i>
+        </a>
+        <ul class="topbar-menu fadeInDown animated">
+            <li class="profile-item">
+                <a href="#">                            
+                    <div class="profile-image">
+                        <p:graphicImage value="/resources/#{loginMB.user.imagePath}" 
+                                        library="barcelona-layout" 
+                                        rendered="#{request.isUserInRole('ADMINISTRATOR')}"/>
+                        <p:graphicImage value="/resources/schools/#{loginMB.user.school.id}/users/#{loginMB.user.imagePath}" 
+                                        library="barcelona-layout" 
+                                        rendered="#{!request.isUserInRole('ADMINISTRATOR')}" />
+                    </div>
+                    <div class="profile-info">
+                        <span class="topbar-item-name profile-name" style="text-align: center">#{loginMB.user.username.toUpperCase()}</span>
+                        <span class="topbar-item-name profile-role" style="text-align: center">#{loginMB.user.role_.toLowerCase()}</span>
+                    </div>
+                </a>
+                <ul class="animated">
+                    <li role="menuitem">
+                        <a href="#">
+                            <p:button  icon="fa fa-user" outcome="/profile/profile" style="width:100%" value="#{msg.profile}"/>
+                        </a>
+                    </li>
+                    <li role="menuitem">
+                        <h:form id="logoutForm">
+                            <a href="#">
+                                <p:commandButton icon="fa fa-sign-out"  action="#{loginMB.logout3()}"  style="width:100%" value="#{msg.logOut}">
+                                    <f:param name="id" value="1"/>
+                                </p:commandButton>
+                            </a>
+                        </h:form>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="topbar-icon fa fa-language"></i>
+                    <span class="topbar-item-name">Language</span>
+                </a>
+                <ul class="animated">
+                    <li role="menuitem" style="text-align: center">
+                        <a>    
+                            <h:form id="languageForm">
+                                <p:commandButton class="" label="Arabic" value="العربية" action="#{guestPreferences.actionArabic()}" style="width:100%"/>
+                            </h:form>
+                        </a>    
+                    </li>
+                    <li role="menuitem" style="text-align: center">
+                        <a>
+                            <h:form id="languageForm2">
+                                <p:commandButton class="" label="English" value="English" action="#{guestPreferences.actionEnglish()}" style="width:100%"/>
+                            </h:form>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</ui:composition>    

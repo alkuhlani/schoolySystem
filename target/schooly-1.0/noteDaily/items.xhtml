@@ -1,0 +1,198 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/WEB-INF/template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="title">
+        Schooly System
+    </ui:define>
+
+    <ui:define name="head">
+        <!--head-->
+<!--        <style type="text/css">
+            .ui-icon-myCancel{
+                
+                background: url("#{resource['barcelona-layout:images/profile-image.png']}") ;
+                background-position: 0 0;
+                background-size: auto;
+            }
+        </style>-->
+    </ui:define>
+
+    <ui:define name="content">
+        <f:event type="preRenderComponent" listener="#{noteDailyMB.prepareItems()}"/> 
+        <h:form>
+            <div class="ui-g" >
+
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <p:toolbar>
+                            <f:facet name="left">
+                                <p:outputLabel for="classId " value="#{msg.class}" 
+                                               rendered="#{request.isUserInRole('TEACHER')}"/>
+                                <p:selectOneMenu value="#{noteDailyMB.classId}" 
+                                                 rendered="#{request.isUserInRole('TEACHER')}"
+                                                 id="classId" 
+                                                 required="true">
+                                    <p:ajax listener="#{noteDailyMB.studentListner}" update="studentId"/>
+                                    <f:selectItem itemLabel="#{msg.select} " noSelectionOption="true"/>
+                                    <f:selectItems  value="#{noteDailyMB.teacherAssigns}" 
+                                                    var="cc" 
+                                                    itemLabel="#{(view.locale.language eq 'en')?cc.class_.name_en:cc.class_.name_ar}" 
+                                                    itemValue="#{cc.class_.id}" />
+                                </p:selectOneMenu>
+                                <p:outputLabel for="subjectId " value="#{msg.subject}" 
+                                               rendered="#{request.isUserInRole('STUDENT')}"/>
+                                <p:selectOneMenu value="#{noteDailyMB.classId}" 
+                                                 rendered="#{request.isUserInRole('STUDENT')}"
+                                                 id="subjectId" 
+                                                 required="true" >
+                                    <f:selectItem itemLabel="#{msg.select} " noSelectionOption="true"/>
+                                    <f:selectItems  value="#{noteDailyMB.teacherAssigns}" 
+                                                    var="sub" 
+                                                    itemLabel="#{(view.locale.language eq 'en')?sub.subject_t.name_en:sub.subject_t.name_ar}" 
+                                                    itemValue="#{sub.subject_t.id}" />
+                                </p:selectOneMenu>
+                                <p:outputLabel for="classId2" value="#{msg.class}" rendered="#{request.isUserInRole('EMPLOYEE') or request.isUserInRole('ADMIN')}"/>
+                                <p:selectOneMenu value="#{noteDailyMB.classId}" 
+                                                 rendered="#{request.isUserInRole('EMPLOYEE') or request.isUserInRole('ADMIN')}"
+                                                 id="classId2" 
+                                                 required="true" >
+                                    <p:ajax listener="#{noteDailyMB.studentListner}" update="studentId"/>
+                                    <f:selectItem itemLabel="#{msg.select} " noSelectionOption="true"/>
+                                    <f:selectItems  value="#{noteDailyMB.class_s}" 
+                                                    var="cl" 
+                                                    itemLabel="#{(view.locale.language eq 'en')?cl.name_en:cl.name_ar}" 
+                                                    itemValue="#{cl.id}" />
+                                </p:selectOneMenu>
+                                <p:outputLabel for="studentId" value="#{msg.student}"  
+                                               rendered="#{!request.isUserInRole('STUDENT')}" />
+                                <p:selectOneMenu value="#{noteDailyMB.studentId}" 
+                                                 rendered="#{!request.isUserInRole('STUDENT')}"
+                                                 id="studentId"
+                                                 required="true" >
+                                    <f:selectItem itemLabel="#{msg.select} #{msg.student}" noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="all" itemValue="-1"  />
+                                    <f:selectItems  value="#{noteDailyMB.studentSchools}" 
+                                                    var="st" 
+                                                    itemLabel="#{(view.locale.language eq 'en')?st.student.name_en:st.student.name_ar}" 
+                                                    itemValue="#{st.student.id}"  />
+                                </p:selectOneMenu>
+                                <p:outputLabel for="startDate" value="#{msg.from}"/>
+                                <p:calendar id="startDate" required="true" 
+                                            value="#{noteDailyMB.startDate}" 
+                                            pattern="dd-MM-yyyy" mask="true" pages="3"
+                                            style="color: #ffffff;text-align: center;direction: ltr">
+                                    <p:ajax event="dateSelect" 
+                                            update="endDate" /></p:calendar>
+                                <p:outputLabel for="endDate" value="#{msg.to}"/>
+                                <p:calendar id="endDate" required="true" 
+                                            value="#{noteDailyMB.endDate}" 
+                                            pattern="dd-MM-yyyy" mask="true" 
+                                            mindate="#{noteDailyMB.startDate}"  
+                                            style="color: #ffffff;text-align: center;direction: ltr"/>
+                            </f:facet>
+                            <f:facet name="right">
+                                <!--<p:commandButton value="Cancel" icon="ui-icon-myCancel"/>--> 
+                                <p:commandButton value="#{msg.search}" actionListener="#{noteDailyMB.search()}" update="@form"/>
+                            </f:facet>
+                        </p:toolbar>
+                        <!--<h1></h1>-->
+                        <p:dataTable var="item" value="#{noteDailyMB.items}"  reflow="true"
+                                     rowsPerPageTemplate="5,10,15,20,40,100"
+                                     rows="40"
+                                     paginator="true" 
+                                     resizableColumns="true"
+                                     paginatorTemplate="{CurrentPageReport} 
+                                     {FirstPageLink} 
+                                     {PreviousPageLink} 
+                                     {PageLinks} 
+                                     {NextPageLink} 
+                                     {LastPageLink} 
+                                     {RowsPerPageDropdown}"
+                                     currentPageReportTemplate="(Displaying 
+                                     {startRecord} - {endRecord} 
+                                     of {totalRecords}, 
+                                     Page: {currentPage}/{totalPages})"
+                                     id="items" 
+                                     dir="#{(view.locale.language eq 'en')?'ltr':'rtl'}"
+
+                                     rowIndexVar="index">
+                            <f:facet name="header">
+                                <p:button title="#{msg.add}" 
+                                          value="#{msg.add}" outcome="create" 
+                                          rendered="#{request.isUserInRole('TEACHER') or request.isUserInRole('ADMIN')}"
+                                          style="float: left"/>
+                                <p:commandButton id="toggler" type="button" value="Columns" style="float:right" icon="ui-icon-calculator" />
+                                <p:columnToggler datasource="items" trigger="toggler" />
+                                #{msg.noteDaily}
+                            </f:facet>
+                            <p:column  headerText="no" 
+                                       filterBy="#{index+1}" 
+                                       sortBy="#{index+1}" 
+                                       style="text-align: center;width: 30px">
+                                <h:outputText value="#{index+1}"/>
+                            </p:column> 
+
+                            <p:column  headerText="#{msg.description}" 
+                                       filterBy="#{item.name}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{item.name}"/>
+                            </p:column>                
+                            <p:column  headerText="#{msg.class}" 
+                                       filterBy="#{(view.locale.language eq 'en')
+                                                   ?item.subjectTable.teacherAssign.class_.name_en
+                                                   :item.subjectTable.teacherAssign.class_.name_ar}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{item.subjectTable.teacherAssign.class_.name_en}"/>
+                            </p:column>                
+                            <p:column  headerText="#{msg.subject}" 
+                                       filterBy="#{(view.locale.language eq 'en')
+                                                   ?item.subjectTable.teacherAssign.subject_t.name_en
+                                                   :item.subjectTable.teacherAssign.subject_t.name_ar}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')
+                                                       ?item.subjectTable.teacherAssign.subject_t.name_en
+                                                       :item.subjectTable.teacherAssign.subject_t.name_ar}"/>
+                            </p:column>                
+                            <p:column  headerText="#{msg.teacher}" 
+                                       filterBy="#{(view.locale.language eq 'en')
+                                                   ?item.subjectTable.teacherAssign.teacher.name_en
+                                                   :item.subjectTable.teacherAssign.teacher.name_ar}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')
+                                                       ?item.subjectTable.teacherAssign.teacher.name_en
+                                                       :item.subjectTable.teacherAssign.teacher.name_ar}"/>
+                            </p:column>                
+                            <p:column  headerText="#{msg.student}" 
+                                       filterBy="#{(view.locale.language eq 'en')
+                                                   ?item.studentSchool.student.name_en
+                                                   :item.studentSchool.student.name_ar}" 
+                                       style="text-align: center">
+                                <h:outputText value="#{item.studentSchool.student.name_en}"/>
+                            </p:column>                
+                            <p:column   headerText="#{msg.date}" 
+                                        filterBy="#{item.writeDate}" 
+                                        style="text-align: center">
+                                <h:outputText value="#{item.writeDate}"/>
+                            </p:column>                
+                            <p:column style="width: 30px" 
+                                      rendered="#{request.isUserInRole('TEACHER') or request.isUserInRole('ADMIN')}">
+                                <p:button   title="#{msg.update}" 
+                                            icon="fa fa-edit"  
+                                            outcome="update">
+                                    <f:param name="id" value="#{item.id}"/>
+                                    <f:param name="id1" value="#{item.studentSchool.class_.id}"/>
+                                </p:button>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

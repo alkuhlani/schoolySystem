@@ -1,0 +1,112 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:h="http://java.sun.com/jsf/html"
+              xmlns:f="http://java.sun.com/jsf/core"
+              xmlns:ui="http://java.sun.com/jsf/facelets"
+              xmlns:p="http://primefaces.org/ui"
+              >
+
+    <ui:define name="head">
+        <style type="text/css">
+            .ui-selectoneradio.ui-grid-responsive .ui-grid-col-4,
+            .ui-selectmanycheckbox.ui-grid-responsive .ui-grid-col-4{
+                padding-bottom: 10px;
+            }
+            .ui-grid-col-4{
+                text-align: right
+            }
+            .ui-grid-col-6{
+                text-align: right
+            }
+            .ui-grid-col-2{
+                text-align: left
+            }
+
+        </style>
+    </ui:define>
+
+    <div class="ui-g " >
+        <div class="ui-g-12">
+            <div class="card card-w-title" >
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:button outcome="items"  title="back" icon="fa fa-reply" />
+                    </f:facet>
+                    <f:facet name="right">
+                    </f:facet>
+                </p:toolbar>
+
+                <p:messages showDetail="true" autoUpdate="true" closable="true" />
+                <p:focus context="panel"/>
+                <p:panelGrid id="panel" columns="2" columnClasses="ui-grid-col-4,ui-grid-col-6" 
+                             layout="grid" styleClass="ui-panelgrid-blank form-group" 
+                             style="border:0px none; background-color:transparent;direction:#{(view.locale.language eq 'en')?'ltr':'rtl'}" >
+                    <p:outputLabel  value="#{msg.class}" 
+                                    rendered="#{request.isUserInRole('ADMIN')}"
+                                    for="classId"/>
+                    <p:selectOneMenu value="#{subjectTableMB.classId}"
+                                     style="text-align: center;width: 100%"
+                                     required="true"
+                                     id="classId"
+                                     rendered="#{request.isUserInRole('ADMIN')}">
+
+                        <f:selectItem itemLabel="Select" noSelectionOption="true"/>
+                        <p:ajax listener="#{subjectTableMB.subjectTableListner}" update="teachers"/>
+                        <f:selectItems value="#{subjectTableMB.class_s}" 
+                                       var="class"
+                                       itemValue="#{class.id}"
+                                       itemLabel="#{(view.locale.language eq 'en')?class.name_en:class.name_ar}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel  value="#{msg.subject}" rendered="#{request.isUserInRole('ADMIN')}"
+                                    for="subjectId"/>
+                    <p:selectOneMenu value="#{subjectTableMB.subjectId}"
+                                     style="text-align: center;width: 100%"
+                                     required="true"
+                                     id="subjectId"
+                                     rendered="#{request.isUserInRole('ADMIN')}">
+
+                        <f:selectItem itemLabel="Select" noSelectionOption="true"/>
+                        <p:ajax listener="#{subjectTableMB.subjectTableListner}" update="teachers"/>
+                        <f:selectItems value="#{subjectTableMB.subject_ts}" 
+                                       var="subject"
+                                       itemValue="#{subject.id}"
+                                       itemLabel="#{(view.locale.language eq 'en')?subject.name_en:subject.name_ar}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="teachers" 
+                                   value="#{msg.teacher}"
+                                   />
+
+                    <p:selectOneMenu id="teachers" 
+                                     value="#{subjectTableMB.item.teacherAssign.id}" 
+                                     style="text-align: center;width: 100%"
+                                     required="true">      
+                        <f:selectItem itemLabel="#{msg.select}" noSelectionOption="true"/>
+                        <f:selectItems value="#{subjectTableMB.teacherAssigns}"
+                                       var="t"  
+                                       itemLabel="#{(view.locale.language eq 'en')?t.teacher.name_en:t.teacher.name_ar} - #{(view.locale.language eq 'en')?t.class_.name_en:t.class_.name_ar} - #{(view.locale.language eq 'en')?t.subject_t.name_en:t.subject_t.name_ar}" 
+                                       itemValue="#{t.id}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="days" 
+                                   value="#{msg.day}"
+                                   />
+                    <p:selectOneMenu id="days" 
+                                     value="#{subjectTableMB.item.day.id}" 
+                                     style="text-align: center;width: 100%"
+                                     required="true">     
+                        <f:selectItem itemLabel="#{msg.select}" noSelectionOption="true"/>
+                        <f:selectItems value="#{subjectTableMB.days}"
+                                       var="day"  
+                                       itemLabel="#{(view.locale.language eq 'en')?day.name_en:day.name_ar}" 
+                                       itemValue="#{day.id}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="lectureNo" value="#{msg.lectureNo}"/>
+                    <p:inputText id="lectureNo" value="#{subjectTableMB.item.lectureNo}" 
+                                 style="width: 100%;text-align: center"
+                                 maxlength="1" 
+                                 required="true">
+                        <p:keyFilter regEx="/[\d\-]/"/>
+                    </p:inputText>
+                </p:panelGrid>
+            </div>
+        </div>
+    </div>
+</ui:component>

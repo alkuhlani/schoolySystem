@@ -1,0 +1,408 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/WEB-INF/template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="title">
+        Schooly System
+    </ui:define>
+
+    <ui:define name="head">
+        <!--head-->
+    </ui:define>
+
+    <ui:define name="content">
+        <f:event type="preRenderComponent" listener="#{systemVariablesMB.prepareUpdate()}"/>
+        <h:form id="form">
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h1>#{msg.Systemvariables}</h1>
+                            <!--<p:focus context="name_en" rendered="#{!usersMB.edit}"/>-->
+                            <p:messages showDetail="true" autoUpdate="true" closable="true"  />
+                            <p:panelGrid columns="3" columnClasses="ui-grid-col-2,ui-grid-col-8,ui-grid-col-2" 
+                                         layout="grid" styleClass="ui-panelgrid-blank form-group" 
+                                         style="border:0px none; background-color:transparent;
+                                         direction: #{(view.locale.language eq 'en')?'ltr':'rtl'}">
+                                <p:outputLabel for="termHalf  " value="#{msg.currentTermHalf}"
+                                               rendered="#{loginMB.user.school.systemVariables.termType.id eq 2}"/>
+                                <h:panelGroup id="termHalf" styleClass="md-inputfield"
+                                              rendered="#{loginMB.user.school.systemVariables.termType.id eq 2}">
+                                    <p:outputLabel  value="#{systemVariablesMB.item.termHalf}" 
+                                                    rendered="#{!systemVariablesMB.edittermHalf}" />
+
+                                    <p:selectOneMenu id="termTypea" 
+                                                     value="#{systemVariablesMB.item.termHalf}" 
+                                                     style="text-align: center;width: 100%"
+                                                     rendered="#{systemVariablesMB.edittermHalf}">                        
+                                        <f:selectItem 
+                                            itemLabel="#{msg.firstHalf}" 
+                                            itemValue="1" />
+                                        <f:selectItem 
+                                            itemLabel="#{msg.secondHalf}" 
+                                            itemValue="2" />
+                                    </p:selectOneMenu>
+                                </h:panelGroup>
+                                <h:panelGroup styleClass="md-inputfield"
+                                              rendered="#{loginMB.user.school.systemVariables.termType.id eq 2}">
+                                    <p:commandButton value="#{msg.update}" icon="fa fa-pencil-square-o" style="width:auto" 
+                                                     action="#{systemVariablesMB.editTermHalf()}" 
+                                                     rendered="#{!systemVariablesMB.edittermHalf}"  
+                                                     disabled="#{systemVariablesMB.edittermHalf?true:flase}" ajax="true" id="edittermHalf">
+                                        <p:ajax  update="@form" listener="#{systemVariablesMB.editTermHalf()}" />
+                                    </p:commandButton>
+                                    <p:commandButton value="#{msg.save}" icon="ui-icon-check" style="width:auto" 
+                                                     action="#{systemVariablesMB.saveTermHalf()}" 
+                                                     rendered="#{systemVariablesMB.edittermHalf}" 
+                                                     disabled="#{systemVariablesMB.edittermHalf?flase:true}" 
+                                                     ajax="true" id="saveTermHalf" update="@all" />                                    
+                                </h:panelGroup>
+
+
+                                <p:outputLabel rendered="#{systemVariablesMB.item.termType.id eq '2'}" 
+                                               for="SchoolWeek  " value="#{msg.currentWeek}"/> 
+                                <h:panelGroup rendered="#{systemVariablesMB.item.termType.id eq '2'}"
+                                              id="SchoolWeek" styleClass="md-inputfield">
+                                    <p:outputLabel  value="#{(view.locale.language eq 'en')?systemVariablesMB.item.schoolWeek.name_en:systemVariablesMB.item.schoolWeek.name_ar}" 
+                                                    rendered="#{!systemVariablesMB.editschoolWeek}" />
+                                    <p:selectOneMenu id="termSchoolWeek" 
+                                                     value="#{systemVariablesMB.item.schoolWeek.id}" 
+                                                     rendered="#{systemVariablesMB.editschoolWeek}"
+                                                     style="text-align: center;width: 100%">                        
+                                        <f:selectItems value="#{systemVariablesMB.schoolWeeks}"
+                                                       var="t"  
+                                                       itemLabel="#{(view.locale.language eq 'en')?t.name_en:t.name_ar} - #{(view.locale.language eq 'en')?t.termWeek.name_en:t.termWeek.name_ar}"                                                        
+                                                       itemValue="#{t.id}" />
+                                    </p:selectOneMenu>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{systemVariablesMB.item.termType.id eq '2'}"
+                                              styleClass="md-inputfield" >
+                                    <p:commandButton value="#{msg.update}" icon="fa fa-pencil-square-o" style="width:auto" 
+                                                     action="#{systemVariablesMB.editSchoolWeek()}" 
+                                                     rendered="#{!systemVariablesMB.editschoolWeek}"  
+                                                     disabled="#{systemVariablesMB.editschoolWeek?true:flase}" 
+                                                     ajax="true" id="editSchoolWeek">
+                                        <p:ajax  update="@form" listener="#{systemVariablesMB.editSchoolWeek()}" />
+                                    </p:commandButton>
+                                    <p:commandButton value="#{msg.save}" icon="ui-icon-check" style="width:auto" 
+                                                     action="#{systemVariablesMB.saveSchoolWeek()}" 
+                                                     rendered="#{systemVariablesMB.editschoolWeek}" 
+                                                     disabled="#{systemVariablesMB.editschoolWeek?flase:true}" 
+                                                     ajax="true" id="saveSchoolWeek" update="@all" />                                    
+                                </h:panelGroup> 
+                                
+                                <p:outputLabel for="TermWeek" value="#{msg.currentTerm}"
+                                               rendered="#{loginMB.user.school.systemVariables.termType.id eq 2}"/> 
+                                <h:panelGroup id="TermWeek" styleClass="md-inputfield"
+                                              rendered="#{loginMB.user.school.systemVariables.termType.id eq 2}">
+                                    <p:outputLabel  value="#{(view.locale.language eq 'en')?systemVariablesMB.item.termWeek.name_en:systemVariablesMB.item.termWeek.name_ar}" 
+                                                    rendered="#{!systemVariablesMB.edittermWeek}" />
+                                    <p:selectOneMenu id="termWeekInput" 
+                                                     value="#{systemVariablesMB.item.termWeek.id}" 
+                                                     rendered="#{systemVariablesMB.edittermWeek}"
+                                                     style="text-align: center;width: 100%">                        
+                                        <f:selectItems value="#{systemVariablesMB.termWeeks}"
+                                                       var="t"  
+                                                       itemLabel="#{(view.locale.language eq 'en')?t.name_en:t.name_ar}" 
+                                                       itemValue="#{t.id}" />
+                                    </p:selectOneMenu>
+                                </h:panelGroup>
+                                <h:panelGroup styleClass="md-inputfield" 
+                                              rendered="#{loginMB.user.school.systemVariables.termType.id eq 2}">
+                                    <p:commandButton value="#{msg.update}" icon="fa fa-pencil-square-o" style="width:auto" 
+                                                     action="#{systemVariablesMB.editTermWeek()}" 
+                                                     rendered="#{!systemVariablesMB.edittermWeek}"  
+                                                     disabled="#{systemVariablesMB.edittermWeek?true:flase}" 
+                                                     ajax="true" id="editTermWeek">
+                                        <p:ajax  update="@form" listener="#{systemVariablesMB.editTermWeek()}" />
+                                    </p:commandButton>
+                                    <p:commandButton value="#{msg.save}" icon="ui-icon-check" style="width:auto" 
+                                                     action="#{systemVariablesMB.savetermWeek()}" 
+                                                     rendered="#{systemVariablesMB.edittermWeek}" 
+                                                     disabled="#{systemVariablesMB.edittermWeek?flase:true}" 
+                                                     ajax="true" id="saveTermWeek" update="@all" />                                    
+                                </h:panelGroup> 
+                                <p:outputLabel for="schoolMonth" value="#{msg.currentMonth}" 
+                                               rendered="#{systemVariablesMB.item.termType.id eq '1'}" /> 
+                                <h:panelGroup id="schoolMonth" styleClass="md-inputfield" 
+                                              rendered="#{systemVariablesMB.item.termType.id eq '1'}" >
+                                    <p:outputLabel  value="#{(view.locale.language eq 'en')?
+                                                             systemVariablesMB.item.schoolMonth.name_en:
+                                                             systemVariablesMB.item.schoolMonth.name_ar}" 
+                                                    rendered="#{!systemVariablesMB.editschoolMonth}" />
+                                    <p:selectOneMenu id="schoolMonthInput" 
+                                                     value="#{systemVariablesMB.item.schoolMonth.id}" 
+                                                     rendered="#{systemVariablesMB.editschoolMonth}"
+                                                     style="text-align: center;width: 100%">                        
+                                        <f:selectItems value="#{systemVariablesMB.schoolMonths}"
+                                                       var="t"  
+                                                       itemLabel="#{(view.locale.language eq 'en')?
+                                                                    t.name_en:t.name_ar}" 
+                                                       itemValue="#{t.id}" />
+                                    </p:selectOneMenu>
+                                </h:panelGroup>
+                                <h:panelGroup styleClass="md-inputfield" 
+                                              rendered="#{systemVariablesMB.item.termType.id eq '1'}" >
+                                    <p:commandButton value="#{msg.update}" icon="fa fa-pencil-square-o" 
+                                                     style="width:auto" 
+                                                     action="#{systemVariablesMB.editSchoolMonth()}" 
+                                                     rendered="#{!systemVariablesMB.editschoolMonth}"  
+                                                     disabled="#{systemVariablesMB.editschoolMonth?true:flase}" 
+                                                     ajax="true" id="editSchoolMonth">
+                                        <p:ajax  update="@form" listener="#{systemVariablesMB.editSchoolMonth()}" />
+                                    </p:commandButton>
+                                    <p:commandButton value="#{msg.save}" icon="ui-icon-check" style="width:auto" 
+                                                     action="#{systemVariablesMB.saveSchoolMonth()}" 
+                                                     rendered="#{systemVariablesMB.editschoolMonth}" 
+                                                     disabled="#{systemVariablesMB.editschoolMonth?flase:true}" 
+                                                     ajax="true" id="saveSchoolMonth" update="@all" />                                    
+                                </h:panelGroup> 
+                                <p:outputLabel for="TermMonth" value="#{msg.currentTerm}" 
+                                               rendered="#{systemVariablesMB.item.termType.id eq '1'}" /> 
+                                <h:panelGroup id="TermMonth" styleClass="md-inputfield" 
+                                              rendered="#{systemVariablesMB.item.termType.id eq '1'}" >
+                                    <p:outputLabel  value="#{(view.locale.language eq 'en')?
+                                                             systemVariablesMB.item.termMonth.name_en:systemVariablesMB.item.termMonth.name_ar}" 
+                                                    rendered="#{!systemVariablesMB.edittermMonth}" />
+                                    <p:selectOneMenu id="termMonthInput" 
+                                                     value="#{systemVariablesMB.item.termMonth.id}" 
+                                                     rendered="#{systemVariablesMB.edittermMonth}"
+                                                     style="text-align: center;width: 100%">                        
+                                        <f:selectItems value="#{systemVariablesMB.termMonths}"
+                                                       var="t"  
+                                                       itemLabel="#{(view.locale.language eq 'en')?t.name_en:t.name_ar}" 
+                                                       itemValue="#{t.id}" />
+                                    </p:selectOneMenu>
+                                </h:panelGroup>
+                                <h:panelGroup styleClass="md-inputfield" 
+                                              rendered="#{systemVariablesMB.item.termType.id eq '1'}" >
+                                    <p:commandButton value="#{msg.update}" icon="fa fa-pencil-square-o" style="width:auto" 
+                                                     action="#{systemVariablesMB.editTermMonth()}" 
+                                                     rendered="#{!systemVariablesMB.edittermMonth}"  
+                                                     disabled="#{systemVariablesMB.edittermMonth?true:flase}" 
+                                                     ajax="true" id="editTermMonth">
+                                        <p:ajax  update="@form" listener="#{systemVariablesMB.editTermMonth()}" />
+                                    </p:commandButton>
+                                    <p:commandButton value="#{msg.save}" icon="ui-icon-check" style="width:auto" 
+                                                     action="#{systemVariablesMB.savetermMonth()}" 
+                                                     rendered="#{systemVariablesMB.edittermMonth}" 
+                                                     disabled="#{systemVariablesMB.edittermMonth?flase:true}" 
+                                                     ajax="true" id="saveTermMonth" update="@all" />                                    
+                                </h:panelGroup> 
+                                
+                                <p:outputLabel for="SchoolYear" value="#{msg.schoolYearCurrent}"/> 
+                                <h:panelGroup id="SchoolYear" styleClass="md-inputfield">
+                                    <p:outputLabel  value="#{systemVariablesMB.item.schoolYear.name_en}" 
+                                                    rendered="#{!systemVariablesMB.editSchoolYear}" />
+                                    <p:selectOneMenu id="schoolYearInput" 
+                                                     value="#{systemVariablesMB.item.schoolYear.id}" 
+                                                     rendered="#{systemVariablesMB.editSchoolYear}"
+                                                     style="text-align: center;width: 100%">                        
+                                        <f:selectItems value="#{systemVariablesMB.schoolYears}"
+                                                       var="sy"  
+                                                       itemLabel="#{(view.locale.language eq 'en')?sy.name_en:su.name_ar}" 
+                                                       itemValue="#{sy.id}" />
+                                    </p:selectOneMenu>
+                                </h:panelGroup>
+                                <h:panelGroup styleClass="md-inputfield" >
+                                    <p:commandButton value="#{msg.update}" icon="fa fa-pencil-square-o" style="width:auto" 
+                                                     action="#{systemVariablesMB.editSchoolYear()}" 
+                                                     rendered="#{!systemVariablesMB.editSchoolYear}"  
+                                                     disabled="#{systemVariablesMB.editSchoolYear?true:flase}" 
+                                                     ajax="true" id="editSchoolYear">
+                                        <p:ajax  update="@form" listener="#{systemVariablesMB.editSchoolYear()}" />
+                                    </p:commandButton>
+                                    <p:commandButton value="#{msg.save}" icon="ui-icon-check" style="width:auto" 
+                                                     action="#{systemVariablesMB.saveSchoolYear()}" 
+                                                     rendered="#{systemVariablesMB.editSchoolYear}" 
+                                                     disabled="#{systemVariablesMB.editSchoolYear?flase:true}"
+                                                     id="saveSchoolYear" update="@all" />                                    
+                                </h:panelGroup>
+                                
+                                <p:outputLabel for="weekTopMark" value="#{msg.weekTopMark}"
+                                               rendered="#{loginMB.user.school.systemVariables.termType.id eq 2}"/> 
+                                <h:panelGroup id="weekTopMark" styleClass="md-inputfield"
+                                              rendered="#{loginMB.user.school.systemVariables.termType.id eq 2}">
+                                    <p:outputLabel  value="#{(view.locale.language eq 'en')?systemVariablesMB.item.weekTopMark.name:systemVariablesMB.item.weekTopMark.name}" 
+                                                    rendered="#{!systemVariablesMB.editweekTopMark}" />
+                                    <p:selectOneMenu id="weekTopMarks" 
+                                                     value="#{systemVariablesMB.item.weekTopMark.id}" 
+                                                     rendered="#{systemVariablesMB.editweekTopMark}"
+                                                     style="text-align: center;width: 100%">                        
+                                        <f:selectItems value="#{systemVariablesMB.weekTopMarks}"
+                                                       var="tt"  
+                                                       itemLabel="#{(view.locale.language eq 'en')?tt.name:tt.name}" 
+                                                       itemValue="#{tt.id}" />
+                                    </p:selectOneMenu>
+                                </h:panelGroup>
+                                <h:panelGroup styleClass="md-inputfield" 
+                                              rendered="#{loginMB.user.school.systemVariables.termType.id eq 2}">
+                                    <p:commandButton value="#{msg.update}" icon="fa fa-pencil-square-o" style="width:auto" 
+                                                     action="#{systemVariablesMB.editWeekTopMark()}" 
+                                                     rendered="#{!systemVariablesMB.editweekTopMark }"  
+                                                     disabled="#{systemVariablesMB.editweekTopMark?true:flase}" ajax="true" id="editWeekTopMark">
+                                        <p:ajax  update="@form" listener="#{systemVariablesMB.editWeekTopMark()}" />
+                                    </p:commandButton>
+                                    <p:commandButton value="#{msg.save}" icon="ui-icon-check" style="width:auto" 
+                                                     action="#{systemVariablesMB.saveWeekTopMark()}" 
+                                                     rendered="#{systemVariablesMB.editweekTopMark}" 
+                                                     disabled="#{systemVariablesMB.editweekTopMark?flase:true}" 
+                                                     ajax="true" id="saveWeekTopMark" update="@all" />                                    
+                                </h:panelGroup> 
+                                
+                                <p:outputLabel  for="monthTopMark" value="#{msg.monthTopMark}"
+                                                rendered="#{loginMB.user.school.systemVariables.termType.id eq 1}"/> 
+                                <h:panelGroup id="monthTopMark" styleClass="md-inputfield"
+                                              rendered="#{loginMB.user.school.systemVariables.termType.id eq 1}">
+                                    <p:outputLabel  value="#{(view.locale.language eq 'en')?
+                                                             systemVariablesMB.item.monthTopMark.name:systemVariablesMB.item.monthTopMark.name}" 
+                                                    rendered="#{!systemVariablesMB.editmonthTopMark}" />
+                                    
+                                    <p:selectOneMenu id="monthTopMarks" 
+                                                     value="#{systemVariablesMB.item.monthTopMark.id}" 
+                                                     rendered="#{systemVariablesMB.editmonthTopMark}"
+                                                     style="text-align: center;width: 100%">                        
+                                        <f:selectItems value="#{systemVariablesMB.monthTopMarks}"
+                                                       var="tt"  
+                                                       itemLabel="#{(view.locale.language eq 'en')?tt.name:tt.name}" 
+                                                       itemValue="#{tt.id}" />
+                                    </p:selectOneMenu>
+                                </h:panelGroup>
+                                <h:panelGroup styleClass="md-inputfield" rendered="#{loginMB.user.school.systemVariables.termType.id eq 1}">
+                                    <p:commandButton value="#{msg.update}" icon="fa fa-pencil-square-o" style="width:auto" 
+                                                     action="#{systemVariablesMB.editMonthTopMark()}" 
+                                                     rendered="#{!systemVariablesMB.editmonthTopMark }"  
+                                                     disabled="#{systemVariablesMB.editmonthTopMark?true:flase}" ajax="true" 
+                                                     id="editmonthTopMark">
+                                        <p:ajax  update="@form" listener="#{systemVariablesMB.editMonthTopMark()}" />
+                                    </p:commandButton>
+                                    <p:commandButton value="#{msg.save}" icon="ui-icon-check" style="width:auto" 
+                                                     action="#{systemVariablesMB.saveMonthTopMark()}" 
+                                                     rendered="#{systemVariablesMB.editmonthTopMark}" 
+                                                     disabled="#{systemVariablesMB.editmonthTopMark?flase:true}" 
+                                                     ajax="true" id="savemonthTopMark" update="@all" />                                    
+                                </h:panelGroup> 
+                                
+                                <p:outputLabel for="term2TopMark" value="#{msg.term2TopMark}"/> 
+                                <h:panelGroup id="term2TopMark" styleClass="md-inputfield">
+                                    <p:outputLabel  value="#{(view.locale.language eq 'en')?systemVariablesMB.item.term2TopMark.name:systemVariablesMB.item.term2TopMark.name}" 
+                                                    rendered="#{!systemVariablesMB.editterm2TopMark}" />
+                                    <p:selectOneMenu id="term2TopMarks" 
+                                                     value="#{systemVariablesMB.item.term2TopMark.id}" 
+                                                     rendered="#{systemVariablesMB.editterm2TopMark}"
+                                                     style="text-align: center;width: 100%">                        
+                                        <f:selectItems value="#{systemVariablesMB.term2TopMarks}"
+                                                       var="tt"  
+                                                       itemLabel="#{(view.locale.language eq 'en')?tt.name:tt.name}" 
+                                                       itemValue="#{tt.id}" />
+                                    </p:selectOneMenu>
+                                </h:panelGroup>
+                                <h:panelGroup styleClass="md-inputfield" >
+                                    <p:commandButton value="#{msg.update}" icon="fa fa-pencil-square-o" style="width:auto" 
+                                                     action="#{systemVariablesMB.editTerm2TopMark()}" 
+                                                     rendered="#{!systemVariablesMB.editterm2TopMark }"  
+                                                     disabled="#{systemVariablesMB.editterm2TopMark?true:flase}" ajax="true" 
+                                                     id="editterm2TopMark">
+                                        <p:ajax  update="@form" listener="#{systemVariablesMB.editTerm2TopMark()}" />
+                                    </p:commandButton>
+                                    <p:commandButton value="#{msg.save}" icon="ui-icon-check" style="width:auto" 
+                                                     action="#{systemVariablesMB.saveTerm2TopMark()}" 
+                                                     rendered="#{systemVariablesMB.editterm2TopMark}" 
+                                                     disabled="#{systemVariablesMB.editterm2TopMark?flase:true}" 
+                                                     ajax="true" id="saveterm2TopMark" update="@all" />                                    
+                                </h:panelGroup> 
+                                
+                                
+                                <p:outputLabel for="term3TopMark" value="#{msg.term3TopMark}"
+                                               rendered="#{loginMB.user.school.systemVariables.termType.id eq 2}"/> 
+                                <h:panelGroup id="term3TopMark" styleClass="md-inputfield"
+                                              rendered="#{loginMB.user.school.systemVariables.termType.id eq 2}">
+                                    <p:outputLabel  value="#{(view.locale.language eq 'en')?systemVariablesMB.item.termTopMark.name:systemVariablesMB.item.termTopMarkr.name}" 
+                                                    rendered="#{!systemVariablesMB.editterm3TopMark}" />
+                                    <p:selectOneMenu id="term3TopMarks" 
+                                                     value="#{systemVariablesMB.item.termTopMark.id}" 
+                                                     rendered="#{systemVariablesMB.editterm3TopMark}"
+                                                     style="text-align: center;width: 100%">                        
+                                        <f:selectItems value="#{systemVariablesMB.termTopMarks}"
+                                                       var="tt"  
+                                                       itemLabel="#{(view.locale.language eq 'en')?tt.name:tt.name}" 
+                                                       itemValue="#{tt.id}" />
+                                    </p:selectOneMenu>
+                                </h:panelGroup>
+                                <h:panelGroup styleClass="md-inputfield" 
+                                              rendered="#{loginMB.user.school.systemVariables.termType.id eq 2}">
+                                    <p:commandButton value="#{msg.update}" icon="fa fa-pencil-square-o" style="width:auto" 
+                                                     action="#{systemVariablesMB.editTermTopMark()}" 
+                                                     rendered="#{!systemVariablesMB.editterm3TopMark }"  
+                                                     disabled="#{systemVariablesMB.editterm3TopMark?true:flase}" ajax="true" 
+                                                     id="editTerm3TopMark">
+                                        <p:ajax  update="@form" listener="#{systemVariablesMB.editTermTopMark()}" />
+                                    </p:commandButton>
+                                    <p:commandButton value="#{msg.save}" icon="ui-icon-check" style="width:auto" 
+                                                     action="#{systemVariablesMB.saveTermTopMark()}" 
+                                                     rendered="#{systemVariablesMB.editterm3TopMark}" 
+                                                     disabled="#{systemVariablesMB.editterm3TopMark?flase:true}" 
+                                                     ajax="true" id="saveTerm3TopMark" update="@all" />                                    
+                                </h:panelGroup> 
+                                
+                                
+                                <p:outputLabel for="firstID" value="#{msg.firstID}"/> 
+                                <h:panelGroup id="firstID" styleClass="md-inputfield">
+                                    <p:outputLabel  value="#{systemVariablesMB.item.firstID}" 
+                                                    rendered="#{!systemVariablesMB.editfirstID}" />
+                                    <p:inputText value="#{systemVariablesMB.item.firstID}" rendered="#{systemVariablesMB.editfirstID}"/>
+                                </h:panelGroup>
+                                <h:panelGroup styleClass="md-inputfield" >
+                                    <p:commandButton value="#{msg.update}" icon="fa fa-pencil-square-o" style="width:auto" 
+                                                     action="#{systemVariablesMB.editFirstID()}" 
+                                                     rendered="#{!systemVariablesMB.editfirstID and systemVariablesMB.item.termType.equals(null)}"  
+                                                     disabled="#{systemVariablesMB.editfirstID?true:flase}" ajax="true" id="editfirstID">
+                                        <p:ajax  update="@form" listener="#{systemVariablesMB.editFirstID()}" />
+                                    </p:commandButton>
+                                    <p:commandButton value="#{msg.save}" icon="ui-icon-check" style="width:auto" 
+                                                     action="#{systemVariablesMB.saveFirstID()}" 
+                                                     rendered="#{systemVariablesMB.editfirstID}" 
+                                                     disabled="#{systemVariablesMB.editfirstID?flase:true}" 
+                                                     ajax="true" id="savefirstID" update="@all" />                                    
+                                </h:panelGroup> 
+
+                                <p:outputLabel for="termType" value="#{msg.termType}"/> 
+                                <h:panelGroup id="termType" styleClass="md-inputfield">
+                                    <p:outputLabel  value="#{systemVariablesMB.item.termType.name_en}" 
+                                                    rendered="#{!systemVariablesMB.editTermType}" />
+                                    <p:selectOneMenu id="termTypeInput" 
+                                                     value="#{systemVariablesMB.item.termType.id}" 
+                                                     rendered="#{systemVariablesMB.editTermType}"
+                                                     style="text-align: center;width: 100%">                        
+                                        <f:selectItems value="#{systemVariablesMB.termTypes}"
+                                                       var="tt"  
+                                                       itemLabel="#{(view.locale.language eq 'en')?tt.name_en:tt.name_ar}" 
+                                                       itemValue="#{tt.id}" />
+                                    </p:selectOneMenu>
+                                </h:panelGroup>
+                                <h:panelGroup styleClass="md-inputfield" >
+                                    <p:commandButton value="#{msg.update}" icon="fa fa-pencil-square-o" style="width:auto" 
+                                                     action="#{systemVariablesMB.editTermType()}" 
+                                                     rendered="#{!systemVariablesMB.editTermType and systemVariablesMB.item.termType.equals(null)}"  
+                                                     disabled="#{systemVariablesMB.editTermType?true:flase}" ajax="true" id="editTermType">
+                                        <p:ajax  update="@form" listener="#{systemVariablesMB.editTermType()}" />
+                                    </p:commandButton>
+                                    <p:commandButton value="#{msg.save}" icon="ui-icon-check" style="width:auto" 
+                                                     action="#{systemVariablesMB.saveTermType()}" 
+                                                     rendered="#{systemVariablesMB.editTermType}" 
+                                                     disabled="#{systemVariablesMB.editTermType?flase:true}" 
+                                                     ajax="true" id="saveTermType" update="@all" />                                    
+                                </h:panelGroup> 
+                            </p:panelGrid>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,115 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/WEB-INF/template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="title">
+        Schooly System
+    </ui:define>
+
+    <ui:define name="head">
+        <!--head-->
+    </ui:define>
+
+    <ui:define name="content">
+        <f:event type="preRenderComponent" listener="#{weekMarkMB.prepareItems()}"/>
+        <h:form>
+            <div class="ui-g" >
+                      
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <!--<h1></h1>-->
+                        <p:dataTable var="item" value="#{weekMarkMB.items}"  reflow="true"
+                                     rowsPerPageTemplate="5,10,15,20,40,100"
+                                     rows="40"
+                                     paginator="true" 
+                                     resizableColumns="true"
+                                     paginatorTemplate="{CurrentPageReport} 
+                                     {FirstPageLink} 
+                                     {PreviousPageLink} 
+                                     {PageLinks} 
+                                     {NextPageLink} 
+                                     {LastPageLink} 
+                                     {RowsPerPageDropdown}"
+                                     currentPageReportTemplate="(Displaying 
+                                     {startRecord} - {endRecord} 
+                                     of {totalRecords}, 
+                                     Page: {currentPage}/{totalPages})"
+                                     id="items" 
+                                     
+                                     rowIndexVar="index">
+                            <f:facet name="header">
+                                <p:button title="#{msg.add}" value="#{msg.add}" 
+                                          outcome="create_1" 
+                                          style="float: left"
+                                          rendered="#{request.isUserInRole('TEACHER') or request.isUserInRole('ADMIN')}"/>
+
+                                <p:commandButton   title="#{msg.currentWeek}" 
+                                                   value="#{msg.currentWeek}" 
+                                                   action="#{weekMarkMB.prepareItems()}" 
+                                                   update="@form"  style="float: left"/>
+                                <p:commandButton   title="#{msg.currentTerm}" 
+                                                   value="#{msg.currentTerm}" 
+                                                   action="#{weekMarkMB.prepare2Items()}" 
+                                                   update="@form"  style="float: left"/>
+                                <p:commandButton id="toggler" type="button" value="Columns" style="float:right" icon="ui-icon-calculator" />
+                                <p:columnToggler datasource="items" trigger="toggler" />
+                                #{msg.weekMark}
+                            </f:facet>
+                            <p:column  headerText="no" 
+                                       filterBy="#{index+1}" 
+                                       sortBy="#{index+1}" 
+                                       style="text-align: center;width: 30px">
+                                <h:outputText value="#{index+1}"/>
+                            </p:column> 
+                            <p:column rendered="#{!request.isUserInRole('TEACHER')}"  
+                                      headerText="#{msg.teacher_name}" filterBy="#{(view.locale.language eq 'en')?item.teacherAssign.teacher.name_en:item.teacherAssign.teacher.name_ar}" style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.teacherAssign.teacher.name_en:item.teacherAssign.teacher.name_ar}"/>
+                            </p:column>                
+                            <p:column  headerText="#{msg.class_name}" 
+                                       filterBy="#{(view.locale.language eq 'en')?item.teacherAssign.class_.name_en:item.teacherAssign.class_.name_ar}" style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.teacherAssign.class_.name_en:item.teacherAssign.class_.name_ar}"/>
+                            </p:column>                
+                            <p:column  headerText="#{msg.weekName}" 
+                                       filterBy="#{(view.locale.language eq 'en')?item.teacherAssign.class_.name_en:item.teacherAssign.class_.name_ar}" style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.teacherAssign.class_.name_en:item.teacherAssign.class_.name_ar}"/>
+                            </p:column>                
+                            <p:column  headerText="#{msg.subject}" 
+                                       filterBy="#{(view.locale.language eq 'en')?item.teacherAssign.subject_t.name_en:item.teacherAssign.subject_t.name_ar}" style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.teacherAssign.subject_t.name_en:item.teacherAssign.subject_t.name_ar}"/>
+                            </p:column>                
+                                        
+                            <p:column  headerText="#{msg.student_name}" filterBy="#{(view.locale.language eq 'en')?item.studentSchool.student.name_en:item.studentSchool.student.name_ar}" style="text-align: center">
+                                <h:outputText value="#{(view.locale.language eq 'en')?item.studentSchool.student.name_en:item.studentSchool.student.name_ar}"/>
+                            </p:column>
+                            <p:column  headerText="#{msg.quizeMark}" filterBy="#{item.quize}" style="text-align: center">
+                                <h:outputText value="#{item.quize}"/>
+                            </p:column>
+                            <p:column  headerText="#{msg.hwMark}" filterBy="#{item.hw}" style="text-align: center">
+                                <h:outputText value="#{item.hw}"/>
+                            </p:column>
+                            <p:column  headerText="#{msg.attendanceMark}" filterBy="#{item.attendance}" style="text-align: center">
+                                <h:outputText value="#{item.attendance}"/>
+                            </p:column>
+                            <p:column  headerText="#{msg.BehaviorMark}" filterBy="#{item.behavior}" style="text-align: center">
+                                <h:outputText value="#{item.behavior}"/>
+                            </p:column>
+                            <p:column  headerText="#{msg.total}" filterBy="#{item.behavior+item.attendance+item.hw+item.quize}" style="text-align: center">
+                                <h:outputText value="#{item.behavior+item.attendance+item.hw+item.quize}"/>
+                            </p:column>
+                            <p:column style="width: 30px">
+                                <p:button   title="#{msg.update}" icon="fa fa-edit"  outcome="update">
+                                    <f:param name="id" value="#{item.id}"/>
+                                </p:button>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/WEB-INF/template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="title">
+        Schooly System
+    </ui:define>
+
+    <ui:define name="head">
+        <!--head-->
+    </ui:define>
+
+    <ui:define name="content">
+        <f:event type="preRenderComponent" listener="#{subjectTableMB.prepareAllItems2()}"/>      
+        <h:form>
+
+
+            <div class="ui-g" >
+
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <!--<h1></h1>-->
+
+                        <p:fileUpload 
+                            value="#{subjectTableMB.file}" mode="advanced" sizeLimit="5242880" 
+                            fileUploadListener="#{subjectTableMB.fileUploadListener}" 
+                            update="@form">
+                        </p:fileUpload>
+                        <p:dataTable var="item" value="#{subjectTableMB.items}"  reflow="true"
+                                     rowsPerPageTemplate="20,40,100,150,200,300"
+                                     rows="40"
+                                     paginator="true" 
+                                     resizableColumns="true"
+                                     paginatorTemplate="{CurrentPageReport} 
+                                     {FirstPageLink} 
+                                     {PreviousPageLink} 
+                                     {PageLinks} 
+                                     {NextPageLink} 
+                                     {LastPageLink} 
+                                     {RowsPerPageDropdown}
+                                     {Exporters}"
+                                     currentPageReportTemplate="(Displaying 
+                                     {startRecord} - {endRecord} 
+                                     of {totalRecords}, 
+                                     Page: {currentPage}/{totalPages})"
+                                     id="items" 
+                                     dir="#{(view.locale.language eq 'en')?'ltr':'rtl'}"
+                                     selection="#{subjectTableMB.selectedSubjectTable}" 
+
+                                     rowIndexVar="index">
+                            <f:facet name="header">
+                                <p:commandButton id="toggler" type="button" value="Columns" style="float:right" icon="ui-icon-calculator" />
+                                <p:columnToggler datasource="items" trigger="toggler" />
+                                <h:link title="#{msg.add}" outcome="create" value="" style="text-align: left">
+                                    <i class="fa fa-plus" style="size: 20px;color: #ffffff;font-size:larger ;float: left;padding-right: 5px;" />
+                                </h:link> 
+                                #{msg.student_list}
+                            </f:facet>
+                            <f:facet name="{Exporters}">
+                                <h:commandLink>
+                                    <p:graphicImage value="/resources/barcelona-layout/images/Excel-3-icon.png" width="24"/>
+                                    <p:dataExporter type="xls" target="items" fileName="studens" />
+                                </h:commandLink>
+                            </f:facet>
+                            <p:column  headerText="no" 
+                                       filterBy="#{index+1}" 
+                                       sortBy="#{index+1}" 
+                                       style="text-align: center;width: 30px">
+                                <h:outputText value="#{index+1}"/>
+                            </p:column> 
+                                                                
+                            <p:column  headerText="#{msg.teacher}" style="text-align: center">
+                                <h:outputText value="#{item.teacherAssign.teacher.name_en}"/>
+                            </p:column> 
+                            <p:column  headerText="#{msg.class}"  style="text-align: center">
+                                <h:outputText value="#{item.teacherAssign.class_.name_en}"/>
+                            </p:column> 
+                            <p:column  headerText="#{msg.subject}"  style="text-align: center">
+                                <h:outputText value="#{item.teacherAssign.subject_t.name_en}"/>
+                            </p:column> 
+                            
+                            <p:column  headerText="#{msg.day}"  style="text-align: center">
+                                <h:outputText value="#{item.day.name_en}"/>
+                            </p:column> 
+                            
+                            <p:column  headerText="#{msg.lectureNo}"  style="text-align: center">
+                                <h:outputText value="#{item.lectureNo}"/>
+                            </p:column> 
+                            
+                           
+                            
+                            
+
+                        </p:dataTable>
+                    </div>
+                </div>
+
+            </div>
+            <p:separator />
+            <div style="text-align: center">
+                <p:commandButton  value="#{msg.save}"  action="#{subjectTableMB.createItemsFromExcel()}"  
+                                  icon="ui-icon-check"/>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>
